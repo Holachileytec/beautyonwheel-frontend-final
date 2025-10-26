@@ -1,0 +1,203 @@
+#app {
+  height: 100%;
+}
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  background: #000;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.mySwiper {
+  height: 80vh !important;
+  text-shadow: 2px 2px 3px black;
+}
+
+/* Media query  */
+/* Extra  Extra Large */
+@media (min-width: 1400px) {
+}
+/* Extra large */
+@media (min-width: 1200px) {
+}
+
+/* Large */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .bigT {
+    margin: 0 !important;
+  }
+  .BiT {
+    font-size: 70px !important;
+    top: 15% !important;
+    left: 0 !important;
+    width: 100%;
+
+    padding-top: 0 !important;
+  }
+  .biS {
+    font-size: 17px !important;
+    top: 35% !important;
+    left: 0% !important;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .biB {
+    font-size: 15px !important;
+    top: 60% !important;
+    left: 38% !important;
+  }
+  .mySwiper {
+    height: 50vh !important;
+  }
+  .BN button {
+    padding: 5px !important;
+    height: 60px !important;
+    font-size: 15px;
+    width: 190px !important;
+  }
+}
+
+/* Medium */
+@media (min-width: 768px) and (max-width: 991px) {
+  .bigT {
+    margin: 0 !important;
+  }
+  .BiT {
+    font-size: 60px !important;
+    top: 15% !important;
+    left: 0 !important;
+    width: 100%;
+
+    padding-top: 0 !important;
+  }
+  .biS {
+    font-size: 15px !important;
+    top: 30% !important;
+    left: 0% !important;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .biB {
+    font-size: 15px !important;
+    top: 60% !important;
+    left: 38% !important;
+  }
+  .mySwiper {
+    height: 50vh !important;
+  }
+  .BN button {
+    padding: 5px !important;
+    height: 60px !important;
+    font-size: 15px;
+    width: 190px !important;
+  }
+}
+/* Small */
+@media (min-width: 576px) and (max-width: 767px) {
+  .bigT {
+    margin: 0 !important;
+  }
+  .BiT {
+    font-size: 40px !important;
+    top: 15% !important;
+    left: 0 !important;
+    width: 100%;
+
+    padding-top: 0 !important;
+  }
+  .biS {
+    font-size: 12px !important;
+    top: 30% !important;
+    left: 0% !important;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .biB {
+    font-size: 10px !important;
+    top: 50% !important;
+    left: 38% !important;
+  }
+  .mySwiper {
+    height: 45vh !important;
+  }
+  .BN button {
+    padding: 5px !important;
+    height: 40px !important;
+    font-size: 13px;
+    width: 100px !important;
+  }
+}
+
+/* EXtra Small2 */
+@media (min-width: 200px) and (max-width: 575px) {
+  .bigT {
+    margin: 0 !important;
+  }
+  .BiT {
+    font-size: 40px !important;
+    top: 10% !important;
+    left: 0 !important;
+    width: 100%;
+
+    padding-top: 0 !important;
+  }
+  .biS {
+    font-size: 12px !important;
+    top: 22% !important;
+    left: 0% !important;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .biB {
+    font-size: 10px !important;
+    top: 60% !important;
+    left: 38% !important;
+  }
+  .mySwiper {
+    height: 30vh !important;
+  }
+  .BN button {
+    padding: 5px !important;
+    height: 40px !important;
+    font-size: 13px;
+    width: 100px !important;
+  }
+}

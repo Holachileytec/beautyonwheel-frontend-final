@@ -1,0 +1,230 @@
+.links ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+}
+.links li {
+  width: 90px;
+  text-align: center;
+  /* border: 1px solid; */
+  font-weight: 700;
+  word-spacing: 2px;
+  font-size: 17px;
+  font-family: "Montserrat", sans-serif;
+}
+.links li:hover {
+  color: #f7444e;
+  cursor: pointer;
+}
+body {
+  background-color: whitesmoke;
+}
+.navbar {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  align-items: center;
+  --bs-navbar-padding-y: 0 !important;
+  box-shadow: 1px 1px 10px grey;
+}
+
+.firstNav .columnB,
+.columnB div {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  font-size: 13px;
+}
+.columnB p {
+  margin-bottom: 0px;
+  padding: 4px;
+  padding-right: 30px;
+}
+.columnA a {
+  padding-right: 20px;
+}
+.columnA a:hover {
+  color: burlywood;
+}
+.columnA {
+  align-items: center;
+  display: flex;
+  margin-left: 40px;
+  font-size: 13px;
+}
+.columnB p a,
+.columnA a {
+  color: white;
+  text-decoration: none;
+}
+.columnB p a:hover {
+  color: burlywood;
+  cursor: pointer;
+}
+
+.columnB div {
+  margin: 5px;
+}
+.row {
+  --bs-gutter-x: 0px !important;
+}
+
+.hideSml {
+  display: none;
+}
+
+.hideSml .nav-link,
+.nav-link {
+  color: black !important;
+  transition: 0.5s;
+}
+.hideSml .nav-link,
+.nav-link:hover {
+  transition: 0.5s;
+  color: brown !important;
+  font-size: 17px;
+  font-weight: 700;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar-toggler {
+  border: none !important;
+}
+.navbar-toggler:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.offcanvas {
+  width: 100% !important;
+  background-color: black !important;
+  color: white !important;
+}
+
+.btn-close {
+  background-color: orange !important;
+}
+.offcanvas-title {
+  /* border: 1px solid black; */
+  width: 700px;
+}
+
+.offcanvas-body {
+  padding: 0px !important;
+}
+.accordion-item:last-of-type > .accordion-header .accordion-button.collapsed {
+  border-bottom-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  background-color: black;
+}
+
+.accordion-item:first-of-type > .accordion-header .accordion-button {
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+}
+.accordion-button:focus {
+  box-shadow: none !important;
+}
+.accordion-button {
+  color: white !important;
+  height: 30px;
+}
+.accordion-item {
+  border: none !important;
+}
+.accordion-button:active {
+  color: orangered !important;
+}
+.accordion-button:not(.collapsed) {
+  background-color: black !important;
+}
+.accordion-body {
+  background-color: black !important;
+  color: white !important;
+}
+.accordion {
+  --bs-accordion-border-radius: none;
+  --bs-accordion-inner-border-radius: none;
+}
+ul a,
+.parC {
+  text-decoration: none !important;
+}
+.num a {
+  color: black;
+  text-decoration: none !important;
+  font-weight: 800;
+  font-size: 18px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  transition: 0.5s;
+}
+.num a:hover {
+  color: brown !important;
+  transition: 0.5s;
+}
+
+.BN button {
+  background-color: black !important;
+  border-radius: 0px !important;
+  padding: 20px !important;
+  border: none !important;
+  width: 150px !important;
+  position: relative;
+  transition: 0.5s ease;
+  height: 65px !important;
+}
+.BN button:hover {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid black !important;
+  transition: 0.5s ease !important;
+}
+
+/* Media query  */
+/* Extra  Extra Large */
+@media (min-width: 1400px) {
+}
+/* Extra large */
+@media (min-width: 1200px) {
+  .hideSml {
+    /* display: block; */
+    padding-left: auto !important;
+    display: flex;
+  }
+  .hideSml .nav-link {
+    font-size: 15px;
+  }
+  .columnA {
+    margin-left: 0px !important;
+    justify-content: center;
+  }
+}
+
+/* Large */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .columnA {
+    margin-left: 0px !important;
+    justify-content: center;
+  }
+}
+
+/* Medium */
+@media (min-width: 768px) and (max-width: 991px) {
+  .columnA {
+    margin-left: 0px !important;
+    justify-content: center;
+  }
+}
+/* Small */
+@media (min-width: 576px) and (max-width: 767px) {
+  .columnA {
+    display: none;
+  }
+}
+
+/* EXtra Small */
+@media (min-width: 200px) and (max-width: 575px) {
+  .columnA {
+    display: none;
+  }
+}

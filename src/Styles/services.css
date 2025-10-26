@@ -1,0 +1,123 @@
+.srvbdy {
+  margin-bottom: 100px;
+  transform: translateY(50px);
+  transition: all 1.2s ease;
+}
+#masge,
+#mkup,
+#nils,
+#mnicure,
+#pdicure {
+  font-size: 50px;
+}
+
+.desc {
+  text-align: center;
+  margin-top: 100px;
+}
+img {
+  border-radius: 20px;
+}
+
+.serv button {
+  width: 50% !important;
+  background-color: brown !important;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  color: white;
+  margin: auto;
+  border-radius: 2px !important;
+  transition: 2s;
+  padding: 10px !important;
+  height: 50px !important;
+  margin-top: -2px;
+
+  box-shadow: 2px 2px 5px grey;
+}
+.serv {
+  display: flex;
+}
+
+.arr {
+  transition: 2s;
+  margin-top: -2px;
+  animation-name: slide;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.service-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Media query  */
+/* Extra  Extra Large */
+@media (min-width: 1400px) {
+}
+/* Extra large */
+@media (min-width: 1200px) {
+}
+
+/* Large */
+@media (min-width: 992px) and (max-width: 1199px) {
+}
+
+/* Medium */
+@media (min-width: 768px) and (max-width: 991px) {
+}
+/* Small */
+@media (min-width: 576px) and (max-width: 767px) {
+  .srvbdy .row {
+    flex-direction: column;
+    margin-bottom: 100px !important;
+  }
+  .otherSide {
+    flex-direction: column-reverse !important;
+  }
+  .desc {
+    text-align: center;
+    margin-top: 10px;
+  }
+  #masge,
+  #mkup,
+  #nils,
+  #mnicure,
+  #pdicure {
+    font-size: 30px;
+  }
+}
+
+/* EXtra Small2 */
+@media (min-width: 200px) and (max-width: 575px) {
+  .srvbdy .row {
+    flex-direction: column;
+    margin-bottom: 100px !important;
+  }
+  .otherSide {
+    flex-direction: column-reverse !important;
+  }
+  .desc {
+    text-align: center;
+    margin-top: 10px;
+  }
+  #masge,
+  #mkup,
+  #nils,
+  #mnicure,
+  #pdicure {
+    font-size: 30px;
+  }
+}

@@ -1,0 +1,213 @@
+.footer {
+  margin-top: 5rem;
+  width: 100%;
+  transform: translateY(50px);
+  transition: all 1.2s ease;
+  font-size: 14px;
+}
+
+.footer.footer-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.companyLogo {
+  text-align: center;
+  animation: fadeUp 1.5s ease forwards;
+}
+
+.footerImg {
+  margin-top: 4rem;
+  width: 5rem;
+  filter: drop-shadow(0 2px 5px rgba(220, 218, 218, 0.2));
+  transition: transform 0.4s ease;
+}
+
+.footerImg:hover {
+  transform: scale(1.05);
+}
+
+.footerHeadText {
+  font-size: 20px;
+  color: rgb(224, 74, 74);
+  margin-top: 1rem;
+}
+
+.footerSlogan {
+  font-size: 15px;
+  font-style: italic;
+  transition: color 0.4s ease;
+}
+
+.footerSlogan:hover {
+  color: brown;
+}
+
+/* Column sections */
+.company,
+.what_we_do,
+.who_we_serve,
+.where_we_are {
+  margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.company:hover,
+.what_we_do:hover,
+.who_we_serve:hover,
+.where_we_are:hover {
+  transform: translateY(-5px);
+}
+
+.company h1,
+.what_we_do h1,
+.who_we_serve h1,
+.where_we_are h1 {
+  color: rgb(224, 74, 74);
+
+  margin-bottom: 1rem;
+  position: relative;
+  font-size: 15px !important;
+}
+
+.company h1::after,
+.what_we_do h1::after,
+.who_we_serve h1::after,
+.where_we_are h1::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 0.1px;
+  bottom: -5px;
+  left: 0;
+  background-color: white;
+  transition: width 0.5s ease;
+}
+
+.company:hover h1::after,
+.what_we_do:hover h1::after,
+.who_we_serve:hover h1::after,
+.where_we_are:hover h1::after {
+  width: 100%;
+}
+
+.company a,
+.what_we_do a,
+.where_we_are a {
+  color: white;
+  margin: 0.5rem 0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.company a:hover,
+.what_we_do a:hover,
+.where_we_are a:hover {
+  color: brown;
+  transform: translateX(5px);
+}
+.foot {
+  color: white !important;
+  background-color: black;
+}
+
+/* Bottom Line */
+.underlineFooter {
+  width: 100%;
+  height: 1px;
+  margin: 2rem auto;
+  background-color: white;
+  opacity: 0.5;
+}
+
+/* Social Icons Area */
+.socialIcon {
+  display: flex;
+  justify-content: center;
+  gap: 8rem;
+  flex-wrap: wrap;
+  text-align: center;
+  padding-bottom: 5rem;
+}
+
+.faphone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.icon {
+  transition: transform 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  color: white;
+}
+
+.icon:hover {
+  transform: translateY(-5px) scale(1.1);
+}
+
+.whatsap:hover {
+  color: green;
+}
+.facebook:hover {
+  color: blue;
+}
+.twitter:hover {
+  color: #00acee;
+}
+.youtube:hover {
+  color: red;
+}
+.insta:hover {
+  color: #e1306c;
+}
+.tiktok:hover {
+  color: white;
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .wrapperQink {
+    gap: 5rem;
+  }
+  .company,
+  .what_we_do,
+  .who_we_serve,
+  .where_we_are {
+    width: 100%;
+    align-items: center;
+  }
+  .footerSlogan {
+    margin-left: 0;
+  }
+}

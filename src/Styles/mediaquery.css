@@ -1,0 +1,26 @@
+/* Extra  Extra Large */
+@media (min-width: 1400px) {
+}
+/* Extra large */
+@media (min-width: 1200px) {
+  .hideSml {
+    /* display: block; */
+    padding-left: auto !important;
+    display: flex;
+  }
+}
+
+/* Large */
+@media (min-width: 992px) {
+}
+
+/* Medium */
+@media (min-width: 768px) {
+}
+/* Small */
+@media (min-width: 600px) {
+}
+
+/* EXtra Small */
+@media (min-width: 575px) {
+}
