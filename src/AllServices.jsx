@@ -8,6 +8,7 @@ import pedic from "./assets/pedic.jpg";
 import massage from "./assets/masge.jpg";
 import { Button } from "react-bootstrap";
 import "./Styles/services.css";
+import { Link } from "react-router-dom";
 
 function AllServices() {
   return (
@@ -23,27 +24,22 @@ function AllServices() {
             <p className="desc">
               <i>
                 {" "}
-                We deliver premium makeup Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
+                Relax and unwind with our soothing massage service,
+                designed to melt away stress and rejuvenate your body.
+                Our skilled therapists use tailored techniques to
+                ease tension, leaving you feeling refreshed and
+                revitalized.
               </i>
             </p>
-            <div className="BN serv">
-              <Button>
-                ViewAll {"  "}
-                <FaArrowRight className="arr" />
-              </Button>
-            </div>
+            <Link to="/massage" style={{ textDecoration: "none" }}>
+              {" "}
+              <div className="BN serv">
+                <Button>
+                  ViewAll {"  "}
+                  <FaArrowRight className="arr" />
+                </Button>
+              </div>
+            </Link>
           </div>
         }
         SecT={<span id="masge">Massage</span>}
@@ -54,28 +50,21 @@ function AllServices() {
           <div>
             <p className="desc">
               <i>
-                {" "}
-                We deliver premium makeup Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
+                Treat your nails to expert care with our manicure and
+                pedicure services. From classic to creative designs,
+                we provide detailed,
+                long-lasting results that keep your nails looking perfect.
               </i>
             </p>
-            <div className="BN serv">
-              <Button>
-                ViewAll {"  "}
-                <FaArrowRight className="arr" />
-              </Button>
-            </div>
+            <Link to="/nail-service" style={{ textDecoration: "none" }}>
+              {" "}
+              <div className="BN serv">
+                <Button>
+                  ViewAll {"  "}
+                  <FaArrowRight className="arr" />
+                </Button>
+              </div>
+            </Link>
           </div>
         }
         Col2={
@@ -96,27 +85,22 @@ function AllServices() {
             <p className="desc">
               <i>
                 {" "}
-                We deliver premium makeup Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
+               Indulge in a professional manicure that ensures your hands
+                and nails look stunning. Whether you prefer a timeless
+                 polish or a trendy design, our technicians 
+               provide meticulous attention to detail for a polished,
+                perfect look.
               </i>
             </p>
-            <div className="BN serv">
-              <Button>
-                ViewAll {"  "}
-                <FaArrowRight className="arr" />
-              </Button>
-            </div>
+            <Link to="/manicure" style={{ textDecoration: "none" }}>
+              {" "}
+              <div className="BN serv">
+                <Button>
+                  ViewAll {"  "}
+                  <FaArrowRight className="arr" />
+                </Button>
+              </div>
+            </Link>
           </div>
         }
         SecT={<span id="mnicure">Manicure</span>}
@@ -128,27 +112,21 @@ function AllServices() {
             <p className="desc">
               <i>
                 {" "}
-                We deliver premium makeup Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
+                Give your feet the pampering they deserve
+                 with our luxurious pedicure service. We 
+                 focus on relaxation and care,
+                 leaving your feet soft, smooth, and beautifully polished.
               </i>
             </p>
-            <div className="BN serv">
-              <Button>
-                ViewAll {"  "}
-                <FaArrowRight className="arr" />
-              </Button>
-            </div>
+            <Link to="/pedicure" style={{ textDecoration: "none" }}>
+              {" "}
+              <div className="BN serv">
+                <Button>
+                  ViewAll {"  "}
+                  <FaArrowRight className="arr" />
+                </Button>
+              </div>
+            </Link>
           </div>
         }
         Col2={
@@ -169,27 +147,22 @@ function AllServices() {
             <p className="desc">
               <i>
                 {" "}
-                We deliver premium makeup Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
-                adipisicing elit. Explicabo nisi quibusdam suscipit nostrum
-                facere nemo, ex, necessitatibus ipsa officiis commodi magnam
-                odit quia illo voluptate voluptatum dolorum fuga, esse ratione.
+           Enhance your natural beauty with our professional
+            makeup service. Whether it's for a special occasion
+             or a fresh everyday look, our makeup artists use
+              high-quality products 
+           to create a flawless finish that boosts your confidence.
               </i>
             </p>
-            <div className="BN serv">
-              <Button>
-                ViewAll {"  "}
-                <FaArrowRight className="arr" />
-              </Button>
-            </div>
+            <Link to="/makeup" style={{ textDecoration: "none" }}>
+              {" "}
+              <div className="BN serv">
+                <Button>
+                  ViewAll {"  "}
+                  <FaArrowRight className="arr" />
+                </Button>
+              </div>
+            </Link>
           </div>
         }
         SecT={<span id="mkup">Makeup</span>}

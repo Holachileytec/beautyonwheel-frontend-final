@@ -2,7 +2,7 @@ import { Button } from "react-bootstrap";
 import { FaArrowRight } from "react-icons/fa";
 import "./Styles/carousel.css";
 
-function SwipeContent({ Testing, bigTxt, smllTxt, btnTxt }) {
+function SwipeContent({ Testing, bigTxt, smllTxt, btnTxt,goSomewhere }) {
   return (
     <div>
       <img src={Testing} alt="myImage" />
@@ -33,7 +33,7 @@ function SwipeContent({ Testing, bigTxt, smllTxt, btnTxt }) {
       </div>
 
       <div className="BN">
-        <Button
+        <a href={goSomewhere}><Button
           style={{
             position: "absolute",
             top: "65%",
@@ -44,7 +44,8 @@ function SwipeContent({ Testing, bigTxt, smllTxt, btnTxt }) {
         >
           {btnTxt}
           <FaArrowRight />
-        </Button>
+        </Button></a>
+        
       </div>
     </div>
   );

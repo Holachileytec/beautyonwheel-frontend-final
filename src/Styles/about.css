@@ -1,0 +1,165 @@
+/* --- Global & Container Styles --- */
+.about-container {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #fcfcfc; /* Near-white background */
+    font-family: 'Playfair Display', serif, 'Inter', sans-serif; /* Mix of elegant serif for titles and clean sans-serif for body */
+    color: #495057;
+}
+
+.about-content {
+    width: 100%;
+    max-width: 900px;
+    padding: 60px 20px;
+    line-height: 1.7;
+}
+
+/* --- Header Section --- */
+.about-header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #f8f9fa; /* Very light separator */
+}
+
+.about-header h1 {
+    font-size: 3.2em;
+    color: #e83e8c; /* Primary Accent: Soft Rose/Pink */
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.about-header p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15em;
+    color: #6c757d;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* --- Content Sections --- */
+.about-section {
+    margin-bottom: 60px;
+    padding: 20px 0;
+}
+
+.section-title {
+    font-size: 2em;
+    color: #212529;
+    /* Subtle underline effect */
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #fccde2; 
+}
+
+.mission-section p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1em;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.mission-section p strong {
+    color: #e83e8c;
+}
+
+/* --- Value Cards Section --- */
+.value-cards {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.card {
+    flex: 1;
+    background: #fff8fc; /* Very light pink background */
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #f8d4e9;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(232, 62, 140, 0.15);
+}
+
+.card h3 {
+    font-size: 1.3em;
+    color: #e83e8c;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95em;
+    color: #718096;
+}
+
+/* --- Footer & CTA --- */
+.about-footer {
+    text-align: center;
+    margin-top: 70px;
+    padding-top: 40px;
+    border-top: 2px solid #f8f9fa;
+}
+
+.about-footer p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    color: #495057;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 14px 40px;
+    background-color: #e83e8c; /* Primary Accent: Soft Rose/Pink */
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 30px; /* Pill shape button */
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cta-button:hover {
+    background-color: #d1307b;
+}
+
+/* Media Query */
+@media (max-width: 768px) {
+    .about-content {
+        padding: 40px 15px;
+    }
+
+    .about-header h1 {
+        font-size: 2.8em;
+    }
+    
+    .about-header p {
+        font-size: 1em;
+    }
+
+    .value-cards {
+        flex-direction: column; /* Stack cards vertically */
+        gap: 20px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    .about-section {
+        margin-bottom: 40px;
+    }
+    
+    .section-title {
+        font-size: 1.7em;
+        margin-bottom: 20px;
+    }
+}

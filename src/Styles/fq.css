@@ -1,0 +1,63 @@
+.fq_container {
+  /* margin-top: 2rem;
+  /* width: 100%;
+  margin: auto;
+  height: 100%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.userInforText p {
+  position: relative;
+  font-size: 2rem;
+  color: black;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.acordion_items {
+  border: 5px solid white;
+  width: 700px;
+  border-radius: 2rem;
+  box-shadow: 2px 2px 10px rgb(29, 28, 28);
+  padding: 0.3rem;
+  margin-bottom: 1rem;
+}
+.items {
+  display: flex ;
+  /* margin-top: 5rem; */
+  justify-content: space-between;
+  align-items: center;
+}
+.items .header {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #d1307b;
+  cursor: default;
+  border: none !important;
+}
+
+.answer {
+  display: flex;
+  /* width: 100rem; */
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin: 1rem;
+  font-size: 1rem;
+  border-top: 1px solid black;
+}
+.show {
+  display: content;
+}
+.hide {
+  display: none;
+}
+.fqNavbar {
+  width: 100vw;
+  margin: auto ;
+  display: flex;
+  justify-self: center;
+}

@@ -1,0 +1,241 @@
+/* --- Global & Container Styles --- */
+.payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f4f8; /* Very light background */
+    font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding: 20px; /* Add padding for small screens */
+    box-sizing: border-box;
+}
+
+.payment-card {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 16px; /* Rounded corners */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.payment-card h2 {
+    color: #1a202c;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+}
+
+/* --- Order Summary --- */
+.order-summary {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.total-amount {
+    font-size: 1.4em;
+    color: #d1307b; /* Primary Blue Accent */
+    font-weight: bold;
+}
+
+/* --- Method Selector Tabs --- */
+.method-selector {
+    display: flex;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #e2e8f0;
+}
+
+.method-button {
+    flex-grow: 1;
+    padding: 12px 0;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    background-color: transparent;
+    color: #4a5568;
+    transition: all 0.2s ease;
+}
+
+.method-button.active {
+    background-color:#d1307b; /* Primary Blue Accent */
+    color: #ffffff;
+    box-shadow: 0 4px 6px rgba(4, 102, 200, 0.2);
+}
+
+/* --- Input Field Styling (Floating Label Style) --- */
+.card-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between fields */
+}
+
+.payment-input {
+    width: 100%;
+    padding: 15px 12px 5px 12px; /* Top padding for label space */
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    background: #f7f9fb;
+    font-size: 1em;
+    color: #2d3748;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.payment-input:focus {
+    border-color: #d1307b; /* Highlight on focus */
+    box-shadow: 0 0 0 3px rgba(4, 102, 200, 0.2);
+    background: #ffffff;
+}
+
+/* Floating Label Logic (Label is placed right after input in JSX) */
+.payment-input + .payment-label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    font-size: 1em;
+}
+
+.card-input-group > div, .card-input-group > input {
+    position: relative; /* Establish context for absolute label */
+}
+
+/* Move label up when input is focused or has content (placeholder=" " is key) */
+.payment-input:focus + .payment-label,
+.payment-input:not(:placeholder-shown) + .payment-label {
+    top: 5px;
+    font-size: 0.75em;
+    color: #d1307b;
+    background: #ffffff;
+    padding: 0 4px;
+    left: 8px;
+}
+
+.card-details-row {
+    display: flex;
+    gap: 20px;
+}
+
+.detail-field {
+    flex: 1;
+    position: relative;
+}
+
+/* --- Save Card Option --- */
+.save-option {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.save-option input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #d1307b;
+}
+
+.save-option label {
+    font-size: 0.9em;
+    color: #4a5568;
+}
+
+/* --- Transfer Details View --- */
+.transfer-instruction {
+    text-align: left;
+    color: #4a5568;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.account-box {
+    text-align: left;
+    background-color: #e6f0f8;
+    border: 1px solid #b3d1f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.account-box p {
+    margin: 5px 0;
+    color: #2d3748;
+}
+
+/* --- Action Button --- */
+.pay-button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 30px;
+    background-color: #d1307b; /* Primary Blue Accent */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.pay-button:hover {
+    background-color: #0452a3;
+}
+
+.pay-button:active {
+    transform: scale(0.99);
+}
+
+/* --- Security Note --- */
+.security-note {
+    font-size: 0.8em;
+    color: #a0aec0;
+    margin-top: 20px;
+}
+
+.secure-badge {
+    color: #38a169; /* Green for security */
+    font-weight: 600;
+}
+
+/* ==================================== */
+/* 💻 MEDIA QUERY FOR SMALL SCREENS */
+/* ==================================== */
+@media (max-width: 600px) {
+    .payment-container {
+        padding: 0; /* Remove outer padding */
+        align-items: flex-start; /* Start content at the top */
+        min-height: auto; /* Allow height to collapse */
+    }
+
+    .payment-card {
+        padding: 20px; /* Reduce padding inside the card */
+        border-radius: 0; /* Remove corner radius for a full-width mobile look */
+        box-shadow: none; /* Remove shadow on mobile for cleaner look */
+        max-width: 100%;
+    }
+    
+    .card-details-row {
+        /* Stack the Expiry and CVV fields vertically on small screens */
+        flex-direction: column;
+        gap: 15px; 
+    }
+    
+    .payment-card h2 {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+    }
+    
+    .method-button {
+        padding: 10px 0; /* Slightly smaller buttons */
+    }
+}

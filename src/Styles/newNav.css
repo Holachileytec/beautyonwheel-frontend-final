@@ -1,0 +1,124 @@
+.cont {
+  background-color: #fff;
+  filter: drop-shadow(2px 2px 10px grey);
+  margin-bottom: 20px;
+  /* position: fixed;
+  width: 100%;
+  z-index: 999;
+  top: 0%; */
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.text {
+  text-align: right;
+  padding: 20px;
+  height: 80px;
+}
+
+.text a {
+  text-decoration: none;
+  padding: 10px;
+  color:#d1307b;
+  font-weight: 600;
+  transition: 0.5s;
+  font-size: 17px;
+}
+.text a:hover {
+  font-size: 20px;
+  transition: 0.5s;
+  color: white;
+  text-shadow: 1px 1px 5px black;
+}
+
+.bookBtn {
+  float: right;
+  margin-left: 40px;
+}
+.bookBtn button {
+  background-color: #d1307b;
+  border: none;
+  padding: 23px;
+}
+.bookBtn button:hover {
+  background-color: white;
+  color: black !important;
+  border: 1px solid black;
+}
+.Dbutin{
+  background-color: #d1307b !important ;
+  border: none !important;
+  border-radius: 3px !important;
+  padding: 10px !important;
+}
+
+/* Media query  */
+/* Extra  Extra Large */
+@media (min-width: 1400px) {
+}
+/* Extra large */
+@media (min-width: 1200px) {
+  
+}
+
+/* Large */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .text a {
+  padding: 10px;
+ 
+  font-size: 15px;
+}
+.text{
+  text-align: center;
+}
+
+
+.book{
+  width: 130px;
+    margin-left: auto;
+  margin-right: auto;
+}
+}
+
+/* Medium */
+@media (min-width: 768px) and (max-width: 991px) {
+    .text a {
+  padding: 8x;
+  font-size: 13px;
+}
+
+.Dbutin{
+  font-size: 10px !important;
+}
+
+}
+/* Small */
+@media (min-width: 576px) and (max-width: 767px) {
+  .text a {
+  padding: 4px;
+  font-size: 11px;
+}
+.text{
+  text-align: center;
+}
+.Dbutin{
+  font-size: 8px !important;
+}
+}
+
+/* EXtra Small */
+@media (min-width: 200px) and (max-width: 575px) {
+    .text a {
+  padding: 4px;
+  font-size: 7px;
+}
+.text{
+  text-align: center;
+}
+.Dbutin{
+  font-size: 6px !important;
+}
+}

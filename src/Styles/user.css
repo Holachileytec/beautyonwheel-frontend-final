@@ -1,0 +1,417 @@
+.user-profile {
+  min-height: 100vh;
+  background: #1a1a1a;
+  color: white;
+  font-family: "Arial", sans-serif;
+  padding: 20px;
+}
+
+/* Header */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.profile-header h1 {
+  color: #d4af37;
+  font-size: 28px;
+}
+
+.notification-bell {
+  position: relative;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.notification-bell:hover {
+  transform: scale(1.1);
+}
+
+.notification-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #d1307b;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Main Content Layout */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Cards Common Styles */
+.user-card,
+.plan-card,
+.appointments-card,
+.notifications-card,
+.beauticians-card,
+.quick-actions {
+  background: #2b2b2b;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border-left: 4px solid #d1307b;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-card:hover,
+.plan-card:hover,
+.appointments-card:hover,
+.notifications-card:hover,
+.beauticians-card:hover,
+.quick-actions:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* User Card */
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  background: #d1307b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+}
+
+.user-info h2 {
+  color: #d4af37;
+  margin-bottom: 5px;
+}
+
+.user-email,
+.user-phone,
+.join-date {
+  color: #ccc;
+  margin-bottom: 5px;
+}
+
+/* Plan Card */
+.plan-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.plan-badge.vip {
+  background: #d4af37;
+  color: black;
+}
+
+.plan-badge.vvip {
+  background: #ffd700;
+  color: black;
+}
+
+.plan-badge.normal {
+  background: #666;
+  color: white;
+}
+
+.benefits-list {
+  margin: 15px 0;
+  padding-left: 20px;
+}
+
+.benefits-list li {
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+.upgrade-btn {
+  background: #d1307b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.upgrade-btn:hover {
+  background: #a0522d;
+  transform: translateY(-2px);
+}
+
+/* Appointments */
+.appointment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #333;
+}
+
+.appointment-item:last-child {
+  border-bottom: none;
+}
+
+.appointment-info h4 {
+  color: #d4af37;
+  margin-bottom: 5px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-badge.confirmed {
+  background: #4caf50;
+  color: white;
+}
+
+.status-badge.pending {
+  background: #ff9800;
+  color: black;
+}
+
+.book-btn {
+  background: transparent;
+  color: #d4af37;
+  border: 2px solid #d4af37;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.book-btn:hover {
+  background: #d4af37;
+  color: black;
+}
+
+/* Notifications */
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.unread-count {
+  background: #d1307b;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px 0;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background: #333;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.notification-item.unread {
+  background: #333;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.notification-message {
+  color: #ccc;
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.notification-time {
+  color: #888;
+  font-size: 12px;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  background: #d1307b;
+  border-radius: 50%;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* Beauticians */
+.beautician-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #333;
+}
+
+.beautician-item:last-child {
+  border-bottom: none;
+}
+
+.beautician-avatar {
+  width: 50px;
+  height: 50px;
+  background: #d1307b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.beautician-info h4 {
+  color: #d4af37;
+  margin-bottom: 5px;
+}
+
+.specialty {
+  color: #ccc;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.beautician-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: #888;
+}
+
+.status.available {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.status.busy {
+  color: #f44336;
+  font-weight: bold;
+}
+
+/* Quick Actions */
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.action-btn {
+  background: #333;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.action-btn a {
+  text-decoration: none !important;
+  color: white !important;
+}
+
+.action-btn:hover {
+  background: #d1307b;
+  color: white;
+  border-color: #d1307b;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .user-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+  .action-btn a {
+    text-decoration: none !important;
+    color: white !important;
+  }
+
+  .appointment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .beautician-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}
+
+.user-card,
+.plan-card,
+.appointments-card,
+.notifications-card,
+.beauticians-card,
+.quick-actions {
+  animation: fadeIn 0.6s ease;
+}
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

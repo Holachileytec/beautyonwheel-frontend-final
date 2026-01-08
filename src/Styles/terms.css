@@ -1,0 +1,39 @@
+.terms-container {
+  width: 100vw;
+  /* height: 100vh; */
+}
+.terms-Wrapper {
+  border: 2px solid gray;
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 60vw;
+  /* height: 100vh; */
+  margin: auto;
+  padding: 7px;
+  margin-bottom: 10px;
+}
+.tc {
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  font-size: 2rem;
+  color: #d1307b;
+  font-weight: bold;
+  text-align: center;
+}
+.ourService h2 {
+  text-align: center;
+  font-size: 1rem;
+  color: #d1307b;
+  font-weight: bold;
+  margin-top: 2.5rem;
+}
+.ourService p {
+  display: flex;
+  justify-self: center;
+  /* width: 60rem; */
+  line-height: 2rem;
+  font-size: 1rem;
+  color: black;
+}

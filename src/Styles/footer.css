@@ -29,7 +29,7 @@
 
 .footerHeadText {
   font-size: 20px;
-  color: rgb(224, 74, 74);
+  color: #d1307b;
   margin-top: 1rem;
 }
 
@@ -40,7 +40,7 @@
 }
 
 .footerSlogan:hover {
-  color: brown;
+  color: #d1307b;
 }
 
 /* Column sections */
@@ -66,7 +66,7 @@
 .what_we_do h1,
 .who_we_serve h1,
 .where_we_are h1 {
-  color: rgb(224, 74, 74);
+  color: #d1307b;
 
   margin-bottom: 1rem;
   position: relative;
@@ -106,7 +106,7 @@
 .company a:hover,
 .what_we_do a:hover,
 .where_we_are a:hover {
-  color: brown;
+  color: #d1307b;
   transform: translateX(5px);
 }
 .foot {

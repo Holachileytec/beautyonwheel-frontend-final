@@ -42,6 +42,7 @@ function Carousel() {
               </p>
             }
             btnTxt="About Us "
+            goSomewhere="/aboutus"
           />
         </SwiperSlide>
         <SwiperSlide>

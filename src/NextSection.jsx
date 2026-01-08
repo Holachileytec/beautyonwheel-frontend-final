@@ -16,10 +16,10 @@ function NextSection() {
               services for the beauty of your nails
             </h3>
             <p>
-              Vestibulum congue, sapien a sollicitudin euismod, lorem ex auctor
-              arcu, eget convallis mauris nisl sagittis dui. Ut nec laoreet
-              ante. Duis ultricies congue libero, et accumsan purus malesuada
-              aptent taciti.
+              Step into our creative manicure and pedicure studio, where artistry
+               and precision come together to transform your nails into a
+                masterpiece. With expert technicians dedicated to delivering top-tier
+               services. From stunning designs to flawless finishes
             </p>
             <div className="d-flex">
               <div className="d-flex amt">

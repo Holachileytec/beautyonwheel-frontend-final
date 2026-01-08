@@ -12,10 +12,11 @@ import {
   NavbarToggle,
 } from "react-bootstrap";
 import Offacnvas from "./Offacnvas";
-import Logo from "./assets/react.svg";
+import Logo from "./assets/makeup-logo.png";
 import Accod from "./Accod";
 
 import { FaPhone } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 function NavBar() {
   const [show, setShow] = useState(false);
@@ -46,7 +47,7 @@ function NavBar() {
             <div>
               <FaUser />
               <p>
-                <a href="">login</a>
+                <a href="/login">login</a>
               </p>
             </div>
 
@@ -71,7 +72,7 @@ function NavBar() {
             }}
             className="brnd"
           >
-            <Navbar.Brand href="#">
+            <Navbar.Brand href="/">
               <img src={Logo} alt="BOW" width="70px" height="70px" />
             </Navbar.Brand>
 
@@ -90,23 +91,23 @@ function NavBar() {
               style={{ maxHeight: "500px" }}
               navbarScroll
             >
-              <Nav.Link href="#">Home</Nav.Link>
+              <Nav.Link href="/">Home</Nav.Link>
 
               <NavDropdown title="Services" id="navbarScrollingDropdown">
-                <NavDropdown.Item href="#masge">Massage</NavDropdown.Item>
+                <NavDropdown.Item href="/#masge">Massage</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#nils">Nails</NavDropdown.Item>
+                <NavDropdown.Item href="/#nils">Nails</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#mnicure">Manicure</NavDropdown.Item>
+                <NavDropdown.Item href="/#mnicure">Manicure</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#pdicure">Pedicure</NavDropdown.Item>
+                <NavDropdown.Item href="/#pdicure">Pedicure</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#mkup">Makeup</NavDropdown.Item>
+                <NavDropdown.Item href="/#mkup">Makeup</NavDropdown.Item>
               </NavDropdown>
-              <Nav.Link href="#">Blog</Nav.Link>
+              <Nav.Link href="/blog">Blog</Nav.Link>
 
               <Nav.Link href="#">About Us</Nav.Link>
-              <Nav.Link href="#"> Payments </Nav.Link>
+              <Nav.Link href="/payment"> Payments </Nav.Link>
             </Nav>
           </Col>
           <Col
@@ -129,9 +130,11 @@ function NavBar() {
               <a href="tel:+234-456-46545"> +234-456-46545</a>
             </div>
             <div className="BN BNC">
-              <Button style={{ alignItems: "center" }}>
-                Book Now <FaArrowRight />
-              </Button>
+              <Link to="/bookASession">
+                <Button style={{ alignItems: "center" }}>
+                  Book Now <FaArrowRight />
+                </Button>
+              </Link>
             </div>
           </Col>
         </Row>

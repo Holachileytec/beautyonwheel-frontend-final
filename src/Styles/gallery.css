@@ -1,0 +1,10 @@
+.images{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+    
+}
+.images img{
+    border-radius: 10px;
+    max-width: 300px;
+}

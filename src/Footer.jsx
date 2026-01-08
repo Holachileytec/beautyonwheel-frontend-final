@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./Styles/footer.css";
-import logo from "./assets/react.svg";
+import logo from "./assets/makeup-logo.png";
 import { Row, Col } from "react-bootstrap";
 import {
   FaPhoneAlt,
@@ -58,22 +58,22 @@ function Footer() {
           <Col>
             <div className="company">
               <h1>Company</h1>
-              <a href="">Gallery</a>
+              <a href="/gallery">Gallery</a>
               <a href="/contact">Contact Us</a>
-              <a href="/LandPage">Terms/Condition</a>
+              <a href="/termsandconditions">Terms & Condition</a>
               <a href="/Privacy">Privacy</a>
 
-              <a href="Sign Up">Join us</a>
+              <a href="/signup">Join us</a>
             </div>
           </Col>
           <Col>
             <div className="what_we_do">
               <h1 className="wwdH1">What We Do</h1>
               <p className="wwdNav d-flex flex-column">
-                <a href="#">MakeUp</a>
-                <a href="#">Pedicure</a>
-                <a href="#">Manicure</a>
-                <a href="#">Massage</a>
+                <a href="/makeup">MakeUp</a>
+                <a href="/pedicure">Pedicure</a>
+                <a href="/manicure">Manicure</a>
+                <a href="/massage">Massage</a>
               </p>
             </div>
           </Col>
