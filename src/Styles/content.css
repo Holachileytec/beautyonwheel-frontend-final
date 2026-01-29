@@ -15,8 +15,29 @@
 
 
 
+.frm button{
+background-color: #d1307b;
+border: none;
+width:100%;
+padding:10px;
+transition: 1s;
+}
+.frm button:hover{
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+  transition: 1s;
+  transform: translateY(30%);
+}
 
-
+.frm .e{
+  margin: 20px;
+}
+.frm .e label{
+  padding-left: 10px;
+  font-weight: 600;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
 
 /* Media query  */
 /* Extra  Extra Large */
