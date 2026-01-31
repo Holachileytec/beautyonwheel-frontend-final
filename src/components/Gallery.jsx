@@ -1,4 +1,5 @@
 import React from "react"
+import { useEffect, useState } from "react"
 import "../Styles/gallery.css"
 function Gallery() {
 const [image,setImage]=useState([])

@@ -23,7 +23,7 @@ function Footer() {
           observer.unobserve(el);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
     if (el) observer.observe(el);
   }, []);
@@ -110,33 +110,31 @@ function Footer() {
                     <FaWhatsapp />
                   </p>
                 </a>
-                <a href="">
+                <a href="https://www.facebook.com/share/1AfAswee3B/">
                   <p className="icon facebook">
-                  <FaFacebookF />
-                </p>
+                    <FaFacebookF />
+                  </p>
                 </a>
                 <a href="">
                   <p className="icon twitter">
-                  <FaTwitter />
-                </p>
+                    <FaTwitter />
+                  </p>
                 </a>
                 <a href="">
                   <p className="icon youtube">
-                  <FaYoutube />
-                </p>
+                    <FaYoutube />
+                  </p>
+                </a> 
+                <a href="https://www.instagram.com/beautyonwheel012?igsh=c3k4OGt2bDkycGhy">
+                  <p className="icon insta">
+                    <FaInstagram />
+                  </p>
                 </a>
-                <a href="">
-                   <p className="icon insta">
-                  <FaInstagram />
-                </p>
-                </a>
-                <a href="">
+                <a href="https://www.tiktok.com/@beautyonwheel?_r=1&_t=ZS-92u5AGaSaXJ">
                   <p className="icon tiktok">
-                  <FaTiktok />
-                </p>
+                    <FaTiktok />
+                  </p>
                 </a>
-
-
               </div>
             </div>
           </Col>

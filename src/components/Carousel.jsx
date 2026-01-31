@@ -4,46 +4,44 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import makeupH from "../assets/makeupH.jpg";
 import maniH from "../assets/maniH.jpg";
 import pedicH from "../assets/pedicH.jpg";
-import Testing from "../assets/myTest.png";
+import imageE from "../assets/imageE.jpg";
 import braid from "../assets/braid.jpg";
 import massage from "../assets/massH.jpg";
 import "../Styles/carousel.css";
 
 // import required modules
-import { Pagination } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 import { Button } from "react-bootstrap";
 import { FaArrowRight } from "react-icons/fa";
 import SwipeContent from "./SwipeContent";
-const delay = { delay: 1000 };
+// const delay = { delay: 1000 };
 
 function Carousel() {
   return (
     <>
       <Swiper
-        direction={"vertical"}
+        direction={"horizontal"}
         pagination={{
           clickable: true,
         }}
         autoplay={{
-          delay: 1000,
+          delay: 4000,
+          disableOnInteraction: false,
+          reverseDirection: true,
         }}
-        modules={[Pagination]}
+        loop={true}
+        modules={[Pagination, Autoplay]}
         className="mySwiper"
       >
         <SwiperSlide>
           <SwipeContent
-            Testing={Testing}
-            bigTxt={
-              <span style={{ marginLeft: "150px" }} className="bigT">
-                {" "}
-                Our Team
-              </span>
-            }
+            Testing={imageE}
+            bigTxt={<span className="bigT"> Our Team</span>}
             smllTxt={
               <p>
                 BeautyOnWheel is powered by a dynamic team focused on delivering
                 convenient, high-quality beauty services directly to our clients{" "}
-                {/* <br />
+                <br />
                 Founder & CEO Provides overall vision, business strategy,
                 partnerships, and brand direction. Oversees growth and ensures
                 the company stays aligned with its mission.
@@ -76,22 +74,17 @@ function Carousel() {
                 notifications), and data security <br />
                 legal & Compliance Advisor Ensures all operations comply with
                 local regulations, handles contracts, and manages liability
-                issues. */}
+                issues.
               </p>
             }
             btnTxt="About Us "
-            goSomewhere="/aboutus"
+            goSomewhere="/about.jsx"
           />
         </SwiperSlide>
         <SwiperSlide>
           <SwipeContent
             Testing={massage}
-            bigTxt={
-              <span style={{ marginLeft: "150px" }} className="bigT">
-                {" "}
-                Massage
-              </span>
-            }
+            bigTxt={<span className="bigT"> Massage</span>}
             smllTxt={
               <p>
                 Massage Therapy Our professional massage service is designed to
@@ -109,31 +102,7 @@ function Carousel() {
         <SwiperSlide>
           <SwipeContent
             Testing={braid}
-            bigTxt={
-              <span style={{ marginLeft: "320px" }} className="bigT">
-                {" "}
-                Hair Styling
-              </span>
-            }
-            smllTxt={
-              <p style={{marginLeft: "220px", textAlign: "justify"}}>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Assumenda a laboriosam, dignissimos <br /> officia accusamus quo
-                distinctio facilis quam
-              </p>
-            } 
-            btnTxt="Shop Now "
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <SwipeContent
-            Testing={maniH}
-            bigTxt={
-              <span style={{ marginLeft: "150px" }} className="bigT">
-                {" "}
-                Manicure
-              </span>
-            }
+            bigTxt={<span className="bigT"> Hair Styling</span>}
             smllTxt={
               <p>
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -146,12 +115,22 @@ function Carousel() {
         </SwiperSlide>
         <SwiperSlide>
           <SwipeContent
-            Testing={pedicH}
-            bigTxt={
-              <span style={{ marginLeft: "150px" }} className="bigT">
-                Pedicure
-              </span>
+            Testing={maniH}
+            bigTxt={<span className="bigT"> Manicure</span>}
+            smllTxt={
+              <p>
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Assumenda a laboriosam, dignissimos <br /> officia accusamus quo
+                distinctio facilis qu
+              </p>
             }
+            btnTxt="Shop Now "
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <SwipeContent
+            Testing={pedicH}
+            bigTxt={<span className="bigT">Pedicure</span>}
             smllTxt={
               <p>
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -165,12 +144,7 @@ function Carousel() {
         <SwiperSlide>
           <SwipeContent
             Testing={makeupH}
-            bigTxt={
-              <span style={{ marginLeft: "150px" }} className="bigT">
-                {" "}
-                MakeUp
-              </span>
-            }
+            bigTxt={<span className="bigT"> MakeUp</span>}
             smllTxt={
               <p>
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
