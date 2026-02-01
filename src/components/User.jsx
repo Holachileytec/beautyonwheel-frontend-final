@@ -130,6 +130,7 @@ getAllNotifs()
       notifications.map((notif) =>
         notif.id === id ? { ...notif, isRead: true } : notif
       )
+      
     );
   };
   

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import "../Styles/paymentSuccess.css";
 
 const PaymentSuccess = () => {
     const [searchParams] = useSearchParams();
@@ -19,7 +20,7 @@ const PaymentSuccess = () => {
     const verify = async () => {
         try {
             const token = localStorage.getItem("token")
-            // 2. Call your verify API
+         
             const res = await axios.get(`http://localhost:8000/api/paystack/verify/${reference}`,{
                 headers:{
                     Authorization:`Bearer ${token}`
@@ -31,12 +32,13 @@ const PaymentSuccess = () => {
                 setStatus("failed");
             }
         } catch (err) {
-            setStatus("failed");
+            setStatus("failed")
+            console.error("An error occurred during verification:", err);
         }
     };
 
     return (
-        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+        <div style={{ textAlign: 'center', marginTop: '50px' }} className='successPg'>
             {status === "verifying" && <h2>Verifying your payment... Please wait.</h2>}
             
             {status === "success" && (

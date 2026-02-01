@@ -54,13 +54,6 @@ function Carousel() {
                 customer support team, vendor management, and quality control to
                 ensure seamless on-the-go service delivery.
                 <br />
-                Beauty Professionals (Service Team) Certified makeup artists,
-                hairstylists, nail technicians, massage therapists, and skincare
-                specialists who deliver professional services to clients. <br />
-                Customer Support Team Provides client assistance, handles
-                inquiries, manages bookings, and ensures a positive customer
-                experience.
-                <br />
                 Marketing & Sales Team Develops marketing strategies, manages
                 social media, drives customer acquisition, and builds brand
                 awareness.
@@ -105,9 +98,10 @@ function Carousel() {
             bigTxt={<span className="bigT"> Hair Styling</span>}
             smllTxt={
               <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Assumenda a laboriosam, dignissimos <br /> officia accusamus quo
-                distinctio facilis quam
+                Transform your look with stylish, neatly done hairstyles suited
+                for any occasion. <br />
+                We create looks that complement your features and reflect your
+                unique personality, tailored to your preference.
               </p>
             }
             btnTxt="Shop Now "
@@ -119,9 +113,9 @@ function Carousel() {
             bigTxt={<span className="bigT"> Manicure</span>}
             smllTxt={
               <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Assumenda a laboriosam, dignissimos <br /> officia accusamus quo
-                distinctio facilis qu
+                Keep your hands looking polished and elegant with our manicure
+                services, <br />
+                combining nail care and shaping for a neat, refined look
               </p>
             }
             btnTxt="Shop Now "
@@ -133,9 +127,9 @@ function Carousel() {
             bigTxt={<span className="bigT">Pedicure</span>}
             smllTxt={
               <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Assumenda a laboriosam, dignissimos <br /> officia accusamus quo
-                distinctio facilis quam
+                Treat your feet to expert care with our refreshing pedicure
+                services designed to cleanse, <br /> nourish, and leave your
+                feet smooth, healthy, and beautifully finished.
               </p>
             }
             btnTxt="Shop Now "
@@ -147,9 +141,10 @@ function Carousel() {
             bigTxt={<span className="bigT"> MakeUp</span>}
             smllTxt={
               <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Assumenda a laboriosam, dignissimos <br /> officia accusamus quo
-                distinctio facilis quam
+                Enhance your natural beauty with professional makeup tailored to
+                your skin tone, occasion, <br />
+                and personal style. From soft everyday looks to full glam, we
+                deliver flawless results.
               </p>
             }
             btnTxt="Shop Now "

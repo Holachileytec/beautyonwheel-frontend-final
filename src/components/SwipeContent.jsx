@@ -27,6 +27,8 @@ function SwipeContent({ Testing, bigTxt, smllTxt, btnTxt, goSomewhere }) {
           color: "white",
           width: "100%",
           textAlign: "center",
+          fontSize: "25px",
+          
         }}
         className="biS"
       >
