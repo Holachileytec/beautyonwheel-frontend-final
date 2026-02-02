@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../Styles/user.css";
 import { Link } from "react-router-dom";
 import { FaTelegram } from "react-icons/fa"
-import axios from "axios";
+import api from "../config/api";
 import { useNavigate } from "react-router-dom"
 
 
@@ -51,11 +51,7 @@ const dataToUpdate = {};
   }
 
 try {
-const res= await axios.put(`http://localhost:8000/api/users/${user._id}`, dataToUpdate,{
-headers:{
-  Authorization:`Bearer ${token}`
-}
-})
+const res= await api.put(`/api/users/${user._id}`, dataToUpdate)
 setUpdateMessage(res.data.message ||"Update Successful")
 if(res.data.user){
   setUserInfo(res.data.user)
@@ -83,11 +79,7 @@ setFormData({name:"",phone:""})
     console.log("User not authenticated")
     return;
   }
-axios.get(`http://localhost:8000/api/users/${user._id}`,{
-  headers:{
-    Authorization:`Bearer ${token}`
-  }
-})
+api.get(`/api/users/${user._id}`)
 .then(res =>{
   setUserInfo(res.data.user);
 })
@@ -102,7 +94,7 @@ getBeauticians()
 
   const getBeauticians=async()=>{
 try{
-const res= await axios.get(`http://localhost:8000/api/beauticians/allbeauticians`)
+const res= await api.get(`/api/beauticians/allbeauticians`)
 console.log(res.data.beauticians)
 setBeauticians(res.data.beauticians)
 }catch(err){
@@ -110,13 +102,12 @@ console.error("Error getting beauticians", err)
 setBeauticians([])
 }
   }
-  console.log(userInfo.membership.type)
 useEffect(()=>{
   
 const getAllNotifs = async ()=>{
  try{
-   const res = await axios.get("http://localhost:8000/notifications")
-  setNotifications(res.data.notifications)
+   const res = await api.get("/notifications")
+  setNotifications(res.data.notifications || [])
   console.log(res.data)
  }catch(error){
 console.log("an error occured",error)

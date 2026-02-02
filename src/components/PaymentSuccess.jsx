@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api';
 import "../Styles/paymentSuccess.css";
 
 const PaymentSuccess = () => {
@@ -19,13 +19,7 @@ const PaymentSuccess = () => {
 
     const verify = async () => {
         try {
-            const token = localStorage.getItem("token")
-         
-            const res = await axios.get(`http://localhost:8000/api/paystack/verify/${reference}`,{
-                headers:{
-                    Authorization:`Bearer ${token}`
-                }
-            });
+            const res = await api.get(`/api/paystack/verify/${reference}`);
             if (res.data.success) {
                 setStatus("success");
             } else {

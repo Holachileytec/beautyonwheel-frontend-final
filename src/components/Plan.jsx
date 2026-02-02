@@ -15,7 +15,7 @@ import make11 from "../assets/imageIL.jpg";
 import make12 from "../assets/imagenil.jpg"; // change for nails
 import { Button, ListGroup } from "react-bootstrap";
 import "../Styles/content.css";
-import axios from "axios";
+import api from "../config/api";
 
 const Plan = () => {
   const [activeTab, setActiveTab] = useState("makeup");
@@ -27,7 +27,7 @@ const Plan = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/plan/allPlans");
+        const res = await api.get("/api/plan/allPlans");
         setPlans(res.data.plans);
         console.log("The data is:" + res.data);
       } catch (err) {
@@ -62,16 +62,10 @@ const Plan = () => {
   };
   const initilaizePay = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/paystack/initialize",
-        initializePaymentData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+      const res = await api.post(
+        "/api/paystack/initialize",
+        initializePaymentData
       );
       const { authorization_url } = res.data.data;
       if (authorization_url) {

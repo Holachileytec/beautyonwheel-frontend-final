@@ -27,8 +27,7 @@ function SwipeContent({ Testing, bigTxt, smllTxt, btnTxt, goSomewhere }) {
           color: "white",
           width: "100%",
           textAlign: "center",
-          fontSize: "25px",
-          
+          fontSize: "20px",
         }}
         className="biS"
       >
@@ -40,7 +39,7 @@ function SwipeContent({ Testing, bigTxt, smllTxt, btnTxt, goSomewhere }) {
           <Button
             style={{
               position: "absolute",
-              top: "65%",
+              top: "70%",
 
               left: "45%",
             }}

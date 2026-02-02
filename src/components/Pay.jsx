@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../Styles/pay.css";
-import axios from "axios";
+import api from "../config/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Pay() {
@@ -38,10 +38,7 @@ const [service,setService]=useState([])
     }
   console.log("Booking Details:", bookingData);
     try{
-    const token = localStorage.getItem("token")
-    const response = await axios.post(`http://localhost:8000/api/bookings/create`, bookingData,{
-   headers:{Authorization:`Bearer ${token}`}
-    })
+    const response = await api.post(`/api/bookings/create`, bookingData)
     alert("Booking Successful")
     const selected = service.find((item)=>{
      return item._id === bookingData.service
@@ -58,9 +55,7 @@ setLoading(false)
    useEffect(()=>{
     const fetchBeauticians=async()=>{
       try{
-        const res = await axios.get(`http://localhost:8000/api/beauticians/allbeauticians`, 
-          
-        )
+        const res = await api.get(`/api/beauticians/allbeauticians`)
         setBeauticians(res.data.beauticians)
       }catch(err){
       console.log("Failed to fetch beauticians", err)
@@ -70,7 +65,7 @@ setLoading(false)
 
     const fetchServices= async()=>{
       try{
-        const res = await axios.get(`http://localhost:8000/api/services/all`)
+        const res = await api.get(`/api/services/all`)
         setService(res?.data)
         console.log(res.data,"the console info")
       }catch(err){

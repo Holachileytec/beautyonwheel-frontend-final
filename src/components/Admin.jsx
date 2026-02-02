@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../Styles/admin.css";
-import axios from "axios"
+import api from "../config/api";
 import AModal from "./AModal";
 const Admin = () => {
   const [createServiceFormData, setCreateServiceFormData] = useState({
@@ -40,11 +40,7 @@ const Admin = () => {
 // Update User
 const UpdateUser= async({id})=>{
   try{
-    const res= await axios.put(`http://localhost:8000/api/users/userUpdate/${id}`,updateData1,{
-      headers:{
-        Authorization:`Bearer ${token}`
-      }
-    })
+    const res= await api.put(`/api/users/userUpdate/${id}`,updateData1)
     setUserUpdate(res.data)
     console.log("checking:",res.data)
     alert("User Updated Successfully")
@@ -59,11 +55,7 @@ const updateData2 ={
 }
 const UpdatePlan= async({id})=>{
   try{
-    const res= await axios.put(`http://localhost:8000/api/plan/update/${id}`,updateData2,{
-      headers:{
-        Authorization:`Bearer ${token}`
-      }
-    })
+    const res= await api.put(`/api/plan/update/${id}`,updateData2)
     setPlanUpdate(res.data)
     console.log("checking:",res.data)
     alert("Plan Updated Successfully")
@@ -78,13 +70,8 @@ const updateData3 ={
   description:serviceUpdate.description
 }
 const updateService = async({id})=>{
-  const token = localStorage.getItem("token")
   try{
-    const res = await axios.put(`http://localhost:8000/api/services/updateServ/${id}`,updateData3,{
-      headers:{
-        Authorization:`Bearer ${token}`
-      }
-    })
+    const res = await api.put(`/api/services/updateServ/${id}`,updateData3)
     setServiceUpdate(res.data)
     alert("Service updated successfully!")
 
@@ -100,7 +87,7 @@ const updateData4={
 }
 const updateServiceType = async ({id})=>{
   try{
-    const res = await axios.put(`http://localhost:8000/api/subservices/update/${id}`,updateData4)
+    const res = await api.put(`/api/subservices/update/${id}`,updateData4)
     setServiceTUpdate(res.data)
     alert("Service Type updated successfully!")
 
@@ -119,6 +106,7 @@ const updateServiceType = async ({id})=>{
   const [service, setService] = useState([])
   const [subServices, setSubServices] = useState([])
   const [beauticians, setBeauticians] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState({
     name: "",
     price: ""
@@ -149,7 +137,7 @@ const updateServiceType = async ({id})=>{
     const fetchPlans = async () => {
 
       try {
-        const res = await axios.get("http://localhost:8000/api/plan/allPlans")
+        const res = await api.get("/api/plan/allPlans")
         setPlans(res.data.plans)
         console.log("The data is:" + res.data)
       } catch (err) {
@@ -158,7 +146,7 @@ const updateServiceType = async ({id})=>{
     }
     const fetchServices = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/services/all`)
+        const res = await api.get(`/api/services/all`)
         setService(res?.data)
       } catch (err) {
         console.log("An error occured", err)
@@ -167,7 +155,7 @@ const updateServiceType = async ({id})=>{
     }
     const getAllSubServices = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/subservices/allService");
+        const res = await api.get("/api/subservices/allService");
         // Ensure we are setting an array even if data is missing
         setSubServices(res?.data?.allService || []);
         console.log(res.data.allService)
@@ -180,7 +168,7 @@ const updateServiceType = async ({id})=>{
     };
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/users/getAllUsers");
+        const res = await api.get("/api/users/getAllUsers");
         setUsers(res.data.users);
       } catch (error) {
         console.log("Error fetching users:", error);
@@ -189,7 +177,7 @@ const updateServiceType = async ({id})=>{
 
     const fetchBookings = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/bookings/all");
+        const res = await api.get("/api/bookings/all");
         setBookings(res.data.bookings)
       } catch (error) {
         console.log("An error occured", error);
@@ -198,7 +186,7 @@ const updateServiceType = async ({id})=>{
 
     const fetchBeauticians = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/beauticians/allbeauticians")
+        const res = await api.get("/api/beauticians/allbeauticians")
         setBeauticians(res.data.beauticians)
       } catch (err) {
         console.log("An Error Occured", err)
@@ -231,7 +219,7 @@ const updateServiceType = async ({id})=>{
   // adding a new service
   const addService = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/api/services/create", createServiceData
+      const res = await api.post("/api/services/create", createServiceData
 
       )
       setCreateServiceMessage(res?.data?.message || "Service Added Successfully")
@@ -248,7 +236,7 @@ const updateServiceType = async ({id})=>{
 
   const addPlan = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/api/plan/addplan", addPData)
+      const res = await api.post("/api/plan/addplan", addPData)
       setPlan(res?.data?.savedPlan)
       setPlanMessage("Plan added successfully" || res?.data?.message)
       console.log('for debugs:' + res?.data)
@@ -259,7 +247,7 @@ const updateServiceType = async ({id})=>{
   }
   const deletePlan = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:8000/api/plan/${id}`)
+      const res = await api.delete(`/api/plan/${id}`)
       setPlans(plans.filter(p => p._id !== id));
       alert("Plan Deleted Successfully" || res?.data?.messsage)
     } catch (err) {
@@ -269,7 +257,7 @@ const updateServiceType = async ({id})=>{
   }
   const deleteServ = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:8000/api/services/delete/${id}`)
+      const res = await api.delete(`/api/services/delete/${id}`)
       alert("Service Deleted Successfully" || res?.data?.messsage)
     } catch (err) {
       alert("Service not Deleted Successfully" || err?.response?.data?.message)
@@ -278,7 +266,7 @@ const updateServiceType = async ({id})=>{
   }
   const deleteSubServ = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:8000/api/subservices/delete/${id}`)
+      const res = await api.delete(`/api/subservices/delete/${id}`)
       alert("SubService Deleted Successfully" || res?.data?.messsage)
     } catch (err) {
       alert("SubService not Deleted Successfully" || err?.response?.data?.message)
@@ -288,7 +276,7 @@ const updateServiceType = async ({id})=>{
 
   const deleteBeautician = async (id)=>{
     try{
-      const res = await axios.delete(`http://localhost:8000/api/beauticians/delete/${id}`)
+      const res = await api.delete(`/api/beauticians/delete/${id}`)
       alert("Beautician Deleted Successfully!")
     }catch(error){
       alert("Beautician not deleted!, An error occured.")
@@ -298,7 +286,7 @@ const updateServiceType = async ({id})=>{
 
   const deleteUser = async(id)=>{
     try{
-      const res = await axios.delete(`http://localhost:8000/api/users/delete/${id}`)
+      const res = await api.delete(`/api/users/delete/${id}`)
       alert('User Deleted Successfully')
     }catch(err){
       alert(err?.response?.data?.message || "User could not be deleted")
@@ -315,7 +303,7 @@ const updateServiceType = async ({id})=>{
   }
   const addServiceType = async () => {
     try {
-      const res = await axios.post(`http://localhost:8000/api/subservices/addService`, serviceTypeData)
+      const res = await api.post(`/api/subservices/addService`, serviceTypeData)
       setAddServiceTypeMessage(res?.data?.message || "Subservice Added Sucessfully")
     } catch (error) {
       setAddServiceTypeMessage(error.response?.data?.message || "An Error occured while Adding Subservice")

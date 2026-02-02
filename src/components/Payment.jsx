@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import "../Styles/payment.css";
 import { useLocation } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ const Payment = () => {
     
     const getAllSubServices = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/subservices/allService");
+        const res = await api.get("/api/subservices/allService");
         // Ensure we are setting an array even if data is missing
         setSubServices(res?.data?.allService || []);
         console.log(res.data.allService)
@@ -65,15 +65,8 @@ console.log(subServices,"hey here i am")
     paymentType:"booking"
   }
  const handleSubmitAndPay = async () => {
-  const token = localStorage.getItem("token")
     try {
-      const res = await axios.post("http://localhost:8000/api/paystack/initialize", initializePaymentData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      )
+      const res = await api.post("/api/paystack/initialize", initializePaymentData)
       const { authorization_url } = res.data.data
       if (authorization_url) {
         window.location.href = authorization_url;

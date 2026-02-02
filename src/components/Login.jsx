@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../Styles/Login.css";
-import axios from "axios";
+import api from "../config/api";
 import { useNavigate } from "react-router-dom"
 const Login = () => {
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ const Login = () => {
 
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8000/api/users/login", {
+const res = await api.post("/api/users/login", {
         email,
         password,
       });

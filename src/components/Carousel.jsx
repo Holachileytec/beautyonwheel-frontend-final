@@ -39,35 +39,24 @@ function Carousel() {
             bigTxt={<span className="bigT"> Our Team</span>}
             smllTxt={
               <p>
-                BeautyOnWheel is powered by a dynamic team focused on delivering
-                convenient, high-quality beauty services directly to our clients{" "}
+                BeautyOnWheel - Team Structure Company Overview:
                 <br />
-                Founder & CEO Provides overall vision, business strategy,
-                partnerships, and brand direction. Oversees growth and ensures
-                the company stays aligned with its mission.
+                BeautyOnWheel delivers convenient, high-quality mobile beauty
+                services directly to clients. <br />
+                Founder & CEO - Vision, strategy, partnerships, brand direction,
+                and growth oversight. <br /> Project Manager - Daily operations
+                coordination, timeline management, service execution
                 <br />
-                Project Manager Coordinates daily operations, manages timelines,
-                and ensures smooth execution of services and projects from
-                planning to delivery.
-                <br />
-                Operations Manager Handles service logistics, supervises
-                customer support team, vendor management, and quality control to
-                ensure seamless on-the-go service delivery.
-                <br />
-                Marketing & Sales Team Develops marketing strategies, manages
-                social media, drives customer acquisition, and builds brand
-                awareness.
-                <br />
-                Director of creativity Oversees all creative aspects including
-                beauty shows and events to ensure brand consistency and high
-                standards.
-                <br />
-                Technical / IT Support (Web & App) Manages the booking platform,
-                website, backend systems, integrations (e.g., Google sign-in,
-                notifications), and data security <br />
-                legal & Compliance Advisor Ensures all operations comply with
-                local regulations, handles contracts, and manages liability
-                issues.
+                Operations Manager - Service logistics, customer support, vendor
+                management, quality control <br />
+                Marketing & Sales Team - Marketing strategies, social media,
+                customer acquisition, brand awareness <br /> Director of
+                Creativity - Creative oversight for beauty shows, events, and
+                brand consistency
+                <br /> Technical/IT Support- Booking platform, website, backend
+                systems, integrations, data security
+                <br /> Legal & Compliance Advisor- Regulatory compliance,
+                contracts, liability management
               </p>
             }
             btnTxt="About Us "

@@ -1,5 +1,6 @@
 import React from "react"
 import { useEffect, useState } from "react"
+import api from "../config/api"
 import "../Styles/gallery.css"
 function Gallery() {
 const [image,setImage]=useState([])
@@ -7,10 +8,11 @@ const [image,setImage]=useState([])
 useEffect(()=>{
 const getAllImages=async()=>{
     try{
-        const res = await axios.get("http://localhost:8000/api/gallery/all-items")
-        setImage(res.data.galleryItems)
+        const res = await api.get("/api/gallery/all-items")
+        setImage(res.data.galleryItems || [])
     }catch(err){
         console.log("An error occured", err)
+        setImage([])
     }
 }
 getAllImages()

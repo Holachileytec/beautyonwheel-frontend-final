@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../Styles/user.css";
 import { Link } from "react-router-dom";
 import { FaTelegram } from "react-icons/fa"
-import axios from "axios";
+import api from "../config/api";
 
 const BeauticianProfile = () => {
   const [updateMessage,setUpdateMessage]=useState("")
@@ -37,12 +37,8 @@ if(!user || !user._id || !token){
 }
 
 try{
-  const res=await axios.put(
-    `http://localhost:8000/api/beauticians/profile-update`, formData,{
-      headers:{
-        Authorization:`Bearer ${token}`
-      }
-    }
+  const res=await api.put(
+    `/api/beauticians/profile-update`, formData
   );
   setUpdateMessage(res.data.message || "Update Successful")
   setBeauticianInfo(res.data.beautician)
@@ -69,11 +65,7 @@ const handleChange = (e) => {
         console.log("User not authenticated")
         return;
       }
-    axios.get(`http://localhost:8000/api/beauticians/${user._id}`,{
-      headers:{
-        Authorization:`Bearer ${token}`
-      }
-    })
+    api.get(`/api/beauticians/${user._id}`)
     .then(res =>{
       console.log(res.data)
       setBeauticianInfo(res.data.beautician);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../Styles/Register.css";
 import "../Styles/navbar.css";
-import axios from "axios";
+import api from "../config/api";
 // Make sure to add a beauty-related image to your project
 import beautyImage from "../assets/nil.jpg"; // You'll need to add this image
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8000/api/users/signup", 
+const res = await api.post("/api/users/signup", 
         formData,
       );
       setMessage(res.data.message || "Registration Successful !");
