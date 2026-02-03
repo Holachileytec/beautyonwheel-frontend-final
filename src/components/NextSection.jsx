@@ -11,15 +11,15 @@ function NextSection() {
       <Row style={{ margin: "40px" }} className="nextR">
         <Col style={{ padding: "20px" }}>
           <div>
-            <h3>
-              Creative manicure and pedicure studio with masterly performance of
-              services for the beauty of your nails
-            </h3>
+            <h3>Beauty on Wheel: Luxury That Comes to You</h3>
             <p>
-              Step into our creative manicure and pedicure studio, where artistry
-               and precision come together to transform your nails into a
-                masterpiece. With expert technicians dedicated to delivering top-tier
-               services. From stunning designs to flawless finishes
+              Experience the luxury of a full-service beauty studio that comes
+              directly to you. Beauty on Wheel brings masterful beauty services
+              to your doorstep, transforming any space into your personal
+              sanctuary of self-care and style. Each service is delivered with
+              precision, creativity, and an unwavering commitment to excellence.
+              <br />
+              <b>Your beauty. Your space. Our expertise.</b>
             </p>
             <div className="d-flex">
               <div className="d-flex amt">

@@ -11,12 +11,7 @@ function AModal({ show, handleClose, handleClose1, head, body }) {
         </Modal.Header>
         <Modal.Body>{body}</Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="primary"
-            onClick={() => {
-              handleClose1;
-            }}
-          >
+          <Button variant="primary" onClick={handleClose1}>
             Save Changes
           </Button>
         </Modal.Footer>

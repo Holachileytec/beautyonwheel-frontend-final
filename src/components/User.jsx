@@ -1,70 +1,68 @@
 import React, { useEffect, useState } from "react";
 import "../Styles/user.css";
 import { Link } from "react-router-dom";
-import { FaTelegram } from "react-icons/fa"
+import { FaTelegram } from "react-icons/fa";
 import api from "../config/api";
-import { useNavigate } from "react-router-dom"
-
-
+import { useNavigate } from "react-router-dom";
 
 const User = () => {
-  const navigate = useNavigate()
-  const [notifications,setNotifications]=useState([])
-const [beauticians,setBeauticians]=useState([])
-  const [updateMessage, setUpdateMessage] = useState("")
+  const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
+  const [beauticians, setBeauticians] = useState([]);
+  const [updateMessage, setUpdateMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-
+    address: "",
+    bio: "",
+    experienceYears: 0,
+    specialties: "",
   });
 
-  const [userInfo, setUserInfo] = useState({})
+  const [userInfo, setUserInfo] = useState({});
   const getAuthData = () => {
     let user = null;
     let token = localStorage.getItem("token");
     try {
-        const stored = localStorage.getItem("user");
-        user = stored ? JSON.parse(stored) : null;
+      const stored = localStorage.getItem("user");
+      user = stored ? JSON.parse(stored) : null;
     } catch (e) {
-        console.error("Error parsing user from localStorage:", e);
-        user = null;
+      console.error("Error parsing user from localStorage:", e);
+      user = null;
     }
     return { user, token };
-};
+  };
   const updateUser = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-   const {user,token}=getAuthData()
-   if (!user || !user._id || !token) {
-        setUpdateMessage("Authentication required to update profile.");
-        return;
+    const { user, token } = getAuthData();
+    if (!user || !user._id || !token) {
+      setUpdateMessage("Authentication required to update profile.");
+      return;
     }
 
+    const dataToUpdate = {};
+    if (formData.name.trim() !== "") dataToUpdate.name = formData.name;
+    if (formData.phone.trim() !== "") dataToUpdate.phone = formData.phone;
 
-const dataToUpdate = {};
-  if (formData.name.trim() !== "") dataToUpdate.name = formData.name;
-  if (formData.phone.trim() !== "") dataToUpdate.phone = formData.phone;
+    if (Object.keys(dataToUpdate).length === 0) {
+      setUpdateMessage("Please fill in at least one field to update.");
+      return;
+    }
 
-  if (Object.keys(dataToUpdate).length === 0) {
-    setUpdateMessage("Please fill in at least one field to update.");
-    return;
-  }
-
-try {
-const res= await api.put(`/api/users/${user._id}`, dataToUpdate)
-setUpdateMessage(res.data.message ||"Update Successful")
-if(res.data.user){
-  setUserInfo(res.data.user)
-  localStorage.setItem("user",JSON.stringify(res.data.user))
-
-}
-setFormData({name:"",phone:""})
-} catch (e) {
- setUpdateMessage(e.response?.data?.message || "Error updating User")
- console.error(e.message)
-}
-
-  }
+    try {
+      const res = await api.put(`/api/users/${user._id}`, dataToUpdate);
+      setUpdateMessage(res.data.message || "Update Successful");
+      if (res.data.user) {
+        setUserInfo(res.data.user);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+      }
+      setFormData({ name: "", phone: "" });
+    } catch (e) {
+      setUpdateMessage(e.response?.data?.message || "Error updating User");
+      console.error(e.message);
+    }
+  };
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -72,65 +70,87 @@ setFormData({name:"",phone:""})
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+  // upddate beautician
+  const updateBUser = async () => {
+    const { user, token } = getAuthData();
+
+    if (!user || !user._id || !token) {
+      setUpdateMessage("Please login to update your information");
+      return;
+    }
+
+    try {
+      const res = await api.put(`/api/beauticians/profile-update`, formData);
+      setUpdateMessage(res.data.message || "Update Successful");
+
+      console.log(res.data);
+      setFormData({
+        bio: "",
+        experienceYears: 0,
+        specialties: "",
+        phone: "",
+        name: "",
+      });
+    } catch (err) {
+      setUpdateMessage(err.response?.data?.message || "An error occured");
+      console.error(err.message);
+    }
+  };
   useEffect(() => {
-    
-  const {user,token}=getAuthData();
-  if(!user || !user._id ||! token){
-    console.log("User not authenticated")
-    return;
-  }
-api.get(`/api/users/${user._id}`)
-.then(res =>{
-  setUserInfo(res.data.user);
-})
-.catch(err=>{
-  console.error("Error fetching user", err.message)
-
-})
-getBeauticians()
-
+    const { user, token } = getAuthData();
+    if (!user || !user._id || !token) {
+      console.log("User not authenticated");
+      return;
+    }
+    api
+      .get(`/api/users/${user._id}`)
+      .then((res) => {
+        setUserInfo(res.data.user);
+      })
+      .catch((err) => {
+        console.error("Error fetching user", err.message);
+      });
+    getBeauticians();
   }, []);
 
-
-  const getBeauticians=async()=>{
-try{
-const res= await api.get(`/api/beauticians/allbeauticians`)
-console.log(res.data.beauticians)
-setBeauticians(res.data.beauticians)
-}catch(err){
-console.error("Error getting beauticians", err)
-setBeauticians([])
-}
-  }
-useEffect(()=>{
-  
-const getAllNotifs = async ()=>{
- try{
-   const res = await api.get("/notifications")
-  setNotifications(res.data.notifications || [])
-  console.log(res.data)
- }catch(error){
-console.log("an error occured",error)
-setNotifications([])
- }
-}
-getAllNotifs()
-},[])
+  const getBeauticians = async () => {
+    try {
+      const res = await api.get(`/api/beauticians/allbeauticians`);
+      console.log(res.data.beauticians);
+      setBeauticians(res.data.beauticians);
+    } catch (err) {
+      console.error("Error getting beauticians", err);
+      setBeauticians([]);
+    }
+  };
+  useEffect(() => {
+    const getAllNotifs = async () => {
+      try {
+        const res = await api.get("/notifications");
+        setNotifications(res.data.notifications || []);
+        console.log(res.data);
+      } catch (error) {
+        console.log("an error occured", error);
+        setNotifications([]);
+      }
+    };
+    getAllNotifs();
+  }, []);
   const markAsRead = (id) => {
     setNotifications(
       notifications.map((notif) =>
-        notif.id === id ? { ...notif, isRead: true } : notif
-      )
-      
+        notif.id === id ? { ...notif, isRead: true } : notif,
+      ),
     );
   };
-  
-const displayName = userInfo?.user?.name || userInfo?.name || "Guest";
-const displayPhone = userInfo?.user?.phone || userInfo?.phone || "No Phone";
-const displayMembership = userInfo?.user?.membership || userInfo?.membership || "No Membership"
-const displayRole = userInfo?.user?.role || userInfo?.role || "No Role"
 
-return (
+  const displayName = userInfo?.user?.name || userInfo?.name || "Guest";
+  const displayPhone = userInfo?.user?.phone || userInfo?.phone || "No Phone";
+  const displayMembership =
+    userInfo?.user?.membership || userInfo?.membership || "No Membership";
+  const displayRole = userInfo?.user?.role || userInfo?.role || "No Role";
+
+  return (
     <div className="user-profile">
       {/* Header */}
       <header className="profile-header">
@@ -158,12 +178,15 @@ return (
           {/* Subscription Plan */}
           <div className="plan-card">
             <h3>My Plan</h3>
-            <div className={`plan-badge ${displayMembership?.type?.toLowerCase()}`}>
+            <div
+              className={`plan-badge ${displayMembership?.type?.toLowerCase()}`}
+            >
               {displayMembership?.type} Member
             </div>
             <div className="plan-details">
               <p>
-                <strong>Membership Expires:</strong> {displayMembership?.expiryDate}
+                <strong>Membership Expires:</strong>{" "}
+                {displayMembership?.expiryDate}
               </p>
               <p>
                 <strong>Benefits:</strong>
@@ -195,44 +218,101 @@ return (
             <button className="upgrade-btn">Upgrade Plan</button>
           </div>
 
-
           {/* Update User */}
           <div className="appointments-card">
             <h3>Update Information</h3>
-           {updateMessage && (
-  <div style={{ color: updateMessage.includes("Error") ? "red" : "green", marginBottom: "10px" }}>
-    {updateMessage}
-  </div>
-)}
+            {updateMessage && (
+              <div
+                style={{
+                  color: updateMessage.includes("Error") ? "red" : "green",
+                  marginBottom: "10px",
+                }}
+              >
+                {updateMessage}
+              </div>
+            )}
             <div>
-
-              <input type="text" placeholder="Username" name="name" style={{ width: "100%" }} onChange={handleChange}value={formData.name} />
+              <input
+                type="text"
+                placeholder="Username"
+                name="name"
+                style={{ width: "100%" }}
+                onChange={handleChange}
+                value={formData.name}
+              />
             </div>
             <div className="mt-3">
+              <input
+                type="text"
+                placeholder="Phone Number"
+                name="phone"
+                style={{ width: "100%" }}
+                onChange={handleChange}
+                value={formData.phone}
+              />
+            </div>
 
-              <input type="text" placeholder="Phone Number" name="phone" style={{ width: "100%" }} onChange={handleChange} value={formData.phone} />
+            <div
+              style={{
+                display: displayRole === "beautician" ? "block" : "none",
+              }}
+            >
+              <div>
+                <input
+                  type="text"
+                  placeholder="Bio"
+                  name="bio"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.bio}
+                />
               </div>
-
- <div style={{display: displayRole ==="beautician" ? "block" :"none"}}>  
-            <div>
-              <input type="text" placeholder="Bio" name="bio" 
-              style={{ width: "100%" }} onChange={handleChange}value={formData.bio} />
+              <div>
+                <input
+                  type="number"
+                  placeholder="experience Years"
+                  name="experienceYears"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.experienceYears}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="address"
+                  name="address"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.address}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Speciality"
+                  name="specialties"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.specialties}
+                />
+              </div>
             </div>
-            <div>
-
-              <input type="number" placeholder="experience Years" name="experienceYears"
-               style={{ width: "100%" }} onChange={handleChange}value={formData.experienceYears} />
-            </div>
-            <div>
-
-              <input type="text" placeholder="Speciality" name="specialties" 
-              style={{ width: "100%" }} onChange={handleChange}value={formData.specialties} />
+            <button
+              className="book-btn"
+              onClick={() => {
+                if (displayRole === "beautician") {
+                  updateBUser();
+                } else {
+                  updateUser();
+                }
+              }}
+            >
+              Update
+            </button>
           </div>
         </div>
-            <button className="book-btn" onClick={updateUser} >Update</button>
-          </div>
-        </div>
- 
+
         {/* Right Side - Notifications & Beauticians */}
         <div className="right-column">
           {/* Notifications */}
@@ -247,8 +327,9 @@ return (
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`notification-item ${!notification.read ? "unread" : ""
-                    }`}
+                  className={`notification-item ${
+                    !notification.read ? "unread" : ""
+                  }`}
                   onClick={() => markAsRead(notification.id)}
                 >
                   <div className="notification-content">
@@ -289,11 +370,17 @@ return (
             </div>
           </div>
 
-       
           <div className="quick-actions">
-            <button className="action-btn" onClick={()=>{localStorage.removeItem("token"); navigate("/login") }}>Logout</button>
+            <button
+              className="action-btn"
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/login");
+              }}
+            >
+              Logout
+            </button>
           </div>
-       
         </div>
       </div>
     </div>

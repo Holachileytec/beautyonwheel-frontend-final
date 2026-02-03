@@ -39,28 +39,10 @@ function Carousel() {
             bigTxt={<span className="bigT"> Our Team</span>}
             smllTxt={
               <p>
-                BeautyOnWheel - Team Structure Company Overview:
-                <br />
                 BeautyOnWheel delivers convenient, high-quality mobile beauty
                 services directly to clients. <br />
-                Founder & CEO - Vision, strategy, partnerships, brand direction,
-                and growth oversight. <br /> Project Manager - Daily operations
-                coordination, timeline management, service execution
-                <br />
-                Operations Manager - Service logistics, customer support, vendor
-                management, quality control <br />
-                Marketing & Sales Team - Marketing strategies, social media,
-                customer acquisition, brand awareness <br /> Director of
-                Creativity - Creative oversight for beauty shows, events, and
-                brand consistency
-                <br /> Technical/IT Support- Booking platform, website, backend
-                systems, integrations, data security
-                <br /> Legal & Compliance Advisor- Regulatory compliance,
-                contracts, liability management
               </p>
             }
-            btnTxt="About Us "
-            goSomewhere="/about.jsx"
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -78,7 +60,6 @@ function Carousel() {
                 <br /> relaxed, and re-energized.
               </p>
             }
-            btnTxt="Shop Now "
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -93,7 +74,6 @@ function Carousel() {
                 unique personality, tailored to your preference.
               </p>
             }
-            btnTxt="Shop Now "
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -107,7 +87,6 @@ function Carousel() {
                 combining nail care and shaping for a neat, refined look
               </p>
             }
-            btnTxt="Shop Now "
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -121,7 +100,6 @@ function Carousel() {
                 feet smooth, healthy, and beautifully finished.
               </p>
             }
-            btnTxt="Shop Now "
           />
         </SwiperSlide>
         <SwiperSlide>
@@ -136,7 +114,6 @@ function Carousel() {
                 deliver flawless results.
               </p>
             }
-            btnTxt="Shop Now "
           />
         </SwiperSlide>
       </Swiper>
