@@ -85,7 +85,8 @@ function Footer() {
               <a href="#">Lagos</a>
               <a href="#">Abuja</a>
               <a href="#">Ogun</a>
-              <a href="#">Porthacourt</a>
+              <a href="#">PortHarcourt</a>
+              <a href="#">Ibadan</a>
             </div>
           </Col>
         </Row>
@@ -124,7 +125,7 @@ function Footer() {
                   <p className="icon youtube">
                     <FaYoutube />
                   </p>
-                </a> 
+                </a>
                 <a href="https://www.instagram.com/beautyonwheel012?igsh=c3k4OGt2bDkycGhy">
                   <p className="icon insta">
                     <FaInstagram />
