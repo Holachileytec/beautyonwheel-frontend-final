@@ -98,7 +98,7 @@ function Footer() {
             <div className="copywrite">
               <p className="faphone mail">
                 <FaPhoneAlt /> +2348164267868, +2347083878594 &nbsp;
-                @beautyonwheel012y@gmail.com
+                @beautyonwheel012@gmail.com
               </p>
               <p>© 2025 BeautyOnWheel. All rights reserved.</p>
             </div>
