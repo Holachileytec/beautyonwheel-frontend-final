@@ -65,7 +65,7 @@ const Plan = () => {
     try {
       const res = await api.post(
         "/api/paystack/initialize",
-        initializePaymentData
+        initializePaymentData,
       );
       const { authorization_url } = res.data.data;
       if (authorization_url) {
@@ -161,6 +161,7 @@ const Plan = () => {
                       <strong>Matte Makeup:</strong> (For oil control and clean
                       finish)
                     </ListGroup.Item>
+                    <button className="price-btn">N100,000</button>
                   </>
                 }
               />

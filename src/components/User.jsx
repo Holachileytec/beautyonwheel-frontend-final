@@ -175,7 +175,7 @@ const User = () => {
             </div>
           </div>
 
-          {/* Subscription Plan */}
+          Subscription Plan
           <div className="plan-card">
             <h3>My Plan</h3>
             <div
@@ -218,7 +218,7 @@ const User = () => {
             <button className="upgrade-btn">Upgrade Plan</button>
           </div>
 
-          {/* Update User */}
+          Update User
           <div className="appointments-card">
             <h3>Update Information</h3>
             {updateMessage && (
