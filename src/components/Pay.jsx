@@ -4,10 +4,10 @@ import api from "../config/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Pay() {
-const navigate = useNavigate()
-const [service,setService]=useState([])
-  const [beauticians,setBeauticians]=useState([])
-  const [loading,setLoading]= useState(false)
+  const navigate = useNavigate();
+  const [service, setService] = useState([]);
+  // const [beauticians,setBeauticians]=useState([])
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -17,7 +17,7 @@ const [service,setService]=useState([])
     service: "",
     date: "",
     note: "",
-    beautician:"",
+    // beautician:"",
     paymentMethod: "card",
   });
 
@@ -26,56 +26,53 @@ const [service,setService]=useState([])
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    const bookingData={
-    
-      beautician:form.beautician,
-      service:form.service,
-      address:form.address,
-      note:form.note || form.phone,
-      date:form.date,
-      status:"pending"
+    setLoading(true);
+    const bookingData = {
+      // beautician: form.beautician,
+      service: form.service,
+      address: form.address,
+      note: form.note || form.phone,
+      date: form.date,
+      status: "pending",
+    };
+    console.log("Booking Details:", bookingData);
+    try {
+      const response = await api.post(`/api/bookings/create`, bookingData);
+      alert("Booking Successful");
+      const selected = service.find((item) => {
+        return item._id === bookingData.service;
+      });
+      console.log("Selected Service for Payment:", selected);
+      navigate("/pay", { state: { selectedService: selected.name } });
+    } catch (err) {
+      alert(err.response?.data?.message || "booking failed");
+    } finally {
+      setLoading(false);
     }
-  console.log("Booking Details:", bookingData);
-    try{
-    const response = await api.post(`/api/bookings/create`, bookingData)
-    alert("Booking Successful")
-    const selected = service.find((item)=>{
-     return item._id === bookingData.service
-    })
-    console.log("Selected Service for Payment:", selected);
-    navigate("/pay",{state:{selectedService: selected.name}} )
-    }catch(err){
-    alert(err.response?.data?.message || "booking failed")
-}finally{
-setLoading(false)
-}
-
   };
-   useEffect(()=>{
-    const fetchBeauticians=async()=>{
-      try{
-        const res = await api.get(`/api/beauticians/allbeauticians`)
-        setBeauticians(res.data.beauticians)
-      }catch(err){
-      console.log("Failed to fetch beauticians", err)
+  useEffect(() => {
+    const fetchBeauticians = async () => {
+      try {
+        const res = await api.get(`/api/beauticians/allbeauticians`);
+        setBeauticians(res.data.beauticians);
+      } catch (err) {
+        console.log("Failed to fetch beauticians", err);
       }
-    }
+    };
 
-
-    const fetchServices= async()=>{
-      try{
-        const res = await api.get(`/api/services/all`)
-        setService(res?.data)
-        console.log(res.data,"the console info")
-      }catch(err){
-        console.log("An error occured", err)
-        setService([])
+    const fetchServices = async () => {
+      try {
+        const res = await api.get(`/api/services/all`);
+        setService(res?.data);
+        console.log(res.data, "the console info");
+      } catch (err) {
+        console.log("An error occured", err);
+        setService([]);
       }
-    }
-    fetchBeauticians()
-    fetchServices()
-   },[])
+    };
+    fetchBeauticians();
+    fetchServices();
+  }, []);
 
   return (
     <div className="checkout-container">
@@ -101,7 +98,7 @@ setLoading(false)
           onChange={handleChange}
           required
         />
-<label htmlFor="beautician">Beautician</label>
+        {/* <label htmlFor="beautician">Beautician</label>
 <select name="beautician" value={form.beautician} onChange={handleChange} required>
 <option value=""> Choose a Beautician </option>
 {beauticians?.map((b)=>(
@@ -110,7 +107,7 @@ setLoading(false)
   </option>
 ))}
 
-</select>
+</select> */}
 
         <label>Address</label>
         <input
@@ -140,9 +137,11 @@ setLoading(false)
           required
         >
           <option value="">Select a service</option>
-         {service.map((serv)=>(
-          <option value={serv._id} key={serv._id}>{serv.name}</option>
-         ))}
+          {service.map((serv) => (
+            <option value={serv._id} key={serv._id}>
+              {serv.name}
+            </option>
+          ))}
         </select>
         <label>Date</label>
         <input
@@ -152,12 +151,17 @@ setLoading(false)
           onChange={handleChange}
           required
         />
-<label htmlFor="note">Note</label>
-<textarea name="note" value={form.note} onChange={handleChange} placeholder="Any Specific requests?" required></textarea>
-      
+        <label htmlFor="note">Note</label>
+        <textarea
+          name="note"
+          value={form.note}
+          onChange={handleChange}
+          placeholder="Any Specific requests?"
+          required
+        ></textarea>
 
         <button type="submit" disabled={loading}>
-        {loading? "Booking....":"Confirm & Pay"}
+          {loading ? "Booking...." : "Confirm & Pay"}
         </button>
       </form>
     </div>

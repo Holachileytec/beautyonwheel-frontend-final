@@ -9,6 +9,7 @@ const User = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [beauticians, setBeauticians] = useState([]);
+  const [beauty, setBeauty] = useState();
   const [updateMessage, setUpdateMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -70,6 +71,21 @@ const User = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+  //  beautician profile
+  useEffect(() => {
+    const getBeautician = async () => {
+      const { user, token } = getAuthData();
+      try {
+        const res = await api.get(`/api/beauticians/${user._id}`);
+        setBeauty(res.data.beautician);
+        console.log("Beautician Data:", res.data.beautician);
+      } catch (err) {
+        console.error("Error fetching beautician", err);
+      }
+    };
+    getBeautician();
+  }, []);
+
   // upddate beautician
   const updateBUser = async () => {
     const { user, token } = getAuthData();
@@ -80,16 +96,35 @@ const User = () => {
     }
 
     try {
-      const res = await api.put(`/api/beauticians/profile-update`, formData);
-      setUpdateMessage(res.data.message || "Update Successful");
+      const forUser = {
+        name: formData.name,
+        phone: formData.phone,
+      };
+      const forBeautician = {
+        address: formData.address,
+        bio: formData.bio,
+        experienceYears: formData.experienceYears,
+        specialties: formData.specialties,
+      };
+      // const res = await api.put(`/api/beauticians/profile-update`, formData);
+      const [resU, resB] = await Promise.all([
+        api.put(`/api/users/${user._id}`, forUser),
+        api.put(`/api/beauticians/profile-update`, forBeautician),
+      ]);
+      setUpdateMessage("Update Successful");
+      if (resU.data.user) {
+        setUserInfo(resU.data.user);
+        localStorage.setItem("user", JSON.stringify(resU.data.user));
+      }
 
-      console.log(res.data);
+      console.log("Updated User Data:", resU.data.user || resB.data.beautician);
       setFormData({
         bio: "",
         experienceYears: 0,
         specialties: "",
         phone: "",
         name: "",
+        address: "",
       });
     } catch (err) {
       setUpdateMessage(err.response?.data?.message || "An error occured");
@@ -174,9 +209,11 @@ const User = () => {
               <p className="user-phone">{displayPhone}</p>
             </div>
           </div>
-
-          Subscription Plan
-          <div className="plan-card">
+          {/* Subscription Plan */}
+          <div
+            className="plan-card"
+            style={{ display: displayRole === "beautician" ? "none" : "block" }}
+          >
             <h3>My Plan</h3>
             <div
               className={`plan-badge ${displayMembership?.type?.toLowerCase()}`}
@@ -217,7 +254,6 @@ const User = () => {
             </div>
             <button className="upgrade-btn">Upgrade Plan</button>
           </div>
-
           Update User
           <div className="appointments-card">
             <h3>Update Information</h3>
@@ -347,7 +383,13 @@ const User = () => {
           </div>
 
           {/* Available Beauticians */}
-          <div className="beauticians-card">
+          <div
+            className="beauticians-card"
+            style={{
+              display: displayRole === "beautician" ? "none" : "block",
+            }}
+            non
+          >
             <h3>Our Beauticians</h3>
             <div className="beauticians-list">
               {beauticians.map((beautician) => (
@@ -367,6 +409,34 @@ const User = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+          <div
+            className="beauticians-card"
+            style={{
+              display: displayRole === "beautician" ? "block" : "block",
+            }}
+            non
+          >
+            <h3>My Information</h3>
+            <div className="beauticians-list">
+              {beauty && (
+                <div key={beauty._id}>
+                  <div className="beautician-info">
+                    <h4>Bio</h4>
+                    <p className="specialty">{beauty.bio}</p>
+                  </div>
+
+                  <div className="beautician-info">
+                    <h4>Address</h4>
+                    <p className="specialty">{beauty.address}</p>
+                  </div>
+                  <div className="beautician-info">
+                    <h4>Speciality</h4>
+                    <p className="specialty">{beauty.specialties}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
