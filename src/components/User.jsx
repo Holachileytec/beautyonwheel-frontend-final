@@ -86,7 +86,7 @@ const User = () => {
     getBeautician();
   }, []);
 
-  // upddate beautician
+  // update beautician
   const updateBUser = async () => {
     const { user, token } = getAuthData();
 

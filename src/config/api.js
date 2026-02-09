@@ -1,21 +1,22 @@
-import axios from 'axios';
+import axios from "axios";
 
 // API Base URL - uses environment variable in production, localhost in development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://beautyplug.com.ng:8000";
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,7 +24,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor for error handling
@@ -35,24 +36,24 @@ api.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // Unauthorized - token expired or invalid
-          console.warn('Authentication expired');
+          console.warn("Authentication expired");
           // Optionally redirect to login
           break;
         case 403:
-          console.warn('Access forbidden');
+          console.warn("Access forbidden");
           break;
         case 500:
-          console.error('Server error');
+          console.error("Server error");
           break;
         default:
           break;
       }
     } else if (error.request) {
       // Network error
-      console.error('Network error - please check your connection');
+      console.error("Network error - please check your connection");
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // Export the configured instance
