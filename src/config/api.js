@@ -2,7 +2,7 @@ import axios from "axios";
 
 // API Base URL - uses environment variable in production, localhost in development
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://beautyplug.com.ng:8000";
+  import.meta.env.VITE_API_URL || "https://beautyplug.com.ng";
 
 // Create axios instance with default config
 const api = axios.create({
