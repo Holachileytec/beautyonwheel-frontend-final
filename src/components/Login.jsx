@@ -11,19 +11,15 @@ const Login = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token")
-    if (token) {
-  
-        console.log("Logged in already, Redirecting to HomePage")
-        navigate("/")
-    
-
+if (token) {
+      navigate("/");
     }
   }, [navigate])
   const handleSubmit = async (e) => {
 
     e.preventDefault();
     try {
-const res = await api.post("/api/users/login", {
+const res = await api.post("http://167.71.150.48:8000/api/users/login", {
         email,
         password,
       });
@@ -31,10 +27,9 @@ const res = await api.post("/api/users/login", {
       localStorage.setItem("token", res.data.token)
       localStorage.setItem("user", JSON.stringify(res.data.user))
       navigate("/")
-    } catch (error) {
+} catch (error) {
       setMessage(error.response?.data?.message || "Invalid credentials");
     }
-    console.log("Login attempted with:", { email, password });
   };
 
   return (

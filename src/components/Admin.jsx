@@ -46,7 +46,7 @@ const Admin = () => {
         membership: userUpdate.membership,
       };
 
-      const res = await api.put(`/api/users/userUpdate/${id}`, updateData);
+      const res = await api.put(`http://167.71.150.48:8000/api/users/userUpdate/${id}`, updateData);
       setUserUpdate(res.data);
       alert("User Updated Successfully");
       handleClose1(); // Close modal after success
@@ -66,13 +66,13 @@ const Admin = () => {
         price: planUpdate.price,
       };
 
-      const res = await api.put(`/api/plan/update/${id}`, updateData);
+      const res = await api.put(`http://167.71.150.48:8000/api/plan/update/${id}`, updateData);
       setPlanUpdate(res.data);
       alert("Plan Updated Successfully");
       handleClose2(); // Close modal after success
 
       // Refresh plans list
-      const plansRes = await api.get("/api/plan/allPlans");
+      const plansRes = await api.get("http://167.71.150.48:8000/api/plan/allPlans");
       setPlans(plansRes.data.plans);
 
       return res.data;
@@ -92,13 +92,13 @@ const Admin = () => {
         description: serviceUpdate.description,
       };
 
-      const res = await api.put(`/api/services/updateServ/${id}`, updateData);
+      const res = await api.put(`http://167.71.150.48:8000/api/services/updateServ/${id}`, updateData);
       setServiceUpdate(res.data);
       alert("Service updated successfully!");
       handleClose3(); // Close modal after success
 
       // Refresh services list
-      const servRes = await api.get(`/api/services/all`);
+      const servRes = await api.get(`http://167.71.150.48:8000/api/services/all`);
       setService(servRes.data);
 
       return res.data;
@@ -118,13 +118,13 @@ const Admin = () => {
         category: serviceTUpdate.category,
       };
 
-      const res = await api.put(`/api/subservices/update/${id}`, updateData);
+      const res = await api.put(`http://167.71.150.48:8000/api/subservices/update/${id}`, updateData);
       setServiceTUpdate(res.data);
       alert("Service Type updated successfully!");
       handleClose4(); // Close modal after success
 
       // Refresh subservices list
-      const subRes = await api.get("/api/subservices/allService");
+      const subRes = await api.get("http://167.71.150.48:8000/api/subservices/allService");
       setSubServices(subRes.data.allService || []);
 
       return res.data;
@@ -149,10 +149,17 @@ const Admin = () => {
     price: "",
   });
 
-  // User Modal
+// User Modal
   const [show1, setShow1] = useState(false);
-  const handleClose1 = () => setShow1(false);
-  const handleShow1 = () => setShow1(true);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const handleClose1 = () => {
+    setShow1(false);
+    setSelectedUserId(null);
+  };
+  const handleShow1 = (userId) => {
+    setSelectedUserId(userId);
+    setShow1(true);
+  };
 
   // Plan Modal
   const [show2, setShow2] = useState(false);
@@ -174,7 +181,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await api.get("/api/plan/allPlans");
+        const res = await api.get("http://167.71.150.48:8000/api/plan/allPlans");
         setPlans(res.data.plans);
       } catch (err) {
         console.error("Error fetching plans:", err);
@@ -183,7 +190,7 @@ const Admin = () => {
 
     const fetchServices = async () => {
       try {
-        const res = await api.get(`/api/services/all`);
+        const res = await api.get(`http://167.71.150.48:8000/api/services/all`);
         setService(res?.data || []);
       } catch (err) {
         console.error("Error fetching services:", err);
@@ -193,7 +200,7 @@ const Admin = () => {
 
     const getAllSubServices = async () => {
       try {
-        const res = await api.get("/api/subservices/allService");
+        const res = await api.get("http://167.71.150.48:8000/api/subservices/allService");
         setSubServices(res?.data?.allService || []);
       } catch (err) {
         setSubServices([]);
@@ -203,7 +210,7 @@ const Admin = () => {
 
     const fetchUsers = async () => {
       try {
-        const res = await api.get("/api/users/getAllUsers");
+        const res = await api.get("http://167.71.150.48:8000/api/users/getAllUsers");
         setUsers(res.data.users);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -221,7 +228,7 @@ const Admin = () => {
 
     const fetchBeauticians = async () => {
       try {
-        const res = await api.get("/api/beauticians/allbeauticians");
+        const res = await api.get("http://167.71.150.48:8000/api/beauticians/allbeauticians");
         setBeauticians(res.data.beauticians);
       } catch (err) {
         console.error("Error fetching beauticians:", err);
@@ -256,11 +263,11 @@ const Admin = () => {
         price: Number(createServiceFormData.price),
       };
 
-      const res = await api.post("/api/services/create", createServiceData);
+      const res = await api.post("http://167.71.150.48:8000/api/services/create", createServiceData);
       setCreateServiceMessage("Service Added Successfully");
 
       // Refresh services
-      const servRes = await api.get(`/api/services/all`);
+      const servRes = await api.get(`http://167.71.150.48:8000/api/services/all`);
       setService(servRes.data);
 
       // Clear form
@@ -279,11 +286,11 @@ const Admin = () => {
         price: plan.price,
       };
 
-      const res = await api.post("/api/plan/addplan", addPData);
+      const res = await api.post("http://167.71.150.48:8000/api/plan/addplan", addPData);
       setPlanMessage("Plan added successfully");
 
       // Refresh plans
-      const plansRes = await api.get("/api/plan/allPlans");
+      const plansRes = await api.get("http://167.71.150.48:8000/api/plan/allPlans");
       setPlans(plansRes.data.plans);
 
       // Clear form
@@ -299,7 +306,7 @@ const Admin = () => {
     if (!window.confirm("Are you sure you want to delete this plan?")) return;
 
     try {
-      const res = await api.delete(`/api/plan/${id}`);
+      const res = await api.delete(`http://167.71.150.48:8000/api/plan/${id}`);
       setPlans(plans.filter((p) => p._id !== id));
       alert(res?.data?.message || "Plan Deleted Successfully");
     } catch (err) {
@@ -314,11 +321,11 @@ const Admin = () => {
       return;
 
     try {
-      const res = await api.delete(`/api/services/delete/${id}`);
+      const res = await api.delete(`http://167.71.150.48:8000/api/services/delete/${id}`);
       alert(res?.data?.message || "Service Deleted Successfully");
 
       // Refresh services
-      const servRes = await api.get(`/api/services/all`);
+      const servRes = await api.get(`http://167.71.150.48:8000/api/services/all`);
       setService(servRes.data);
     } catch (err) {
       alert(err?.response?.data?.message || "Service not Deleted Successfully");
@@ -332,11 +339,11 @@ const Admin = () => {
       return;
 
     try {
-      const res = await api.delete(`/api/subservices/delete/${id}`);
+      const res = await api.delete(`http://167.71.150.48:8000/api/subservices/delete/${id}`);
       alert(res?.data?.message || "SubService Deleted Successfully");
 
       // Refresh subservices
-      const subRes = await api.get("/api/subservices/allService");
+      const subRes = await api.get("http://167.71.150.48:8000/api/subservices/allService");
       setSubServices(subRes.data.allService || []);
     } catch (err) {
       alert(
@@ -397,7 +404,7 @@ const Admin = () => {
       setAddServiceTypeMessage("Subservice Added Successfully");
 
       // Refresh subservices
-      const subRes = await api.get("/api/subservices/allService");
+      const subRes = await api.get("http://167.71.150.48:8000/api/subservices/allService");
       setSubServices(subRes.data.allService || []);
 
       // Clear form
@@ -558,13 +565,13 @@ const Admin = () => {
                       <td>
                         <button
                           className="action-btn edit"
-                          onClick={handleShow1}
+                          onClick={() => handleShow1(user._id)}
                         >
                           Edit
                         </button>
                         <button
                           className="action-btn delete"
-                          onClick={() => deleteUser(user.id)}
+                          onClick={() => deleteUser(user._id)}
                         >
                           Delete
                         </button>
@@ -579,7 +586,7 @@ const Admin = () => {
             <AModal
               show={show1}
               handleClose={handleClose1}
-              handleClose1={() => UpdateUser({ id: users[0]?.id })} // ✅ Wrapped in arrow function
+              handleClose1={() => UpdateUser({ id: selectedUserId })} // ✅ Wrapped in arrow function
               head={<h1>Update User</h1>}
               body={
                 <>

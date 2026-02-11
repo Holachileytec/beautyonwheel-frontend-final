@@ -13,7 +13,7 @@ const Payment = () => {
     
     const getAllSubServices = async () => {
       try {
-        const res = await api.get("/api/subservices/allService");
+        const res = await api.get("http://167.71.150.48:8000/api/subservices/allService");
         // Ensure we are setting an array even if data is missing
         setSubServices(res?.data?.allService || []);
         console.log(res.data.allService)
@@ -66,7 +66,7 @@ console.log(subServices,"hey here i am")
   }
  const handleSubmitAndPay = async () => {
     try {
-      const res = await api.post("/api/paystack/initialize", initializePaymentData)
+      const res = await api.post("http://167.71.150.48:8000/api/paystack/initialize", initializePaymentData)
       const { authorization_url } = res.data.data
       if (authorization_url) {
         window.location.href = authorization_url;

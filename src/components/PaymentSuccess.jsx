@@ -19,7 +19,7 @@ const PaymentSuccess = () => {
 
     const verify = async () => {
         try {
-            const res = await api.get(`/api/paystack/verify/${reference}`);
+            const res = await api.get(`http://167.71.150.48:8000/api/paystack/verify/${reference}`);
             if (res.data.success) {
                 setStatus("success");
             } else {
