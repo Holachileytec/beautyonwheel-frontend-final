@@ -23,9 +23,9 @@ getAllImages()
     return (
         <>
             <div className="images">
-                {image.map((img)=>{
+                {image.map((img) => (
                      <img src={img.imageUrl} alt={img.description} key={img._id}/>
-                })}
+                ))}
 
 
                

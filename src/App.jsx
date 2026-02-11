@@ -26,7 +26,9 @@ import PaymentSuccess from "./components/PaymentSuccess";
 
 function App() {
   return (
+    
     <>
+    
       <ChatProvider config={ChatConfig}>
         {/* <NavBar /> */}
         <NewNav />
@@ -51,6 +53,7 @@ function App() {
         <ChatWidget />
       </ChatProvider>
     </>
+    
   );
 }
 export default App;

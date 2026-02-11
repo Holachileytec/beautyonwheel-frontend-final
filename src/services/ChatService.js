@@ -135,7 +135,7 @@ class ChatServiceClass {
     }
 
     try {
-      this.socket = io(this.serverUrl, {
+      this.socket = io(`${this.serverUrl}/chat`, {
         transports: ['websocket', 'polling'],
         autoConnect: true,
         reconnection: true,

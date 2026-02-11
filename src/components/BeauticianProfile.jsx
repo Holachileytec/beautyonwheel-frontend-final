@@ -38,7 +38,7 @@ if(!user || !user._id || !token){
 
 try{
   const res=await api.put(
-    `http://167.71.150.48:8000/api/beauticians/profile-update`, formData
+    `/api/beauticians/profile-update`, formData
   );
   setUpdateMessage(res.data.message || "Update Successful")
   setBeauticianInfo(res.data.beautician)
@@ -65,7 +65,7 @@ const handleChange = (e) => {
         console.log("User not authenticated")
         return;
       }
-    api.get(`http://167.71.150.48:8000/api/beauticians/${user._id}`)
+    api.get(`/api/beauticians/${user._id}`)
     .then(res =>{
       console.log(res.data)
       setBeauticianInfo(res.data.beautician);

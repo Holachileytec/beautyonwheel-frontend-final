@@ -27,7 +27,7 @@ const Plan = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const res = await api.get("http://167.71.150.48:8000/api/plan/allPlans");
+        const res = await api.get("/api/plan/allPlans");
         setPlans(res.data.plans);
         console.log("The data is:" + res.data);
       } catch (err) {

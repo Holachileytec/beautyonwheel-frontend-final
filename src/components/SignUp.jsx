@@ -14,7 +14,7 @@ const SignUp = () => {
     password: "",
     agreeTerms: false,
   });
-  const navigate= useNavigate()
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -28,17 +28,18 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-try {
+    try {
       // Extract only the fields needed by the backend (exclude agreeTerms)
       const { agreeTerms, ...registrationData } = formData;
-      
-      const res = await api.post("http://167.71.150.48:8000/api/users/signup", registrationData);
+
+      const res = await api.post("/api/users/signup", registrationData);
       setMessage(res.data.message || "Registration Successful!");
       navigate("/login");
     } catch (error) {
       // console.error("Signup error:", error.response?.data || error.message);
       setMessage(
-        error.response?.data?.message || "Registration failed. Please try again."
+        error.response?.data?.message ||
+          "Registration failed. Please try again.",
       );
     }
   };
@@ -90,7 +91,7 @@ try {
               </div>
             </div>
 
-<div className="input-group">
+            <div className="input-group">
               <label htmlFor="phone">Phone Number</label>
               <input
                 type="tel"
@@ -116,7 +117,9 @@ try {
               />
             </div>
             <div className="input-group">
-              <label htmlFor="role">I am a</label>
+              <label className="checkboxText" htmlFor="role">
+                I am a &nbsp; &nbsp;
+              </label>
               <select
                 id="role"
                 name="role"
@@ -126,8 +129,12 @@ try {
                 className="role-select"
               >
                 <option value="">Select your role</option>
-                <option value="client">Client - I want to book beauty services</option>
-                <option value="beautician">Beautician - I provide beauty services</option>
+                <option value="client">
+                  Client - I want to book beauty services
+                </option>
+                <option value="beautician">
+                  Beautician - I provide beauty services
+                </option>
               </select>
             </div>
 

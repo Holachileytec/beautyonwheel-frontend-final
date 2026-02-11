@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Pay() {
   const navigate = useNavigate();
   const [service, setService] = useState([]);
-  // const [beauticians,setBeauticians]=useState([])
+  const [beauticians, setBeauticians] = useState([]);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -37,10 +37,7 @@ export default function Pay() {
     };
     console.log("Booking Details:", bookingData);
     try {
-      const response = await api.post(
-        `http://167.71.150.48:8000/api/bookings/create`,
-        bookingData,
-      );
+      const response = await api.post("/api/bookings/create", bookingData);
       alert("Booking Successful");
       const selected = service.find((item) => {
         return item._id === bookingData.service;
@@ -56,9 +53,7 @@ export default function Pay() {
   useEffect(() => {
     const fetchBeauticians = async () => {
       try {
-        const res = await api.get(
-          `http://167.71.150.48:8000/api/beauticians/allbeauticians`,
-        );
+        const res = await api.get("/api/beauticians/allbeauticians");
         setBeauticians(res.data.beauticians);
       } catch (err) {
         console.log("Failed to fetch beauticians", err);
@@ -67,7 +62,7 @@ export default function Pay() {
 
     const fetchServices = async () => {
       try {
-        const res = await api.get(`http://167.71.150.48:8000/api/services/all`);
+        const res = await api.get("/api/services/all");
         setService(res?.data);
         console.log(res.data, "the console info");
       } catch (err) {

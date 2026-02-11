@@ -52,10 +52,7 @@ const User = () => {
     }
 
     try {
-      const res = await api.put(
-        `http://167.71.150.48:8000/api/users/${user._id}`,
-        dataToUpdate,
-      );
+      const res = await api.put(`/api/users/${user._id}`, dataToUpdate);
       setUpdateMessage(res.data.message || "Update Successful");
       if (res.data.user) {
         setUserInfo(res.data.user);
@@ -79,9 +76,7 @@ const User = () => {
     const getBeautician = async () => {
       const { user, token } = getAuthData();
       try {
-        const res = await api.get(
-          `http://167.71.150.48:8000/api/beauticians/${user._id}`,
-        );
+        const res = await api.get(`/api/beauticians/${user._id}`);
         setBeauty(res.data.beautician);
         console.log("Beautician Data:", res.data.beautician);
       } catch (err) {
@@ -113,11 +108,8 @@ const User = () => {
       };
       // const res = await api.put(`/api/beauticians/profile-update`, formData);
       const [resU, resB] = await Promise.all([
-        api.put(`http://167.71.150.48:8000/api/users/${user._id}`, forUser),
-        api.put(
-          `http://167.71.150.48:8000/api/beauticians/profile-update`,
-          forBeautician,
-        ),
+        api.put(`/api/users/${user._id}`, forUser),
+        api.put("/api/beauticians/profile-update", forBeautician),
       ]);
       setUpdateMessage("Update Successful");
       if (resU.data.user) {
@@ -146,7 +138,7 @@ const User = () => {
       return;
     }
     api
-      .get(`http://167.71.150.48:8000/api/users/${user._id}`)
+      .get(`/api/users/${user._id}`)
       .then((res) => {
         setUserInfo(res.data.user);
       })
@@ -158,9 +150,7 @@ const User = () => {
 
   const getBeauticians = async () => {
     try {
-      const res = await api.get(
-        `http://167.71.150.48:8000/api/beauticians/allbeauticians`,
-      );
+      const res = await api.get("/api/beauticians/allbeauticians");
       console.log(res.data.beauticians);
       setBeauticians(res.data.beauticians);
     } catch (err) {
@@ -171,7 +161,7 @@ const User = () => {
   useEffect(() => {
     const getAllNotifs = async () => {
       try {
-        const res = await api.get("http://167.71.150.48:8000/notifications");
+        const res = await api.get("/api/notifications");
         setNotifications(res.data.notifications || []);
         console.log(res.data);
       } catch (error) {

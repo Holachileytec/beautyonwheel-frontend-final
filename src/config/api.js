@@ -1,4 +1,5 @@
 import axios from "axios";
+import { io } from "socket.io-client";
 
 // API Base URL - uses environment variable in production, localhost in development
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -11,6 +12,14 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export const socket = io(API_BASE_URL, {
+  transports: ["polling", "websocket"], // Try polling FIRST, then upgrade
+  reconnection: true,
+  reconnectionAttempts: 5,
+});
+socket.on("connect", () => console.log("🔥 Socket connected:", socket.id));
+socket.on("disconnect", () => console.log("❌ Socket disconnected"));
 
 // Request interceptor to add auth token
 api.interceptors.request.use(
