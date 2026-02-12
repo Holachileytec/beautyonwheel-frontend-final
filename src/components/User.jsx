@@ -34,7 +34,7 @@ const User = () => {
     return { user, token };
   };
   const updateUser = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
 
     const { user, token } = getAuthData();
     if (!user || !user._id || !token) {

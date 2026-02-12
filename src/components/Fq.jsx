@@ -8,93 +8,56 @@ const fqs = [
     index: 1,
     title: "What is BeautyOnWheel?",
     answer:
-      "is a mobile beauty service platform that brings expertly trained beauty professionals to your doorstep.",
+      "BeautyOnWheel is a mobile beauty and entertainment service platform that connects clients with certified beauty professionals and creative production teams. We deliver salon-quality beauty services and beauty-related entertainment experiences at your home, office, event venue, or preferred location.",
   },
   {
     index: 2,
     title: " What services does BeautyOnWheel offer?",
     answer:
-      "offers the following services: Makeup, Massage,Pedicure and Manicure",
+      "BeautyOnWheel offers a wide range of beauty and entertainment services, including: Beauty & Wellness Services: Hair styling and hair treatments, Makeup services (bridal, party, casual, editorial), Manicure and pedicure, Skincare and facial treatments, Massage and spa services, Grooming services for men, Entertainment & Events Services: Beauty Game Reality Shows,Beauty Fashion Shows and Runway Events,Beauty Talent Competitions,Live beauty demonstrations and workshops,Corporate and private beauty-themed entertainment events,Service availability may vary by location",
   },
   {
     index: 3,
     title: "  How do I book an appointment?",
     answer:
-      "www.beautyonwheel.com use our online booking system to select your service, date, and time.Reach out to us directly at +2347089986222 to book your appointment over the phone or via text message",
+      "You can book a service through our website www.beautyonwheel.com.ng, or call our customer support team on +2348164267868, +2347083878594, you an also reach us through our email & social media handlers Email: @beautyonwheel012@gmail.com, Facebook: @beautyonwheel012@gmail.com, Instagram: @beautyonwheel012, TikTok: @beautyonwheel. Select your service type, preferred date, time, and location, then confirm your booking",
   },
   {
     index: 4,
-    title: "What if my beauty professional is late?",
+    title:
+      "What if my beauty professional is late and how far in advance can I book an appointment?",
     answer:
-      "We strive to respect your time and schedule. If your beauty professional is late, we'll work with you to find a solution that meets your needs",
-  },
-  {
-    index: 5,
-    title: " How do I contact BeautyOnWheel?",
-    answer:
-      "Phone: Call us at [07089986222] to speak with our customer support team.Send us an email at [insert email address] and we'll respond promptly",
-  },
-  {
-    index: 7,
-    title: " How far in advance can I book an appointment?",
-    answer: "",
-  },
-  {
-    index: 8,
-    title: "What is the cancellation policy? ",
-    answer:
-      "BeautyOnWheel's cancellation policy requires a minimum of 24 hours' notice for cancellations or rescheduling. If you cancel or reschedule within 24 hours of your appointment, you may be charged a fee... To cancel or reschedule, please contact us directly via phone or email.",
-  },
-  {
-    index: 9,
-    title: " Can I reschedule my appointment?",
-    answer:
-      "To reschedule your appointment with BeautyOnWheel, you'll need to provide at least 24 hours' notice",
-  },
-  {
-    index: 10,
-    title: "  What qualifications do your beauty have?",
-    answer:
-      "Our beauty professionals hold esteemed qualifications that equip them with the skills and knowledge necessary to deliver exceptional services",
-  },
-  {
-    index: 11,
-    title: "  Can I choose my beauty professional?",
-    answer: "",
-  },
-  {
-    index: 12,
-    title: "What products do you use?",
-    answer: "",
-  },
-  {
-    index: 13,
-    title: " How much do your services cost?",
-    answer:
-      "visit our website and subscription page you will see all the packages",
-  },
-  {
-    index: 14,
-    title: "  Can I get a refund if I'm not satisfied?",
-    answer: " check our terms and conditions of the company",
-  },
-  {
-    index: 15,
-    title: " Do your professionals follow proper sanitation?",
-    answer:
-      "yes,Our professionals strictly follow proper sanitation procedures to ensure a safe and healthy environment for clients",
-  },
-  {
-    index: 16,
-    title: "  What if I have a skin condition or allergy?",
-    answer:
-      "If you have a skin condition or allergy, it's essential to inform your beauty professional before any treatment,they will Access your Skin chouce suitable product and take necessary precautions",
+      "We value punctuality and professionalism. If a beauty professional is delayed, you will be notified in advance. If the delay exceeds our service standards, you may reschedule or request compensation according to our policy. Appointments and events can be booked up to 30 days in advance. For large entertainment productions, we recommend booking at least 2–4 weeks in advance for proper planning",
   },
 
   {
-    index: 18,
-    title: "Can I request a specific environment or setup?",
-    answer: "yes,You can definitely request a specific environment",
+    index: 6,
+    title: "What is the cancellation policy & Reschedule an Appointment? ",
+    answer:
+      "Cancellations made at least 24 hours before the appointment are free of charge. Late cancellations or no-shows may attract a cancellation fee. Event bookings may require a non-refundable deposit You can reschedule up to 24 hours before the scheduled time without additional charges. Event rescheduling is subject to availability and contractual terms",
+  },
+
+  {
+    index: 7,
+    title:
+      "  What qualifications do your beauty have allow to choose Beauty Professional?",
+    answer:
+      "All BeautyOnWheel professionals are:Certified and licensed beauty practitioners,Trained in hygiene, safety, and customer service,Experienced in their respective fields,Background-checked and vetted for professionalism and Yes. You may request a specific beauty professional when booking, subject to availability.",
+  },
+
+  {
+    index: 8,
+    title: "What products do you use & services cost?",
+    answer:
+      "We use premium, professional-grade, and dermatologically tested products. Organic and hypoallergenic options are available upon request. Pricing depends on the service type, location, professional level, and event scale. A detailed price list and event quotation are available upon request or on our website",
+  },
+
+  {
+    index: 9,
+    title:
+      "  Can I get a refund if I'm not satisfied what about skin condition or allergy?",
+    answer:
+      " Customer satisfaction is our priority. If you are not satisfied, contact us within 24 hours after the service. Refunds or service corrections will be handled according to our quality assurance policy. Concerning the skin condition please inform us during booking, We will tailor products and procedures to your needs also A patch test may be recommended for sensitive skin.",
   },
 ];
 function Fq() {
@@ -106,7 +69,6 @@ function Fq() {
 
   return (
     <div className="fq_container">
-     
       <div>
         <div className="userInforText">
           <p>Welcome to BeautyOnWheel Frequent Question</p>
