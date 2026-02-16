@@ -23,12 +23,29 @@ import Gallery from "./components/Gallery";
 import BeauticianProfile from "./components/BeauticianProfile";
 import Plan from "./components/Plan";
 import PaymentSuccess from "./components/PaymentSuccess";
+import { useEffect } from "react";
+import { initSocket } from "./config/api";
 
 function App() {
+  
+  useEffect(() => {
+    // Initialize socket when app loads
+    const socket = initSocket();
+    // Optional: Add global socket listeners here
+    socket.on("notification", (data) => {
+      console.log("📬 New notification:", data);
+    });
+
+    // Cleanup on unmount (optional)
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, []); // Empty dependency array = runs once on mount
+
   return (
-    
     <>
-    
       <ChatProvider config={ChatConfig}>
         {/* <NavBar /> */}
         <NewNav />
@@ -53,7 +70,6 @@ function App() {
         <ChatWidget />
       </ChatProvider>
     </>
-    
   );
 }
 export default App;

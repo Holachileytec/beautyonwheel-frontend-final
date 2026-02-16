@@ -8,8 +8,11 @@ function Content({ myImage, b4Bdy, forBtn, item, Title }) {
       <Card style={{ width: "20rem" }} className="Card">
         <Card.Img variant="top" src={myImage} />
         <Card.Body>
-          <Card.Title>{Title}</Card.Title>
-          <Card.Text>{b4Bdy}</Card.Text>
+          <div className="card-text">{Title}</div>
+          <div className="card-text">{b4Bdy}</div>
+
+          {/* <Card.Title>{Title}</Card.Title>
+          <Card.Text>{b4Bdy}</Card.Text> */}
         </Card.Body>
         <ListGroup className="list-group-flush">{item}</ListGroup>
         <Card.Body>

@@ -2,7 +2,8 @@ import axios from "axios";
 import { io } from "socket.io-client";
 
 // API Base URL - uses environment variable in production, localhost in development
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "https://beautyplug.com.ng";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -11,15 +12,29 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  // withCredentials: true,
 });
 
-export const socket = io(API_BASE_URL, {
-  transports: ["polling", "websocket"], // Try polling FIRST, then upgrade
-  reconnection: true,
-  reconnectionAttempts: 5,
-});
-socket.on("connect", () => console.log("🔥 Socket connected:", socket.id));
-socket.on("disconnect", () => console.log("❌ Socket disconnected"));
+//initilaize socket connection
+
+let socket = null;
+export const initSocket = () => {
+  if (!socket) {
+    socket = io(API_BASE_URL, {
+      transports: ["polling", "websocket"], // Try polling FIRST, then upgrade
+      reconnection: true,
+      reconnectionAttempts: 5,
+      // withCredentials: true,
+    });
+    socket.on("connect", () => console.log("🔥 Socket connected:", socket.id));
+    socket.on("disconnect", () => console.log("❌ Socket disconnected"));
+    socket.on("connect_error", (error) =>
+      console.error("🚨 Socket connection error:", error.message),
+    );
+  }
+  return socket;
+};
+export const getSocket = () => socket;
 
 // Request interceptor to add auth token
 api.interceptors.request.use(
@@ -45,6 +60,7 @@ api.interceptors.response.use(
         case 401:
           // Unauthorized - token expired or invalid
           console.warn("Authentication expired");
+          localStorage.removeItem("token");
           // Optionally redirect to login
           break;
         case 403:
