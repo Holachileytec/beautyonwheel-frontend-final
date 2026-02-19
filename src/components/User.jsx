@@ -76,7 +76,7 @@ const User = () => {
     const getBeautician = async () => {
       const { user, token } = getAuthData();
       try {
-        const res = await api.get(`/api/beauticians/${user._id}`);
+        const res = await api.get(`/api/beauticians/beautician/${user._id}`);
         setBeauty(res.data.beautician);
         console.log("Beautician Data:", res.data.beautician);
       } catch (err) {
