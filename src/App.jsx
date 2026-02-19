@@ -25,9 +25,9 @@ import Plan from "./components/Plan";
 import PaymentSuccess from "./components/PaymentSuccess";
 import { useEffect } from "react";
 import { initSocket } from "./config/api";
+import AdminProtector from "./components/AdminProtector.jsx";
 
 function App() {
-  
   useEffect(() => {
     // Initialize socket when app loads
     const socket = initSocket();
@@ -57,7 +57,14 @@ function App() {
           <Route path="/plan" element={<Plan />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/adminDashboard" element={<Admin />} />
+          <Route
+            path="/adminDashboard"
+            element={
+              <AdminProtector>
+                <Admin />
+              </AdminProtector>
+            }
+          />
           <Route path="/user-dashboard" element={<User />} />
           <Route path="/pay" element={<Payment />} />
           <Route path="/aboutus" element={<About />} />

@@ -4,15 +4,29 @@ import Content from "./Content";
 import make1 from "../assets/imageM.jpg";
 import make2 from "../assets/imageK.jpg";
 import make3 from "../assets/imageE.jpg";
+import make3a from "../assets/makeuptm.jpg";
+import make3b from "../assets/makeupn.jpg";
+
 import make4 from "../assets/imageMA.jpg";
 import make5 from "../assets/imageS.jpg";
 import make6 from "../assets/imageG.jpg";
+import make6a from "../assets/massagen.jpg";
+import make6b from "../assets/massageHead.jpg";
+
+// for pedicure
 import make7 from "../assets/ped.jpg"; // for manicure
 import make8 from "../assets/ped1.jpg";
 import make9 from "../assets/ped2.jpg"; //end for manicure
+// For manicure
 import make10 from "../assets/imageN.jpg";
-import make11 from "../assets/imageIL.jpg";
+// import make11 from "../assets/imageIL.jpg";
 import make12 from "../assets/imagenil.jpg"; // change for nails
+// For hair sty
+import make13 from "../assets/menB.jpg";
+import make14 from "../assets/kinkB.jpg";
+import make15 from "../assets/fulB.jpg";
+import make16 from "../assets/bB.jpg";
+import make17 from "../assets/download.jpg";
 import { Button, ListGroup } from "react-bootstrap";
 import "../Styles/content.css";
 import api from "../config/api";
@@ -90,8 +104,7 @@ const Plan = () => {
           {[
             "makeup",
             "hair-styling",
-            "manicure",
-            "pedicure",
+            "Pedicure & Manicure",
             "massage",
             "create-plan",
           ].map((tab) => (
@@ -161,7 +174,6 @@ const Plan = () => {
                       <strong>Matte Makeup:</strong> (For oil control and clean
                       finish)
                     </ListGroup.Item>
-                    <button className="price-btn">N100,000</button>
                   </>
                 }
               />
@@ -283,6 +295,50 @@ const Plan = () => {
                   </>
                 }
               />
+              <Content
+                myImage={make3a}
+                b4Bdy={
+                  <div>
+                    <p>
+                      {" "}
+                      <strong>Products:</strong> Top Notch brands.
+                    </p>
+                  </div>
+                }
+                Title="Combo Plan"
+                item={
+                  <>
+                    <ListGroup.Item>
+                      All-in-One:Enjoy All Plans Benefits
+                    </ListGroup.Item>{" "}
+                    <ListGroup.Item>
+                      Basic Plan + Premium Plan + Luxury Plan
+                    </ListGroup.Item>{" "}
+                  </>
+                }
+              />
+              <Content
+                myImage={make3b}
+                b4Bdy={
+                  <div>
+                    <p>
+                      {" "}
+                      <strong>Products:</strong> Top Notch brands.
+                    </p>
+                  </div>
+                }
+                Title="Exclusive Plan"
+                item={
+                  <>
+                    <ListGroup.Item>
+                      All-in-One:Enjoy All Plans Benefits
+                    </ListGroup.Item>{" "}
+                    <ListGroup.Item>
+                      Basic Plan + Premium Plan + Luxury Plan
+                    </ListGroup.Item>{" "}
+                  </>
+                }
+              />
             </div>
           </div>
         )}
@@ -391,14 +447,58 @@ const Plan = () => {
                   </>
                 }
               />
+              <Content
+                myImage={make6a}
+                b4Bdy={
+                  <div>
+                    <p>
+                      {" "}
+                      <strong>Products:</strong> Top Notch brands.
+                    </p>
+                  </div>
+                }
+                Title="Combo Plan"
+                item={
+                  <>
+                    <ListGroup.Item>
+                      All-in-One:Enjoy All Plans Benefits
+                    </ListGroup.Item>{" "}
+                    <ListGroup.Item>
+                      Basic Plan + Premium Plan + Luxury Plan
+                    </ListGroup.Item>{" "}
+                  </>
+                }
+              />
+              <Content
+                myImage={make6b}
+                b4Bdy={
+                  <div>
+                    <p>
+                      {" "}
+                      <strong>Products:</strong> Top Notch brands.
+                    </p>
+                  </div>
+                }
+                Title="Exclusive Plan"
+                item={
+                  <>
+                    <ListGroup.Item>
+                      All-in-One:Enjoy All Plans Benefits
+                    </ListGroup.Item>{" "}
+                    <ListGroup.Item>
+                      Basic Plan + Premium Plan + Luxury Plan
+                    </ListGroup.Item>{" "}
+                  </>
+                }
+              />
             </div>
           </div>
         )}
 
         {/* Pedicure Tab */}
-        {activeTab === "pedicure" && (
+        {activeTab === "Pedicure & Manicure" && (
           <div className="tabcontent">
-            <h1>Pedicure</h1>
+            <h1>Pedicure & Manicure</h1>
             <hr />
 
             <div className="content mt-4">
@@ -423,7 +523,9 @@ const Plan = () => {
                   <>
                     <ListGroup.Item>Nail trimming and shaping</ListGroup.Item>{" "}
                     <ListGroup.Item>Cuticle care</ListGroup.Item>{" "}
-                    <ListGroup.Item>Hand soak & scrub</ListGroup.Item>{" "}
+                    <ListGroup.Item>
+                      Hands and Feets soak & scrub
+                    </ListGroup.Item>{" "}
                     <ListGroup.Item>Polish (1 color)</ListGroup.Item>
                   </>
                 }
@@ -443,8 +545,8 @@ const Plan = () => {
                     </p>
                     <p>
                       {" "}
-                      <strong>Bonus:</strong> Mini hand cream gift. Priority
-                      booking. Free repair within 5days
+                      <strong>Bonus:</strong> Mini cream gift. Priority booking.
+                      Free repair within 2days
                     </p>
                   </div>
                 }
@@ -452,12 +554,14 @@ const Plan = () => {
                 item={
                   <>
                     <ListGroup.Item>
-                      <strong>Full spa manicure:</strong> (exfoliation, mask,
-                      massage)
+                      <strong>Full spa manicure and Pedicure:</strong>{" "}
+                      (exfoliation, mask, massage)
                     </ListGroup.Item>{" "}
                     <ListGroup.Item>Gel or French polish</ListGroup.Item>{" "}
                     <ListGroup.Item>Cuticle softening and care</ListGroup.Item>{" "}
-                    <ListGroup.Item>Moisturizing hand cream</ListGroup.Item>
+                    <ListGroup.Item>
+                      Moisturizing hand and Feet cream
+                    </ListGroup.Item>
                   </>
                 }
               />
@@ -484,88 +588,38 @@ const Plan = () => {
                 item={
                   <>
                     <ListGroup.Item>
-                      <strong>Luxury Manicure:</strong> (hot oil treatment +
-                      paraffin wax.)
+                      <strong>Luxury Manicure and Pedicure:</strong> (hot oil
+                      treatment + paraffin wax.)
                     </ListGroup.Item>{" "}
                     <ListGroup.Item>
                       Custom nail design or chrome finish
                     </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      Premium hand exfoliation & serum
-                    </ListGroup.Item>
+                    <ListGroup.Item>Premium exfoliation & serum</ListGroup.Item>
                     <ListGroup.Item>
                       Heated towel wrap and full massage
                     </ListGroup.Item>
                   </>
                 }
               />
-            </div>
-          </div>
-        )}
-
-        {/* Manicure Tab */}
-        {activeTab === "manicure" && (
-          <div className="tabcontent">
-            <h1>Manicure</h1>
-            <hr />
-
-            <div className="content mt-4">
               <Content
                 myImage={make10}
                 b4Bdy={
                   <div>
-                    <p>For everyday client, students, casual grooming</p>
                     <p>
                       {" "}
-                      <strong>Products:</strong> Quality but non-luxury brands.
-                    </p>
-                    <p>
-                      {" "}
-                      <strong>Bonus:</strong> Free quick-dry top coat, 3-day
-                      polish fix
+                      <strong>Products:</strong> Top Notch brands.
                     </p>
                   </div>
                 }
-                Title="Basic Plan"
-                item={
-                  <>
-                    <ListGroup.Item>Nail trimming and shaping</ListGroup.Item>{" "}
-                    <ListGroup.Item>Cuticle care</ListGroup.Item>{" "}
-                    <ListGroup.Item>Hand soak & scrub</ListGroup.Item>{" "}
-                    <ListGroup.Item>Polish (1 color)</ListGroup.Item>
-                  </>
-                }
-              />
-              <Content
-                myImage={make11}
-                b4Bdy={
-                  <div>
-                    <p>
-                      {" "}
-                      <strong>Ideal For:</strong>Clients attending events, photo
-                      sessions,or date nights
-                    </p>
-                    <p>
-                      {" "}
-                      <strong>Products:</strong> Premium brands
-                    </p>
-                    <p>
-                      {" "}
-                      <strong>Bonus:</strong> Mini hand cream gift. Priority
-                      booking. Free repair within 5days
-                    </p>
-                  </div>
-                }
-                Title="Premium Plan"
+                Title="Combo Plan"
                 item={
                   <>
                     <ListGroup.Item>
-                      <strong>Full spa manicure:</strong> (exfoliation, mask,
-                      massage)
+                      All-in-One:Enjoy All Plans Benefits
                     </ListGroup.Item>{" "}
-                    <ListGroup.Item>Gel or French polish</ListGroup.Item>{" "}
-                    <ListGroup.Item>Cuticle softening and care</ListGroup.Item>{" "}
-                    <ListGroup.Item>Moisturizing hand cream</ListGroup.Item>
+                    <ListGroup.Item>
+                      Basic Plan + Premium Plan + Luxury Plan
+                    </ListGroup.Item>{" "}
                   </>
                 }
               />
@@ -574,50 +628,35 @@ const Plan = () => {
                 b4Bdy={
                   <div>
                     <p>
-                      <strong>Ideal For: </strong> Celebrites, Bride or Elite
-                      clients.
-                    </p>
-                    <p>
                       {" "}
-                      <strong>Products:</strong> Luxury / Designer brands
-                    </p>
-                    <p>
-                      <strong>Bonus:</strong> Complimentary drink &
-                      aromatherapy. Take-home hand kit(cream + oil + file). Free
-                      repair within 7days
+                      <strong>Products:</strong> Select Your Preferred Brand .
                     </p>
                   </div>
                 }
-                Title="Luxury Plan"
+                Title="Exclusive Plan"
                 item={
                   <>
                     <ListGroup.Item>
-                      <strong>Luxury Manicure:</strong> (hot oil treatment +
-                      paraffin wax.)
+                      Negotiate Prices 1-on-1 with Beautician
                     </ListGroup.Item>{" "}
                     <ListGroup.Item>
-                      Custom nail design or chrome finish
+                      Choose Any Service from All Plans at Custom Price
                     </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      Premium hand exfoliation & serum
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      Heated towel wrap and full massage
-                    </ListGroup.Item>
                   </>
                 }
               />
             </div>
           </div>
         )}
-        {/* Bookings Tab */}
+
+        {/* hairstyling Tab */}
         {activeTab === "hair-styling" && (
           <div className="tab-content">
             <h1>Hair Styling</h1>
             <hr />
             <div className="content mt-4">
               <Content
-                myImage={make10}
+                myImage={make13}
                 b4Bdy={
                   <div>
                     <p>For everyday client, students, casual grooming</p>
@@ -643,7 +682,7 @@ const Plan = () => {
                 }
               />
               <Content
-                myImage={make11}
+                myImage={make14}
                 b4Bdy={
                   <div>
                     <p>
@@ -676,7 +715,7 @@ const Plan = () => {
                 }
               />
               <Content
-                myImage={make12}
+                myImage={make15}
                 b4Bdy={
                   <div>
                     <p>
@@ -710,6 +749,50 @@ const Plan = () => {
                     <ListGroup.Item>
                       Heated towel wrap and full massage
                     </ListGroup.Item>
+                  </>
+                }
+              />
+              <Content
+                myImage={make16}
+                b4Bdy={
+                  <div>
+                    <p>
+                      {" "}
+                      <strong>Products:</strong> Top Notch brands.
+                    </p>
+                  </div>
+                }
+                Title="Combo Plan"
+                item={
+                  <>
+                    <ListGroup.Item>
+                      All-in-One:Enjoy All Plans Benefits
+                    </ListGroup.Item>{" "}
+                    <ListGroup.Item>
+                      Basic Plan + Premium Plan + Luxury Plan
+                    </ListGroup.Item>{" "}
+                  </>
+                }
+              />
+              <Content
+                myImage={make17}
+                b4Bdy={
+                  <div>
+                    <p>
+                      {" "}
+                      <strong>Products:</strong> Top Notch brands.
+                    </p>
+                  </div>
+                }
+                Title="Exclusive Plan"
+                item={
+                  <>
+                    <ListGroup.Item>
+                      All-in-One:Enjoy All Plans Benefits
+                    </ListGroup.Item>{" "}
+                    <ListGroup.Item>
+                      Basic Plan + Premium Plan + Luxury Plan
+                    </ListGroup.Item>{" "}
                   </>
                 }
               />

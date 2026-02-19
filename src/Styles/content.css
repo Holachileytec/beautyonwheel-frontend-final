@@ -1,7 +1,8 @@
 .content {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   justify-content: space-evenly;
+  gap: 10px;
 }
 
 .card-text p,
@@ -13,16 +14,14 @@
   padding: 10px !important;
 }
 
-
-
-.frm button{
-background-color: #d1307b;
-border: none;
-width:100%;
-padding:10px;
-transition: 1s;
+.frm button {
+  background-color: #d1307b;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  transition: 1s;
 }
-.frm button:hover{
+.frm button:hover {
   background-color: white;
   border: 1px solid black;
   color: black;
@@ -30,73 +29,68 @@ transition: 1s;
   transform: translateY(30%);
 }
 
-.frm .e{
+.frm .e {
   margin: 20px;
 }
-.frm .e label{
+.frm .e label {
   padding-left: 10px;
   font-weight: 600;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 
 /* Media query  */
 /* Extra  Extra Large */
 @media (min-width: 1400px) {
-   
 }
 /* Extra large */
 @media (min-width: 1200px) {
-  
 }
 
 /* Large */
 @media (min-width: 992px) and (max-width: 1199px) {
-  .content{
+  .content {
     display: block;
-  justify-content: center !important;
-    
+    justify-content: center !important;
   }
 
- .content .crd{
+  .content .crd {
     display: flex;
     justify-content: center !important;
-     margin: 30px;
+    margin: 30px;
   }
 }
 
 /* Medium */
 @media (min-width: 768px) and (max-width: 991px) {
-   .content{
-    display: block;    
+  .content {
+    display: block;
   }
-   .content .crd{
+  .content .crd {
     display: flex;
     justify-content: center !important;
-     margin: 30px;
+    margin: 30px;
   }
-
 }
 /* Small */
 @media (min-width: 576px) and (max-width: 767px) {
-  .content{
+  .content {
     display: block;
   }
-  .content .crd{
+  .content .crd {
     display: flex;
     justify-content: center !important;
-     margin: 30px;
+    margin: 30px;
   }
 }
 
 /* EXtra Small */
 @media (min-width: 200px) and (max-width: 575px) {
-  .content{
+  .content {
     display: block;
   }
-   .content .crd{
+  .content .crd {
     display: flex;
     justify-content: center !important;
-     margin: 30px;
+    margin: 30px;
   }
 }
-
