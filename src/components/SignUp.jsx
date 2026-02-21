@@ -5,6 +5,7 @@ import api from "../config/api";
 // Make sure to add a beauty-related image to your project
 import beautyImage from "../assets/nil.jpg"; // You'll need to add this image
 import { useNavigate } from "react-router-dom";
+import { p } from "framer-motion/client";
 const SignUp = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -14,6 +15,8 @@ const SignUp = () => {
     password: "",
     agreeTerms: false,
   });
+  const [confirmPass, setConfirmPass] = useState("");
+  const [confirmMessage, setConfirmMessage] = useState("");
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
@@ -23,6 +26,15 @@ const SignUp = () => {
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+  const handleChange2 = (e) => {
+    const { name, value } = e.target;
+    setConfirmPass(value);
+    if (formData.password !== value) {
+      setConfirmMessage("Passwords do not match");
+    } else {
+      setConfirmMessage("Passwords Match");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -115,6 +127,31 @@ const SignUp = () => {
                 placeholder="Enter your password"
                 required
               />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={confirmPass}
+                onChange={handleChange2}
+                placeholder="Confirm your password"
+                required
+              />
+              <label htmlFor="match">
+                {confirmMessage && (
+                  <p
+                    style={{
+                      color:
+                        confirmMessage === "Passwords Match" ? "green" : "red",
+                    }}
+                  >
+                    {confirmMessage}
+                  </p>
+                )}
+              </label>
             </div>
             <div className="input-group">
               <label className="checkboxText" htmlFor="role">

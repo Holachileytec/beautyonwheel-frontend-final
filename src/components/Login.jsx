@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from "react";
 import "../Styles/Login.css";
 import api from "../config/api";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 const Login = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-
   useEffect(() => {
-    const token = localStorage.getItem("token")
-if (token) {
+    const token = localStorage.getItem("token");
+    if (token) {
       navigate("/");
     }
-  }, [navigate])
+  }, [navigate]);
   const handleSubmit = async (e) => {
-
     e.preventDefault();
     try {
-const res = await api.post("/api/users/login", {
+      const res = await api.post("/api/users/login", {
         email,
         password,
       });
       setMessage(res.data.message || "Login Successful");
-      localStorage.setItem("token", res.data.token)
-      localStorage.setItem("user", JSON.stringify(res.data.user))
-      navigate("/")
-} catch (error) {
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      navigate("/");
+    } catch (error) {
       setMessage(error.response?.data?.message || "Invalid credentials");
     }
   };

@@ -15,9 +15,14 @@ const User = () => {
     name: "",
     phone: "",
     address: "",
+    guarantorName: "",
+    guarantorPhone: "",
+    guarantorAddress: "",
+    guarantorRelationship: "",
     bio: "",
     experienceYears: 0,
     specialties: "",
+    gender: "",
   });
 
   const [userInfo, setUserInfo] = useState({});
@@ -74,7 +79,7 @@ const User = () => {
   //  beautician profile
   useEffect(() => {
     const getBeautician = async () => {
-      const { user, token } = getAuthData();
+      const { user } = getAuthData();
       try {
         const res = await api.get(`/api/beauticians/beautician/${user._id}`);
         setBeauty(res.data.beautician);
@@ -105,8 +110,12 @@ const User = () => {
         bio: formData.bio,
         experienceYears: formData.experienceYears,
         specialties: formData.specialties,
+        guarantorAddress: formData.guarantorAddress,
+        guarantorName: formData.guarantorName,
+        guarantorPhone: formData.guarantorPhone,
+        guarantorRelationship: formData.guarantorRelationship,
+        gender: formData.gender,
       };
-      // const res = await api.put(`/api/beauticians/profile-update`, formData);
       const [resU, resB] = await Promise.all([
         api.put(`/api/users/${user._id}`, forUser),
         api.put("/api/beauticians/profile-update", forBeautician),
@@ -125,6 +134,11 @@ const User = () => {
         phone: "",
         name: "",
         address: "",
+        guarantorName: "",
+        guarantorPhone: "",
+        guarantorAddress: "",
+        guarantorRelationship: "",
+        gender: "",
       });
     } catch (err) {
       setUpdateMessage(err.response?.data?.message || "An error occured");
@@ -316,7 +330,57 @@ const User = () => {
               <div>
                 <input
                   type="text"
-                  placeholder="address"
+                  placeholder="Gender"
+                  name="gender"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.gender}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Guarantor's Name"
+                  name="guarantorName"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.guarantorName}
+                />
+              </div>
+              <div>
+                <input
+                  type="number"
+                  placeholder="Guarantor's Phone Number"
+                  name="guarantorPhone"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.guarantorPhone}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Guarantor's Address"
+                  name="guarantorAddress"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.guarantorAddress}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Guarantor's Relationship"
+                  name="guarantorRelationship"
+                  style={{ width: "100%" }}
+                  onChange={handleChange}
+                  value={formData.guarantorRelationship}
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Beautician address"
                   name="address"
                   style={{ width: "100%" }}
                   onChange={handleChange}
@@ -324,8 +388,8 @@ const User = () => {
                 />
               </div>
               <div>
-                <input
-                  type="text"
+                <textarea
+                  rows={4}
                   placeholder="Speciality"
                   name="specialties"
                   style={{ width: "100%" }}
@@ -430,6 +494,16 @@ const User = () => {
                   <div className="beautician-info">
                     <h4>Address</h4>
                     <p className="specialty">{beauty.address}</p>
+                  </div>
+
+                  <div className="beautician-info">
+                    <h4>Guarantor</h4>
+                    <p className="specialty">{beauty.guarantorName}</p>
+                  </div>
+
+                  <div className="beautician-info">
+                    <h4>Gender</h4>
+                    <p className="specialty">{beauty.gender}</p>
                   </div>
                   <div className="beautician-info">
                     <h4>Speciality</h4>
