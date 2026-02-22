@@ -17,7 +17,6 @@ export default function Pay() {
     service: "",
     date: "",
     note: "",
-    // beautician:"",
     paymentMethod: "card",
   });
 
@@ -28,9 +27,11 @@ export default function Pay() {
     e.preventDefault();
     setLoading(true);
     const bookingData = {
-      // beautician: form.beautician,
-      service: form.service,
+      name: form.name,
+      phone: form.phone,
       address: form.address,
+      city: form.city,
+      service: form.service,
       note: form.note || form.phone,
       date: form.date,
       status: "pending",
@@ -98,22 +99,12 @@ export default function Pay() {
           onChange={handleChange}
           required
         />
-        {/* <label htmlFor="beautician">Beautician</label>
-<select name="beautician" value={form.beautician} onChange={handleChange} required>
-<option value=""> Choose a Beautician </option>
-{beauticians?.map((b)=>(
-  <option value={b._id} key={b._id}>
-  {b?.user?.name} ({b?.user?.specialties})
-  </option>
-))}
-
-</select> */}
 
         <label>Address</label>
         <input
           type="text"
           name="address"
-          placeholder="Street address"
+          placeholder="Enter your preferred location for the service"
           value={form.address}
           onChange={handleChange}
           required

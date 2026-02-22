@@ -4,13 +4,23 @@ import { Link } from "react-router-dom";
 import { FaTelegram } from "react-icons/fa";
 import api from "../config/api";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const User = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [beauticians, setBeauticians] = useState([]);
   const [beauty, setBeauty] = useState();
+  const [showRate, setShowRate] = useState(null);
   const [updateMessage, setUpdateMessage] = useState("");
+  const showRating = (id) => {
+    if (showRate === id) {
+      setShowRate(null);
+    } else {
+      setShowRate(id);
+    }
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -23,8 +33,24 @@ const User = () => {
     experienceYears: 0,
     specialties: "",
     gender: "",
+    rating: 0,
   });
-
+  const rateInfo = {
+    rating: formData.rating,
+  };
+  const submitRating = async (id) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:8000/api/beauticians/Bupdate/${id}`,
+        rateInfo,
+      );
+      alert("Beautician Rated Successfully! Thank you for your feedback.");
+      console.log(res.data);
+    } catch (err) {
+      alert("Failed to submit rating. Please try again later.");
+      console.error("Rating error", err);
+    }
+  };
   const [userInfo, setUserInfo] = useState({});
   const getAuthData = () => {
     let user = null;
@@ -115,6 +141,7 @@ const User = () => {
         guarantorPhone: formData.guarantorPhone,
         guarantorRelationship: formData.guarantorRelationship,
         gender: formData.gender,
+        rating: formData.rating,
       };
       const [resU, resB] = await Promise.all([
         api.put(`/api/users/${user._id}`, forUser),
@@ -139,6 +166,7 @@ const User = () => {
         guarantorAddress: "",
         guarantorRelationship: "",
         gender: "",
+        rating: 0,
       });
     } catch (err) {
       setUpdateMessage(err.response?.data?.message || "An error occured");
@@ -455,7 +483,7 @@ const User = () => {
             non
           >
             <h3>Our Beauticians</h3>
-            <div className="beauticians-list">
+            <div className="beauticians-list collapsed">
               {beauticians.map((beautician) => (
                 <div key={beautician._id} className="beautician-item">
                   <div className="beautician-avatar">
@@ -469,6 +497,45 @@ const User = () => {
                       <span className="experience">
                         {beautician.experienceYears}
                       </span>
+                      <span className="experience">{beautician.gender}</span>
+                    </div>
+                    <div className="rating d-flex">
+                      {showRate === beautician._id && (
+                        <>
+                          <input
+                            type="number"
+                            name="rating"
+                            placeholder="Enter your rating"
+                            value={formData.rating}
+                            onChange={handleChange}
+                            style={{
+                              display:
+                                showRate === beautician._id ? "block" : "none",
+                            }}
+                          />
+                          <button
+                            style={{
+                              display:
+                                showRate === beautician._id ? "block" : "none",
+                            }}
+                            onClick={() => {
+                              submitRating(beautician._id);
+                            }}
+                          >
+                            Submit
+                          </button>
+                        </>
+                      )}
+
+                      <button
+                        onClick={() => {
+                          showRating(beautician._id);
+                        }}
+                      >
+                        {showRate === beautician._id
+                          ? "Close"
+                          : "Rate this beautician"}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -478,9 +545,8 @@ const User = () => {
           <div
             className="beauticians-card"
             style={{
-              display: displayRole === "beautician" ? "block" : "block",
+              display: displayRole === "beautician" ? "block" : "none",
             }}
-            non
           >
             <h3>My Information</h3>
             <div className="beauticians-list">
@@ -515,6 +581,14 @@ const User = () => {
           </div>
 
           <div className="quick-actions">
+            <button
+              className="action-btn"
+              onClick={() => {
+                navigate("/bookASession");
+              }}
+            >
+              Book a service
+            </button>
             <button
               className="action-btn"
               onClick={() => {

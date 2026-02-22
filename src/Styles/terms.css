@@ -37,3 +37,14 @@
   font-size: 1rem;
   color: black;
 }
+
+/* Media */
+@media (min-width: 200px) and (max-width: 567px) {
+  .terms-container {
+    width: 100%;
+  }
+  .terms-Wrapper {
+    margin: 0;
+    width: 100%;
+  }
+}

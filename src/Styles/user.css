@@ -69,7 +69,9 @@
   border-radius: 10px;
   margin-bottom: 20px;
   border-left: 4px solid #d1307b;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .user-card:hover,
@@ -273,6 +275,10 @@
   font-size: 12px;
 }
 
+.collapsed {
+  max-height: 250px !important;
+  overflow-y: scroll !important;
+}
 .unread-dot {
   width: 8px;
   height: 8px;

@@ -1,11 +1,11 @@
-import React from "react"
+import React from "react";
 
-import "../Styles/terms.css"
+import "../Styles/terms.css";
 
-function Terms (){
-  return(
-      <>
-    <div className="terms-container">
+function Terms() {
+  return (
+    <>
+      <div className="terms-container">
         <div className="terms-Wrapper">
           <h1 className="tc">Terms and Conditions </h1>
           <div className="ourService">
@@ -90,8 +90,7 @@ function Terms (){
           </div>
         </div>
       </div>
-      </>
-  )
-
+    </>
+  );
 }
 export default Terms;
