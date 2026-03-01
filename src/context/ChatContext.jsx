@@ -1,36 +1,46 @@
-import { createContext, useContext, useReducer, useCallback, useMemo, useRef, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+} from "react";
 import ChatService from "../services/ChatService";
 
 const ChatContext = createContext(null);
 
 // Mode types
 export const ChatMode = {
-  AI: 'ai',
-  HUMAN: 'human',
+  AI: "ai",
+  HUMAN: "human",
 };
 
 // Sender types for messages
 export const SenderType = {
-  USER: 'user',
-  AI: 'ai',
-  HUMAN: 'human',
-  SYSTEM: 'system',
+  USER: "user",
+  AI: "ai",
+  HUMAN: "human",
+  SYSTEM: "system",
 };
 
 const createInitialState = (config) => ({
   isOpen: false,
   messages: [
     {
-      id: 'welcome_msg',
-      text: config?.welcomeMessage || "Hello! I'm your BeautyOnWheel AI assistant. How can I help you today? Ask about our services, booking, pricing, or request to speak with a human agent.",
+      id: "welcome_msg",
+      text:
+        config?.welcomeMessage ||
+        "Hello! I'm your BeautyOnWheel AI assistant. How can I help you today? Ask about our services, booking, pricing, or request to speak with a human agent.",
       sender: SenderType.AI,
-      senderName: 'BeautyOnWheel AI',
+      senderName: "BeautyOnWheel AI",
       timestamp: new Date().toISOString(),
-    }
+    },
   ],
   isTyping: false,
   unreadCount: 0,
-  connectionStatus: 'connected',
+  connectionStatus: "connected",
   userInfo: null,
   mode: ChatMode.AI,
   humanAgent: null,
@@ -40,20 +50,20 @@ const createInitialState = (config) => ({
 
 // Action types
 const ActionTypes = {
-  TOGGLE_CHAT: 'TOGGLE_CHAT',
-  OPEN_CHAT: 'OPEN_CHAT',
-  CLOSE_CHAT: 'CLOSE_CHAT',
-  ADD_MESSAGE: 'ADD_MESSAGE',
-  SET_TYPING: 'SET_TYPING',
-  SET_CONNECTION_STATUS: 'SET_CONNECTION_STATUS',
-  SET_USER_INFO: 'SET_USER_INFO',
-  CLEAR_MESSAGES: 'CLEAR_MESSAGES',
-  MARK_AS_READ: 'MARK_AS_READ',
-  SET_MODE: 'SET_MODE',
-  SET_HUMAN_AGENT: 'SET_HUMAN_AGENT',
-  SET_AGENT_REQUESTED: 'SET_AGENT_REQUESTED',
-  SET_QUEUE_POSITION: 'SET_QUEUE_POSITION',
-  RESET_STATE: 'RESET_STATE',
+  TOGGLE_CHAT: "TOGGLE_CHAT",
+  OPEN_CHAT: "OPEN_CHAT",
+  CLOSE_CHAT: "CLOSE_CHAT",
+  ADD_MESSAGE: "ADD_MESSAGE",
+  SET_TYPING: "SET_TYPING",
+  SET_CONNECTION_STATUS: "SET_CONNECTION_STATUS",
+  SET_USER_INFO: "SET_USER_INFO",
+  CLEAR_MESSAGES: "CLEAR_MESSAGES",
+  MARK_AS_READ: "MARK_AS_READ",
+  SET_MODE: "SET_MODE",
+  SET_HUMAN_AGENT: "SET_HUMAN_AGENT",
+  SET_AGENT_REQUESTED: "SET_AGENT_REQUESTED",
+  SET_QUEUE_POSITION: "SET_QUEUE_POSITION",
+  RESET_STATE: "RESET_STATE",
 };
 
 function chatReducer(state, action) {
@@ -81,17 +91,17 @@ function chatReducer(state, action) {
     case ActionTypes.SET_USER_INFO:
       return { ...state, userInfo: action.payload };
     case ActionTypes.CLEAR_MESSAGES:
-      return { 
-        ...state, 
-        messages: [state.messages[0]] // Keep welcome message
+      return {
+        ...state,
+        messages: [state.messages[0]], // Keep welcome message
       };
     case ActionTypes.MARK_AS_READ:
       return { ...state, unreadCount: 0 };
     case ActionTypes.SET_MODE:
       return { ...state, mode: action.payload };
     case ActionTypes.SET_HUMAN_AGENT:
-      return { 
-        ...state, 
+      return {
+        ...state,
         humanAgent: action.payload,
         mode: action.payload ? ChatMode.HUMAN : ChatMode.AI,
         isAgentRequested: action.payload ? false : state.isAgentRequested,
@@ -118,39 +128,55 @@ export const ChatProvider = ({ children, config }) => {
     serviceInitialized.current = true;
 
     // Initialize the chat service
+    // ChatService.init({
+    //   serverUrl: config?.serverUrl,
+    //   sessionId: config?.sessionId,
+    //   enableRealtime: config?.enableRealtime,
+    // });
     ChatService.init({
-      serverUrl: config?.serverUrl,
-      sessionId: config?.sessionId,
-      enableRealtime: config?.enableRealtime,
+      serverUrl:
+        config?.serverUrl ||
+        import.meta.env.VITE_API_URL ||
+        "http://localhost:8000",
+      enableRealtime: config?.enableRealtime ?? true, // default to true
     });
 
     // Setup event listeners
     const unsubscribers = [
-      ChatService.on('connected', () => {
-        dispatch({ type: ActionTypes.SET_CONNECTION_STATUS, payload: 'connected' });
+      ChatService.on("connected", () => {
+        dispatch({
+          type: ActionTypes.SET_CONNECTION_STATUS,
+          payload: "connected",
+        });
       }),
 
-      ChatService.on('disconnected', () => {
-        dispatch({ type: ActionTypes.SET_CONNECTION_STATUS, payload: 'disconnected' });
+      ChatService.on("disconnected", () => {
+        dispatch({
+          type: ActionTypes.SET_CONNECTION_STATUS,
+          payload: "disconnected",
+        });
       }),
 
-      ChatService.on('connectionError', () => {
-        dispatch({ type: ActionTypes.SET_CONNECTION_STATUS, payload: 'ai_only' });
+      ChatService.on("connectionError", () => {
+        dispatch({
+          type: ActionTypes.SET_CONNECTION_STATUS,
+          payload: "ai_only",
+        });
       }),
 
-      ChatService.on('messageReceived', (message) => {
+      ChatService.on("messageReceived", (message) => {
         dispatch({ type: ActionTypes.ADD_MESSAGE, payload: message });
       }),
 
-      ChatService.on('aiTyping', (isTyping) => {
+      ChatService.on("aiTyping", (isTyping) => {
         dispatch({ type: ActionTypes.SET_TYPING, payload: isTyping });
       }),
 
-      ChatService.on('agentTyping', (isTyping) => {
+      ChatService.on("agentTyping", (isTyping) => {
         dispatch({ type: ActionTypes.SET_TYPING, payload: isTyping });
       }),
 
-      ChatService.on('agentConnected', (agent) => {
+      ChatService.on("agentConnected", (agent) => {
         dispatch({ type: ActionTypes.SET_HUMAN_AGENT, payload: agent });
         dispatch({
           type: ActionTypes.ADD_MESSAGE,
@@ -163,7 +189,7 @@ export const ChatProvider = ({ children, config }) => {
         });
       }),
 
-      ChatService.on('agentDisconnected', () => {
+      ChatService.on("agentDisconnected", () => {
         dispatch({ type: ActionTypes.SET_HUMAN_AGENT, payload: null });
         dispatch({
           type: ActionTypes.ADD_MESSAGE,
@@ -176,22 +202,22 @@ export const ChatProvider = ({ children, config }) => {
         });
       }),
 
-      ChatService.on('agentRequested', () => {
+      ChatService.on("agentRequested", () => {
         dispatch({ type: ActionTypes.SET_AGENT_REQUESTED, payload: true });
       }),
 
-      ChatService.on('queuePosition', (position) => {
+      ChatService.on("queuePosition", (position) => {
         dispatch({ type: ActionTypes.SET_QUEUE_POSITION, payload: position });
       }),
 
-      ChatService.on('modeChanged', (mode) => {
+      ChatService.on("modeChanged", (mode) => {
         dispatch({ type: ActionTypes.SET_MODE, payload: mode });
       }),
     ];
 
     // Cleanup on unmount
     return () => {
-      unsubscribers.forEach(unsub => unsub());
+      unsubscribers.forEach((unsub) => unsub());
       ChatService.disconnect();
     };
   }, [config]);
@@ -225,7 +251,7 @@ export const ChatProvider = ({ children, config }) => {
     try {
       await ChatService.sendMessage(text.trim());
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error("Failed to send message:", error);
       dispatch({
         type: ActionTypes.ADD_MESSAGE,
         payload: {
@@ -241,7 +267,7 @@ export const ChatProvider = ({ children, config }) => {
   const requestHumanAgent = useCallback(() => {
     dispatch({ type: ActionTypes.SET_AGENT_REQUESTED, payload: true });
     ChatService.requestHumanAgent();
-    
+
     dispatch({
       type: ActionTypes.ADD_MESSAGE,
       payload: {
@@ -258,7 +284,7 @@ export const ChatProvider = ({ children, config }) => {
     dispatch({ type: ActionTypes.SET_MODE, payload: ChatMode.AI });
     dispatch({ type: ActionTypes.SET_HUMAN_AGENT, payload: null });
     dispatch({ type: ActionTypes.SET_AGENT_REQUESTED, payload: false });
-    
+
     dispatch({
       type: ActionTypes.ADD_MESSAGE,
       payload: {
@@ -288,37 +314,40 @@ export const ChatProvider = ({ children, config }) => {
   }, []);
 
   // Memoize the context value
-  const value = useMemo(() => ({
-    ...state,
-    config,
-    toggleChat,
-    openChat,
-    closeChat,
-    sendMessage,
-    setUserInfo,
-    clearMessages,
-    markAsRead,
-    requestHumanAgent,
-    switchToAI,
-    sendTypingIndicator,
-    // Computed properties
-    isHumanMode: state.mode === ChatMode.HUMAN,
-    isAIMode: state.mode === ChatMode.AI,
-    hasHumanAgent: !!state.humanAgent,
-  }), [
-    state,
-    config,
-    toggleChat,
-    openChat,
-    closeChat,
-    sendMessage,
-    setUserInfo,
-    clearMessages,
-    markAsRead,
-    requestHumanAgent,
-    switchToAI,
-    sendTypingIndicator,
-  ]);
+  const value = useMemo(
+    () => ({
+      ...state,
+      config,
+      toggleChat,
+      openChat,
+      closeChat,
+      sendMessage,
+      setUserInfo,
+      clearMessages,
+      markAsRead,
+      requestHumanAgent,
+      switchToAI,
+      sendTypingIndicator,
+      // Computed properties
+      isHumanMode: state.mode === ChatMode.HUMAN,
+      isAIMode: state.mode === ChatMode.AI,
+      hasHumanAgent: !!state.humanAgent,
+    }),
+    [
+      state,
+      config,
+      toggleChat,
+      openChat,
+      closeChat,
+      sendMessage,
+      setUserInfo,
+      clearMessages,
+      markAsRead,
+      requestHumanAgent,
+      switchToAI,
+      sendTypingIndicator,
+    ],
+  );
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
@@ -327,7 +356,7 @@ export const ChatProvider = ({ children, config }) => {
 export const useChat = () => {
   const context = useContext(ChatContext);
   if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
+    throw new Error("useChat must be used within a ChatProvider");
   }
   return context;
 };
@@ -335,26 +364,79 @@ export const useChat = () => {
 // Specialized hooks for better performance
 export const useChatOpen = () => {
   const { isOpen, toggleChat, openChat, closeChat } = useChat();
-  return useMemo(() => ({ isOpen, toggleChat, openChat, closeChat }), [isOpen, toggleChat, openChat, closeChat]);
+  return useMemo(
+    () => ({ isOpen, toggleChat, openChat, closeChat }),
+    [isOpen, toggleChat, openChat, closeChat],
+  );
 };
 
 export const useChatMessages = () => {
   const { messages, sendMessage, clearMessages } = useChat();
-  return useMemo(() => ({ messages, sendMessage, clearMessages }), [messages, sendMessage, clearMessages]);
+  return useMemo(
+    () => ({ messages, sendMessage, clearMessages }),
+    [messages, sendMessage, clearMessages],
+  );
 };
 
 export const useChatStatus = () => {
-  const { isTyping, connectionStatus, unreadCount, mode, humanAgent, isAgentRequested } = useChat();
-  return useMemo(() => ({ 
-    isTyping, connectionStatus, unreadCount, mode, humanAgent, isAgentRequested 
-  }), [isTyping, connectionStatus, unreadCount, mode, humanAgent, isAgentRequested]);
+  const {
+    isTyping,
+    connectionStatus,
+    unreadCount,
+    mode,
+    humanAgent,
+    isAgentRequested,
+  } = useChat();
+  return useMemo(
+    () => ({
+      isTyping,
+      connectionStatus,
+      unreadCount,
+      mode,
+      humanAgent,
+      isAgentRequested,
+    }),
+    [
+      isTyping,
+      connectionStatus,
+      unreadCount,
+      mode,
+      humanAgent,
+      isAgentRequested,
+    ],
+  );
 };
 
 export const useChatMode = () => {
-  const { mode, humanAgent, isAgentRequested, requestHumanAgent, switchToAI, isHumanMode, isAIMode } = useChat();
-  return useMemo(() => ({ 
-    mode, humanAgent, isAgentRequested, requestHumanAgent, switchToAI, isHumanMode, isAIMode
-  }), [mode, humanAgent, isAgentRequested, requestHumanAgent, switchToAI, isHumanMode, isAIMode]);
+  const {
+    mode,
+    humanAgent,
+    isAgentRequested,
+    requestHumanAgent,
+    switchToAI,
+    isHumanMode,
+    isAIMode,
+  } = useChat();
+  return useMemo(
+    () => ({
+      mode,
+      humanAgent,
+      isAgentRequested,
+      requestHumanAgent,
+      switchToAI,
+      isHumanMode,
+      isAIMode,
+    }),
+    [
+      mode,
+      humanAgent,
+      isAgentRequested,
+      requestHumanAgent,
+      switchToAI,
+      isHumanMode,
+      isAIMode,
+    ],
+  );
 };
 
 export default ChatContext;

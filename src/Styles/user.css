@@ -279,10 +279,19 @@
   max-height: 250px !important;
   overflow-y: scroll !important;
 }
+.rate {
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #d1307b;
+  color: white;
+  border: none;
+  margin: 0 5px 0 5px;
+}
 .unread-dot {
   width: 8px;
   height: 8px;
   background: #d1307b;
+
   border-radius: 50%;
   margin-left: 10px;
   flex-shrink: 0;

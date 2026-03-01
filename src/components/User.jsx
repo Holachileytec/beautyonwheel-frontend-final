@@ -41,7 +41,8 @@ const User = () => {
   const submitRating = async (id) => {
     try {
       const res = await axios.put(
-        `http://localhost:8000/api/beauticians/Bupdate/${id}`,
+        //`${import.meta.env.VITE_API_URL}/api/beauticians/Bupdate/${id}` this can be use when to deploy to production
+         `http://localhost:8000/api/beauticians/Bupdate/${id}`,
         rateInfo,
       );
       alert("Beautician Rated Successfully! Thank you for your feedback.");
@@ -107,7 +108,7 @@ const User = () => {
     const getBeautician = async () => {
       const { user } = getAuthData();
       try {
-        const res = await api.get(`/api/beauticians/beautician/${user._id}`);
+        const res = await api.get(`/api/beauticians/user/${user._id}`);
         setBeauty(res.data.beautician);
         console.log("Beautician Data:", res.data.beautician);
       } catch (err) {
@@ -191,6 +192,7 @@ const User = () => {
   }, []);
 
   const getBeauticians = async () => {
+    
     try {
       const res = await api.get("/api/beauticians/allbeauticians");
       console.log(res.data.beauticians);
@@ -514,6 +516,7 @@ const User = () => {
                             }}
                           />
                           <button
+                            className="rate"
                             style={{
                               display:
                                 showRate === beautician._id ? "block" : "none",
@@ -528,6 +531,7 @@ const User = () => {
                       )}
 
                       <button
+                        className="rate"
                         onClick={() => {
                           showRating(beautician._id);
                         }}

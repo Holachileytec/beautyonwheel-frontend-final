@@ -152,7 +152,7 @@ api.interceptors.request.use(
   (error) => {
     console.error("❌ Request setup error:", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response — unified error handling
@@ -174,9 +174,10 @@ api.interceptors.response.use(
         case 401:
           console.warn("⚠️  Session expired — please log in again");
           localStorage.removeItem("token");
-          // window.location.href = '/login'; // Uncomment to auto-redirect
+           window.location.href = '/login'; // Uncomment to auto-redirect
           break;
 
+      
         case 403:
           console.warn("⚠️  Access forbidden");
           break;
@@ -212,7 +213,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // ============================================

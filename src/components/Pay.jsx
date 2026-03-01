@@ -36,13 +36,20 @@ export default function Pay() {
       date: form.date,
       status: "pending",
     };
+    const token = localStorage.getItem("token");
     console.log("Booking Details:", bookingData);
     try {
-      const response = await api.post("/api/bookings/create", bookingData);
-      alert("Booking Successful");
-      const selected = service.find((item) => {
-        return item._id === bookingData.service;
+      const response = await api.post("/api/bookings/create", bookingData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      alert("Booking Successful");
+      console.log(response.data);
+       const selected = service.find((item) => {
+         return item._id === bookingData.service;
+      });
+    
       console.log("Selected Service for Payment:", selected);
       navigate("/pay", { state: { selectedService: selected.name } });
     } catch (err) {

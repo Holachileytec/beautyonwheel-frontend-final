@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import "../Styles/admin.css";
 import api from "../config/api";
 import AModal from "./AModal";
+import axios from "axios";
+import AdminChat from "./AdminChat";
 
 const Admin = () => {
+  const [gallery, setGallery] = useState({
+    imageUrl: "",
+    description: "",
+  });
   const [createServiceFormData, setCreateServiceFormData] = useState({
     name: "",
     price: "",
@@ -108,6 +114,29 @@ const Admin = () => {
       return null;
     }
   };
+  // Gallery
+
+  const dataForG = {
+    description: gallery.description,
+    imageUrl: gallery.imageUrl,
+  };
+
+  const uploadImage = async () => {
+    try {
+      const res = await api.post("/api/beauticians/uploadpic", dataForG);
+      // const res = await axios.post(
+      //   "http://localhost:8000/api/beauticians/uploadpic",
+      //   dataForG,
+      // );
+      console.log(res.data);
+      alert(res.data.message || "Image  uploaded successfully!");
+      setGallery({ imageUrl: "", description: "" });
+    } catch (error) {
+      console.error("This error occured in the gallery api", error);
+      alert(error.response?.data?.message || "Failed to upload image");
+    }
+  };
+  // End of Gallery
 
   // ✅ FIX 4: Update Service Type Function
   const updateServiceType = async ({ id }) => {
@@ -148,8 +177,7 @@ const Admin = () => {
     name: "",
     price: "",
   });
-
-// User Modal
+  // User Modal
   const [show1, setShow1] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const handleClose1 = () => {
@@ -163,18 +191,59 @@ const Admin = () => {
 
   // Plan Modal
   const [show2, setShow2] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState(null); // ← NEW
   const handleClose2 = () => setShow2(false);
-  const handleShow2 = () => setShow2(true);
+  const handleShow2 = (id) => {
+    // ← FIXED
+    setSelectedPlanId(id);
+    setShow2(true);
+  };
 
   // Service Modal
   const [show3, setShow3] = useState(false);
+  const [selectedServiceId, setSelectedServiceId] = useState(null); // ← NEW
   const handleClose3 = () => setShow3(false);
-  const handleShow3 = () => setShow3(true);
+  const handleShow3 = (id) => {
+    // ← FIXED
+    setSelectedServiceId(id);
+    setShow3(true);
+  };
 
   // Sub service Modal
   const [show4, setShow4] = useState(false);
+  const [selectedSubServiceId, setSelectedSubServiceId] = useState(null); // ← NEW
   const handleClose4 = () => setShow4(false);
-  const handleShow4 = () => setShow4(true);
+  const handleShow4 = (id) => {
+    // ← FIXED
+    setSelectedSubServiceId(id);
+    setShow4(true);
+  };
+  // // User Modal
+  // const [show1, setShow1] = useState(false);
+  // const [selectedUserId, setSelectedUserId] = useState(null);
+  // const handleClose1 = () => {
+  //   setShow1(false);
+  //   setSelectedUserId(null);
+  // };
+  // const handleShow1 = (userId) => {
+  //   setSelectedUserId(userId);
+  //   setShow1(true);
+  // };
+
+  // // Plan Modal
+  // const [show2, setShow2] = useState(false);
+  // const handleClose2 = () => setShow2(false);
+  // const handleShow2 = () => setShow2(true);
+
+  // // Service Modal
+  // const [show3, setShow3] = useState(false);
+  // const handleClose3 = () => setShow3(false);
+  // const handleShow3 = () => setShow3(true);
+
+  // // Sub service Modal
+  // const [show4, setShow4] = useState(false);
+  // const handleClose4 = () => setShow4(false);
+  // const handleShow4 = () => setShow4(true);
 
   const [planMessage, setPlanMessage] = useState("");
 
@@ -434,6 +503,13 @@ const Admin = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+  const handleChangeG = (e) => {
+    const { name, value, type, checked } = e.target;
+    setGallery((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
   const handleChange4 = (e) => {
     const { name, value, type, checked } = e.target;
@@ -507,6 +583,7 @@ const Admin = () => {
             "bookings",
             "settings",
             "beauticians",
+            "chat",
           ].map((tab) => (
             <button
               key={tab}
@@ -552,7 +629,7 @@ const Admin = () => {
                 </thead>
                 <tbody>
                   {users.map((user) => (
-                    <tr key={user.id}>
+                    <tr key={user._id}>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
                       <td>
@@ -710,6 +787,40 @@ const Admin = () => {
                 </div>
               ))}
             </div>
+            {/* 
+            gallary */}
+            <div className="gallery">
+              <h1>Gallery</h1>
+              <input
+                type="file"
+                value={gallery.imageUrl}
+                name="imageUrl"
+                placeholder="Paste image URL here"
+                onChange={handleChangeG}
+              />
+              <textarea
+                rows="3"
+                value={gallery.description}
+                name="description"
+                placeholder="Input the image url"
+                onChange={handleChangeG}
+              />
+              <button
+                onClick={() => {
+                  uploadImage();
+                }}
+              >
+                Add Image
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* chat tab*/}
+        {activeTab === "chat" && (
+          <div className="tab-content">
+            <h2>Support Chat</h2>
+            <AdminChat />
           </div>
         )}
 
@@ -864,7 +975,7 @@ const Admin = () => {
                         <td>
                           <button
                             className="action-btn edit"
-                            onClick={handleShow3}
+                            onClick={() => handleShow3(serv._Id)}
                           >
                             Edit
                           </button>
@@ -885,12 +996,14 @@ const Admin = () => {
               <AModal
                 show={show3}
                 handleClose={handleClose3}
-                handleClose1={() => {
-                  const selectedServiceId = service.find((s) => show3)?._id;
-                  if (selectedServiceId) {
-                    updateService({ id: selectedServiceId });
-                  }
-                }}
+                // ✅ Fixed — uses the state variable
+                handleClose1={() => updateService({ id: selectedServiceId })}
+                // handleClose1={() => {
+                //   const selectedServiceId = service.find((s) => show3)?._id;
+                //   if (selectedServiceId) {
+                //     updateService({ id: selectedServiceId });
+                //   }
+                // }}
                 head={<h1>Update Service</h1>}
                 body={
                   <>

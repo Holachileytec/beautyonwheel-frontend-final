@@ -20,11 +20,10 @@ function NewNav() {
           </Col>
 
           <Col className="columnB" xs={12} lg={6} md={6} sm={12}>
-           
             <div>
               <FaUser />
               <p>
-                <a href="/login">login</a>
+                <a href="/log">login</a>
               </p>
             </div>
 
@@ -49,7 +48,7 @@ function NewNav() {
           <Col xl={9} lg={10} xs={10}>
             <div className="text">
               <Link to="/">Home</Link>
-             <a href="/#masge">Massage</a>
+              <a href="/#masge">Massage</a>
               <a href="/#hair">Hair</a>
               <a href="#mnicure">Manicure</a>
               <a href="/#pdicure">Pedicure</a>
@@ -59,8 +58,7 @@ function NewNav() {
               <a href="/pay">Payment</a>
             </div>
           </Col>
-          <Col >
-
+          <Col>
             <div className="book">
               <Link to="/bookASession">
                 <Button style={{ alignItems: "center" }} className="Dbutin">

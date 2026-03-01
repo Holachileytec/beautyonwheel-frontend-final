@@ -20,29 +20,27 @@ import Footer from "./components/Footer";
 import Fq from "./components/Fq";
 import Terms from "./components/Terms";
 import Gallery from "./components/Gallery";
-import BeauticianProfile from "./components/BeauticianProfile";
 import Plan from "./components/Plan";
 import PaymentSuccess from "./components/PaymentSuccess";
-import { useEffect } from "react";
-import { initSocket } from "./config/api";
 import AdminProtector from "./components/AdminProtector.jsx";
-
+import AdminLogin from "./components/AdminLogin.jsx";
+import BothLogin from "./components/BothLogin.jsx";
 function App() {
-  useEffect(() => {
-    // Initialize socket when app loads
-    const socket = initSocket();
-    // Optional: Add global socket listeners here
-    socket.on("notification", (data) => {
-      console.log("📬 New notification:", data);
-    });
+  //  useEffect(() => {
+  //   // Initialize socket when app loads
+  //   const socket = initSocket();
+  //   // Optional: Add global socket listeners here
+  //   socket.on("notification", (data) => {
+  //     console.log("📬 New notification:", data);
+  //   });
 
-    // Cleanup on unmount (optional)
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
-  }, []); // Empty dependency array = runs once on mount
+  //   // Cleanup on unmount (optional)
+  //   return () => {
+  //     if (socket) {
+  //       socket.disconnect();
+  //     }
+  //   };
+  // }, []); // Empty dependency array = runs once on mount
 
   return (
     <>
@@ -57,6 +55,7 @@ function App() {
           <Route path="/plan" element={<Plan />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/blog" element={<Blog />} />
+         < Route path="/log" element ={<BothLogin/>}/>
           <Route
             path="/adminDashboard"
             element={
@@ -66,12 +65,12 @@ function App() {
             }
           />
           <Route path="/user-dashboard" element={<User />} />
+          <Route path="/adminLogin" element={<AdminLogin />} />
           <Route path="/pay" element={<Payment />} />
           <Route path="/aboutus" element={<About />} />
           <Route path="/faq" element={<Fq />} />
           <Route path="/termsandconditions" element={<Terms />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/myBeauticianProfile" element={<BeauticianProfile />} />
         </Routes>{" "}
         <Footer />
         <ChatWidget />
