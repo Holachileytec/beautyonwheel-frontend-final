@@ -25,6 +25,8 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import AdminProtector from "./components/AdminProtector.jsx";
 import AdminLogin from "./components/AdminLogin.jsx";
 import BothLogin from "./components/BothLogin.jsx";
+import AdminRegister from "./components/adminRegister.jsx";
+
 function App() {
   //  useEffect(() => {
   //   // Initialize socket when app loads
@@ -55,7 +57,9 @@ function App() {
           <Route path="/plan" element={<Plan />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/blog" element={<Blog />} />
-         < Route path="/log" element ={<BothLogin/>}/>
+          {/* <Route path="/log" element={<BothLogin />} /> */}
+          <Route path="/adminBOWReg" element={<AdminRegister />} />
+
           <Route
             path="/adminDashboard"
             element={
@@ -65,7 +69,7 @@ function App() {
             }
           />
           <Route path="/user-dashboard" element={<User />} />
-          <Route path="/adminLogin" element={<AdminLogin />} />
+          <Route path="/adminBOWlog" element={<AdminLogin />} />
           <Route path="/pay" element={<Payment />} />
           <Route path="/aboutus" element={<About />} />
           <Route path="/faq" element={<Fq />} />

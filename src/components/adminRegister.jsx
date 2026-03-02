@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
-import "../Styles/Login.css";
+import React from "react";
+import { useState } from "react";
 import api from "../config/api";
 import { useNavigate } from "react-router-dom";
 
-const AdminLogin = () => {
+const AdminRegister = () => {
   const navigate = useNavigate();
-  const [info, setInfo] = useState({ username: "", password: "", passkey: "" });
+  const [info, setInfo] = useState({
+    userId: "",
+    username: "",
+    password: "",
+    passkey: "",
+  });
   const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const isAdmin = localStorage.getItem("isAdmin");
-    if (token && isAdmin) navigate("/adminDashboard");
-  }, [navigate]);
 
   const handleChange = (e) => {
     setInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -21,23 +20,38 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/api/admin/loginA", info);
-      setMessage(res.data.message || "Login Successful");
+      const res = await api.post("/api/admin/register", info);
+      setMessage(res.data.message);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("isAdmin", "true");
       localStorage.setItem("admin", JSON.stringify(res.data.admin));
       navigate("/adminDashboard");
     } catch (error) {
-      setMessage(error.response?.data?.message || "Invalid credentials");
+      setMessage(error.response?.data?.message || "Registration failed");
     }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Admin Login</h2>
-        {message && <p style={{ color: "red" }}>{message}</p>}
+        <h2>Admin Registration</h2>
+        {message && (
+          <p style={{ color: message.includes("success") ? "green" : "red" }}>
+            {message}
+          </p>
+        )}
         <form onSubmit={handleSubmit} className="login-form">
+          <div className="input-group">
+            <label>User ID</label>
+            <input
+              type="text"
+              name="userId"
+              value={info.userId}
+              onChange={handleChange}
+              placeholder="Enter your User ID from database"
+              required
+            />
+          </div>
           <div className="input-group">
             <label>Username</label>
             <input
@@ -45,7 +59,7 @@ const AdminLogin = () => {
               name="username"
               value={info.username}
               onChange={handleChange}
-              placeholder="Enter your username"
+              placeholder="Choose a username"
               required
             />
           </div>
@@ -56,7 +70,7 @@ const AdminLogin = () => {
               name="password"
               value={info.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              placeholder="Choose a password"
               required
             />
           </div>
@@ -72,7 +86,7 @@ const AdminLogin = () => {
             />
           </div>
           <button type="submit" className="login-button">
-            Login
+            Register Admin
           </button>
         </form>
       </div>
@@ -80,4 +94,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default AdminRegister;

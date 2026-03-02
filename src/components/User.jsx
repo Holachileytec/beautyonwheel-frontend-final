@@ -42,7 +42,7 @@ const User = () => {
     try {
       const res = await axios.put(
         //`${import.meta.env.VITE_API_URL}/api/beauticians/Bupdate/${id}` this can be use when to deploy to production
-         `http://localhost:8000/api/beauticians/Bupdate/${id}`,
+        `http://localhost:8000/api/beauticians/Bupdate/${id}`,
         rateInfo,
       );
       alert("Beautician Rated Successfully! Thank you for your feedback.");
@@ -104,13 +104,18 @@ const User = () => {
     }));
   };
   //  beautician profile
+  // ✅ Fixed — only runs for beauticians
   useEffect(() => {
     const getBeautician = async () => {
       const { user } = getAuthData();
+      if (!user?._id) return;
+
+      const role = user?.role;
+      if (role !== "beautician") return; // ← guard clause
+
       try {
         const res = await api.get(`/api/beauticians/user/${user._id}`);
         setBeauty(res.data.beautician);
-        console.log("Beautician Data:", res.data.beautician);
       } catch (err) {
         console.error("Error fetching beautician", err);
       }
@@ -192,7 +197,6 @@ const User = () => {
   }, []);
 
   const getBeauticians = async () => {
-    
     try {
       const res = await api.get("/api/beauticians/allbeauticians");
       console.log(res.data.beauticians);

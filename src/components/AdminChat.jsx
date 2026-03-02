@@ -9,12 +9,27 @@ const AdminChat = () => {
   const [messages, setMessages] = useState([]);
   const [reply, setReply] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(false);
   const [connected, setConnected] = useState(false);
   const messagesEndRef = useRef(null);
 
+  // Helper: add session without duplicates
+  const addSessionSafe = (newSession) => {
+    setSessions((prev) => {
+      const exists = prev.find((s) => s.sessionId === newSession.sessionId);
+      if (exists) return prev;
+      return [newSession, ...prev];
+    });
+  };
+
+  // Helper: update session by sessionId
+  const updateSession = (sessionId, updates) => {
+    setSessions((prev) =>
+      prev.map((s) => (s.sessionId === sessionId ? { ...s, ...updates } : s)),
+    );
+  };
+
   useEffect(() => {
-    // const adminId = localStorage.getItem("adminId");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const adminId = user._id || user.id;
 
@@ -22,12 +37,15 @@ const AdminChat = () => {
       console.error("No adminId in localStorage — is admin logged in?");
       return;
     }
+    console.log(
+      "🔑 Connecting with adminId:",
+      adminId,
+      "type:",
+      typeof adminId,
+    );
 
     const socket = io("http://localhost:8000/chat", {
-      auth: {
-        agentId: adminId,
-        isAgent: true,
-      },
+      auth: { agentId: adminId, isAgent: true },
       transports: ["websocket", "polling"],
     });
 
@@ -43,33 +61,43 @@ const AdminChat = () => {
       setConnected(false);
     });
 
-    socket.on("disconnect", () => {
-      setConnected(false);
-    });
+    socket.on("disconnect", () => setConnected(false));
 
+    // New session in queue — add without duplicate
     socket.on("queue:newSession", (data) => {
-      setSessions((prev) => [
-        {
-          sessionId: data.sessionId,
-          guestInfo: data.guestInfo,
-          status: "waiting...",
-          lastMessage: "Requesting support...",
-          unread: 1,
-        },
-        ...prev,
-      ]);
+      console.log("📥 New session in queue:", data.sessionId);
+      addSessionSafe({
+        sessionId: data.sessionId,
+        guestInfo: data.guestInfo,
+        status: "waiting",
+        lastMessage: "Requesting support...",
+        unread: 1,
+      });
       setUnreadCount((n) => n + 1);
     });
 
+    // Session accepted confirmation from server
+    socket.on("session:accepted", (data) => {
+      console.log("✅ Session accepted:", data.sessionId);
+      updateSession(data.sessionId, { status: "active" });
+      // Also update activeSession if it's the same one
+      setActiveSession((current) => {
+        if (current?.sessionId === data.sessionId) {
+          return { ...current, status: "active" };
+        }
+        return current;
+      });
+    });
+
+    // Message received from user
     socket.on("user:message", (data) => {
+      updateSession(data.sessionId, {
+        lastMessage: data.message.text,
+      });
       setSessions((prev) =>
         prev.map((s) =>
           s.sessionId === data.sessionId
-            ? {
-                ...s,
-                lastMessage: data.message.text,
-                unread: (s.unread || 0) + 1,
-              }
+            ? { ...s, unread: (s.unread || 0) + 1 }
             : s,
         ),
       );
@@ -85,6 +113,7 @@ const AdminChat = () => {
       setUnreadCount((n) => n + 1);
     });
 
+    // Typing indicator
     socket.on("user:typing", ({ sessionId, isTyping }) => {
       setActiveSession((current) => {
         if (current?.sessionId === sessionId) setIsTyping(isTyping);
@@ -92,11 +121,20 @@ const AdminChat = () => {
       });
     });
 
+    // Session ended by user
+    socket.on("session:ended", ({ sessionId }) => {
+      console.log("🔴 Session ended by user:", sessionId);
+      updateSession(sessionId, { status: "closed" });
+    });
+
+    // Queue session removed (accepted by another agent)
+    socket.on("queue:sessionRemoved", ({ sessionId }) => {
+      setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
+    });
+
     fetchSessions();
 
-    return () => {
-      socket.disconnect();
-    };
+    return () => socket.disconnect();
   }, []);
 
   useEffect(() => {
@@ -106,7 +144,17 @@ const AdminChat = () => {
   const fetchSessions = async () => {
     try {
       const res = await api.get("/api/chat/admin/sessions");
-      setSessions(res.data.data || []);
+      const fetched = res.data.data || [];
+      // Set sessions but don't overwrite — merge with dedup
+      setSessions((prev) => {
+        const merged = [...fetched];
+        prev.forEach((s) => {
+          if (!merged.find((m) => m.sessionId === s.sessionId)) {
+            merged.push(s);
+          }
+        });
+        return merged;
+      });
     } catch (err) {
       console.error("Error fetching sessions:", err);
     }
@@ -114,11 +162,9 @@ const AdminChat = () => {
 
   const openSession = async (session) => {
     setActiveSession(session);
-    setSessions((prev) =>
-      prev.map((s) =>
-        s.sessionId === session.sessionId ? { ...s, unread: 0 } : s,
-      ),
-    );
+    updateSession(session.sessionId, { unread: 0 });
+    setIsTyping(false);
+
     try {
       const res = await api.get(
         `/api/chat/sessions/${session.sessionId}/messages`,
@@ -127,35 +173,44 @@ const AdminChat = () => {
     } catch (err) {
       console.error("Error fetching messages:", err);
     }
+
+    // Accept session if waiting — server will confirm via session:accepted event
     if (session.status === "waiting") {
+      console.log("📤 Accepting session:", session.sessionId);
       socketRef.current?.emit("agent:acceptSession", {
         sessionId: session.sessionId,
       });
-      setSessions((prev) =>
-        prev.map((s) =>
-          s.sessionId === session.sessionId ? { ...s, status: "active" } : s,
-        ),
+      // Optimistically mark as active (server confirms via session:accepted)
+      updateSession(session.sessionId, { status: "active" });
+      setActiveSession((current) =>
+        current?.sessionId === session.sessionId
+          ? { ...current, status: "active" }
+          : current,
       );
     }
   };
 
   const sendReply = () => {
     if (!reply.trim() || !activeSession) return;
+
+    if (activeSession.status !== "active") {
+      console.warn(
+        `⚠️ Session ${activeSession.sessionId} is not active (status: ${activeSession.status})`,
+      );
+      return;
+    }
+
     socketRef.current?.emit("agent:message", {
       sessionId: activeSession.sessionId,
       message: { id: `msg_${Date.now()}`, text: reply },
     });
+
     setMessages((prev) => [
       ...prev,
       { sender: "human", text: reply, createdAt: new Date() },
     ]);
-    setSessions((prev) =>
-      prev.map((s) =>
-        s.sessionId === activeSession.sessionId
-          ? { ...s, lastMessage: reply }
-          : s,
-      ),
-    );
+
+    updateSession(activeSession.sessionId, { lastMessage: reply });
     setReply("");
   };
 
@@ -211,8 +266,17 @@ const AdminChat = () => {
             alignItems: "center",
           }}
         >
-          <h3 style={{ margin: 0, color:"red",fontSize:"18px" ,fontWeight:"bold"}}>💬 Support Chats</h3>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px"  }}>
+          <h3
+            style={{
+              margin: 0,
+              color: "red",
+              fontSize: "18px",
+              fontWeight: "bold",
+            }}
+          >
+            💬 Support Chats
+          </h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <span style={{ fontSize: "12px" }}>
               {connected ? "🟢 Connected" : "🔴 Disconnected"}
             </span>
@@ -297,7 +361,6 @@ const AdminChat = () => {
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {activeSession ? (
           <>
-            {/* Chat Header */}
             <div
               style={{
                 padding: "12px 16px",
@@ -320,6 +383,15 @@ const AdminChat = () => {
                     {activeSession.guestInfo.email}
                   </div>
                 )}
+                <div
+                  style={{
+                    fontSize: "11px",
+                    color:
+                      activeSession.status === "active" ? "green" : "orange",
+                  }}
+                >
+                  ● {activeSession.status}
+                </div>
               </div>
               <button
                 onClick={() => closeSession(activeSession.sessionId)}
@@ -337,7 +409,6 @@ const AdminChat = () => {
               </button>
             </div>
 
-            {/* Messages */}
             <div
               style={{
                 flex: 1,
@@ -388,7 +459,6 @@ const AdminChat = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Reply Input */}
             <div
               style={{
                 padding: "12px 16px",
@@ -403,7 +473,12 @@ const AdminChat = () => {
                 onChange={(e) => setReply(e.target.value)}
                 onKeyUp={handleTyping}
                 onKeyDown={(e) => e.key === "Enter" && sendReply()}
-                placeholder="Type your reply..."
+                placeholder={
+                  activeSession.status === "active"
+                    ? "Type your reply..."
+                    : "Waiting for session to be accepted..."
+                }
+                disabled={activeSession.status !== "active"}
                 style={{
                   flex: 1,
                   padding: "10px",
@@ -414,13 +489,18 @@ const AdminChat = () => {
               />
               <button
                 onClick={sendReply}
+                disabled={activeSession.status !== "active"}
                 style={{
-                  background: "#4f46e5",
+                  background:
+                    activeSession.status === "active" ? "#4f46e5" : "#aaa",
                   color: "white",
                   border: "none",
                   borderRadius: "8px",
                   padding: "10px 16px",
-                  cursor: "pointer",
+                  cursor:
+                    activeSession.status === "active"
+                      ? "pointer"
+                      : "not-allowed",
                   fontSize: "14px",
                 }}
               >
@@ -440,7 +520,7 @@ const AdminChat = () => {
               gap: "10px",
             }}
           >
-            <div style={{ fontSize: "48px"}}>💬</div>
+            <div style={{ fontSize: "48px" }}>💬</div>
             <p>Select a conversation to start replying</p>
           </div>
         )}

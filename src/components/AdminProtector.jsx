@@ -21,9 +21,10 @@ function AdminProtector({ children }) {
       const res = await axios.post("http://localhost:8000/api/admin/code", {
         code: password,
       });
-
+      console.log("Full response:", res.data);
       if (res.data.success) {
         sessionStorage.setItem("admin_unlocked", "true");
+        localStorage.setItem("token", res.data.token);
         setUnlocked(true); // This tells React: "Re-render now!"
       } else {
         setMessage("Invalid Code");
@@ -38,6 +39,9 @@ function AdminProtector({ children }) {
 
   // 1. If unlocked, show the Admin Dashboard immediately
   if (unlocked) {
+    // Wait until token is actually in localStorage before rendering
+    const token = localStorage.getItem("token");
+    if (!token) return <p>Loading...</p>; // ← prevents premature render
     return <main>{children}</main>;
   }
 

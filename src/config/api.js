@@ -171,13 +171,16 @@ api.interceptors.response.use(
       console.error(`❌ API Error ${status}:`, data?.message || data?.error);
 
       switch (status) {
-        case 401:
+        case 401: {
           console.warn("⚠️  Session expired — please log in again");
-          localStorage.removeItem("token");
-           window.location.href = '/login'; // Uncomment to auto-redirect
+          const isAdminUnlocked = sessionStorage.getItem("admin_unlocked");
+          if (!isAdminUnlocked) {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+          }
           break;
+        }
 
-      
         case 403:
           console.warn("⚠️  Access forbidden");
           break;
@@ -200,7 +203,7 @@ api.interceptors.response.use(
           console.error(`❌ Unexpected error (${status})`);
       }
     } else if (error.request) {
-      // FIX #3: This branch fires when there's NO response (CORS blocks the
+      // This branch fires when there's NO response (CORS blocks the
       // preflight before the response arrives, or the server is down).
       // Vite proxy in dev eliminates this class of error for HTTP requests.
       console.error("❌ No response received — possible causes:");
