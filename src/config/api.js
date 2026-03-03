@@ -11,7 +11,7 @@ import { io } from "socket.io-client";
 // with proper CORS headers).
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.MODE === "development"
+  (import.meta.env.MODE === "production"
     ? "" // ← relative: requests go to localhost:5173 → Vite proxy → backend
     : "https://beautyplug.com.ng");
 
@@ -19,7 +19,7 @@ const API_BASE_URL =
 // In dev we connect directly to the backend; in prod, through Nginx.
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
-  (import.meta.env.MODE === "development"
+  (import.meta.env.MODE === "production"
     ? "http://localhost:8000"
     : "https://beautyplug.com.ng");
 
