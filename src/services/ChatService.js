@@ -180,15 +180,22 @@ class ChatServiceClass {
   }
 
   init(options = {}) {
+    // Fallback to hard-coded production URL if env fails
+    const DEFAULT_SERVER_URL = "https://beautyplug.com.ng";
+
     this.serverUrl =
-      options.serverUrl || import.meta.env.VITE_CHAT_SERVER_URL || null;
+      options.serverUrl ||
+      import.meta.env.VITE_CHAT_SERVER_URL ||
+      DEFAULT_SERVER_URL;
+
     this.sessionId = options.sessionId || this.generateSessionId();
+
     if (this.serverUrl && options.enableRealtime !== false) {
       this.connect();
     }
+
     return this;
   }
-
   connect() {
     if (!this.serverUrl || this.socket?.connected) return;
     try {
@@ -228,7 +235,6 @@ class ChatServiceClass {
       this.emit("connectionError", { error, attempts: this.reconnectAttempts });
     });
 
-   
     this.socket.on("agent:message", (data) => {
       this.emit("messageReceived", {
         ...data,
