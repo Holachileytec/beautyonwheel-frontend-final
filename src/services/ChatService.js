@@ -228,6 +228,13 @@ class ChatServiceClass {
       this.emit("connectionError", { error, attempts: this.reconnectAttempts });
     });
 
+    // this.socket.on("agent:message", (data) => {
+    //   this.emit("messageReceived", {
+    //     ...data,
+    //     sender: "human",
+    //     senderName: this.humanAgent?.name || "Support Agent",
+    //   });
+    // });
     this.socket.on("agent:message", (data) => {
       this.emit("messageReceived", {
         ...data,
@@ -243,7 +250,17 @@ class ChatServiceClass {
       this.isAgentRequested = false; // ← reset
       this.emit("agentConnected", agent);
     });
-
+    // Add inside setupSocketListeners()
+    this.socket.on("session:initialized", (data) => {
+      // Server confirms the session — no action needed but good to log
+      console.log("Session initialized:", data.sessionId, "mode:", data.mode);
+      if (data.mode === "human" && data.agentInfo?.name) {
+        // Reconnected into an existing human session
+        this.mode = "human";
+        this.humanAgent = data.agentInfo;
+        this.emit("agentConnected", data.agentInfo);
+      }
+    });
     this.socket.on("agent:disconnected", () => {
       this.humanAgent = null;
       this.mode = "ai";
@@ -251,7 +268,7 @@ class ChatServiceClass {
       this.emit("agentDisconnected");
     });
 
-    this.socket.on("agent:typing", (isTyping) => {
+    this.socket.on("agent:typing", ({ isTyping }) => {
       this.emit("agentTyping", isTyping);
     });
 
@@ -275,21 +292,27 @@ class ChatServiceClass {
 
     this.emit("messageSent", userMessage);
 
-    // Block AI if in human mode, agent connected, OR waiting in queue
     if (this.mode === "human" || this.humanAgent || this.isAgentRequested) {
       if (this.isConnected && this.socket) {
         this.socket.emit("user:message", {
           sessionId: this.sessionId,
           message: userMessage,
         });
+      } else {
+        // FIX: socket unavailable while in human/queue mode — surface an error
+        // instead of silently dropping the message
+        this.emit("messageReceived", {
+          id: this.generateMessageId(),
+          text: "Your message could not be sent. Please check your connection.",
+          sender: "system",
+          timestamp: new Date().toISOString(),
+        });
       }
       return userMessage;
     }
 
-    // Only pure AI mode reaches here
     return this.getAIResponse(text);
   }
-
   async getAIResponse(text) {
     this.emit("aiTyping", true);
     await this.delay(
@@ -443,7 +466,16 @@ class ChatServiceClass {
   }
 
   generateSessionId() {
-    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    try {
+      const stored = localStorage.getItem("chat_session_id");
+      if (stored) return stored;
+      const id = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      localStorage.setItem("chat_session_id", id);
+      return id;
+    } catch {
+      // SSR or storage blocked — fall back to in-memory ID
+      return `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    }
   }
 
   generateMessageId() {

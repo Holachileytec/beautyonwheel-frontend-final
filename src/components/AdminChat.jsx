@@ -1,527 +1,586 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { io } from "socket.io-client";
 import api from "../config/api";
+import "../Styles/AdminChat.css";
+
+if (import.meta.env.PROD && !import.meta.env.VITE_SOCKET_URL) {
+  throw new Error("[AdminChat] VITE_SOCKET_URL is not set.");
+}
+
+const uid = (prefix = "msg") =>
+  `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+const StatusPill = ({ status }) => (
+  <span className={`ac-chat-status-pill ${status}`}>
+    <span
+      style={{
+        width: 5,
+        height: 5,
+        borderRadius: "50%",
+        background: "currentColor",
+        display: "inline-block",
+      }}
+    />
+    {status}
+  </span>
+);
+
+const SessionStatusLabel = ({ status }) => (
+  <span className={`ac-session-status ${status}`}>
+    <span
+      style={{
+        width: 5,
+        height: 5,
+        borderRadius: "50%",
+        background: "currentColor",
+        display: "inline-block",
+      }}
+    />
+    {status}
+  </span>
+);
+
+// ── Main component ────────────────────────────────────────────────────────────
 
 const AdminChat = () => {
   const socketRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
+  const messagesEndRef = useRef(null);
+
+  /**
+   * FIX 1 – activeSessionRef mirrors activeSession state so that socket event
+   * handlers (registered once on mount) always read the latest value without
+   * needing to be re-registered.  Previously the ref was referenced but never
+   * created, causing runtime ReferenceErrors.
+   */
+  const activeSessionRef = useRef(null);
+
   const [sessions, setSessions] = useState([]);
   const [activeSession, setActiveSession] = useState(null);
   const [messages, setMessages] = useState([]);
   const [reply, setReply] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [connected, setConnected] = useState(false);
-  const messagesEndRef = useRef(null);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [sessionsError, setSessionsError] = useState(null);
+  const [closeError, setCloseError] = useState(null);
 
-  // Helper: add session without duplicates
-  const addSessionSafe = (newSession) => {
+  // Keep ref in sync with state so socket handlers always have the current value
+  const setActiveSessionSafe = useCallback((valueOrUpdater) => {
+    setActiveSession((prev) => {
+      const next =
+        typeof valueOrUpdater === "function"
+          ? valueOrUpdater(prev)
+          : valueOrUpdater;
+      activeSessionRef.current = next;
+      return next;
+    });
+  }, []);
+
+  // ── Session helpers ──────────────────────────────────────────────────────
+
+  const addSessionSafe = useCallback((newSession) => {
     setSessions((prev) => {
-      const exists = prev.find((s) => s.sessionId === newSession.sessionId);
-      if (exists) return prev;
+      if (prev.find((s) => s.sessionId === newSession.sessionId)) return prev;
       return [newSession, ...prev];
     });
-  };
+  }, []);
 
-  // Helper: update session by sessionId
-  const updateSession = (sessionId, updates) => {
+  const updateSession = useCallback((sessionId, updates) => {
     setSessions((prev) =>
       prev.map((s) => (s.sessionId === sessionId ? { ...s, ...updates } : s)),
     );
-  };
+  }, []);
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const adminId = user._id || user.id;
-
-    if (!adminId) {
-      console.error("No adminId in localStorage — is admin logged in?");
-      return;
+  const fetchSessions = useCallback(async () => {
+    setSessionsError(null);
+    try {
+      const res = await api.get("/api/chat/admin/sessions");
+      const fetched = res.data.data || [];
+      setSessions((prev) => {
+        const merged = [...fetched];
+        prev.forEach((s) => {
+          if (!merged.find((m) => m.sessionId === s.sessionId)) merged.push(s);
+        });
+        return merged;
+      });
+    } catch {
+      setSessionsError("Failed to load sessions. Please refresh.");
     }
-    console.log(
-      "🔑 Connecting with adminId:",
-      adminId,
-      "type:",
-      typeof adminId,
-    );
+  }, []);
 
-    const socket = io("http://localhost:8000/chat", {
+  // ── Socket setup (mount / unmount only) ──────────────────────────────────
+  /**
+   * FIX 2 – activeSession was in the dependency array, which caused the entire
+   * socket to be torn down and reconnected every time the admin opened a chat.
+   * Socket registration now happens once on mount; stale-closure problems are
+   * solved via activeSessionRef instead.
+   */
+  useEffect(() => {
+    let adminId;
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      adminId = user._id || user.id;
+    } catch (err) {
+      console.error("Failed to parse user from localStorage:", err);
+    }
+    if (!adminId) return;
+
+    const SOCKET_URL = import.meta.env.VITE_CHAT_SERVER_URL;
+    const socket = io(`${SOCKET_URL}/chat`, {
       auth: { agentId: adminId, isAgent: true },
       transports: ["websocket", "polling"],
     });
-
     socketRef.current = socket;
 
-    socket.on("connect", () => {
-      console.log("✅ Admin chat connected:", socket.id);
-      setConnected(true);
+    // Debug – log all incoming events
+    socket.onAny((event, ...args) => {
+      console.log("Admin received event:", event, args);
     });
 
+    // Connection lifecycle
+    socket.on("connect", () => {
+      console.log("Admin connected:", socket.id);
+      setConnected(true);
+    });
     socket.on("connect_error", (err) => {
-      console.error("❌ Connection failed:", err.message);
+      console.error("Connect error:", err.message);
+      setConnected(false);
+    });
+    socket.on("disconnect", () => {
+      console.log("Admin disconnected");
       setConnected(false);
     });
 
-    socket.on("disconnect", () => setConnected(false));
-
-    // New session in queue — add without duplicate
+    // New session enters the queue
     socket.on("queue:newSession", (data) => {
-      console.log("📥 New session in queue:", data.sessionId);
+      console.log("Queue new session received:", data);
       addSessionSafe({
         sessionId: data.sessionId,
         guestInfo: data.guestInfo,
         status: "waiting",
-        lastMessage: "Requesting support...",
+        lastMessage: "Requesting support…",
         unread: 1,
       });
       setUnreadCount((n) => n + 1);
     });
-
-    // Session accepted confirmation from server
-    socket.on("session:accepted", (data) => {
-      console.log("✅ Session accepted:", data.sessionId);
-      updateSession(data.sessionId, { status: "active" });
-      // Also update activeSession if it's the same one
-      setActiveSession((current) => {
-        if (current?.sessionId === data.sessionId) {
-          return { ...current, status: "active" };
-        }
-        return current;
-      });
-    });
-
-    // Message received from user
-    socket.on("user:message", (data) => {
-      updateSession(data.sessionId, {
-        lastMessage: data.message.text,
-      });
-      setSessions((prev) =>
-        prev.map((s) =>
-          s.sessionId === data.sessionId
-            ? { ...s, unread: (s.unread || 0) + 1 }
-            : s,
-        ),
+    socket.on("sessions:active", (sessions) => {
+      sessions.forEach((s) =>
+        addSessionSafe({
+          sessionId: s.sessionId,
+          guestInfo: s.guestInfo,
+          status: "active",
+          userType: s.userType,
+          lastMessage: "",
+          unread: 0,
+        }),
       );
-      setActiveSession((current) => {
-        if (current?.sessionId === data.sessionId) {
-          setMessages((msgs) => [
-            ...msgs,
-            { sender: "user", text: data.message.text, createdAt: new Date() },
-          ]);
-        }
-        return current;
-      });
-      setUnreadCount((n) => n + 1);
     });
 
-    // Typing indicator
-    socket.on("user:typing", ({ sessionId, isTyping }) => {
-      setActiveSession((current) => {
-        if (current?.sessionId === sessionId) setIsTyping(isTyping);
-        return current;
-      });
+    // Another agent (or the server) accepted a session
+    socket.on("session:accepted", (data) => {
+      console.log("Session accepted:", data);
+      updateSession(data.sessionId, { status: "active" });
+      setActiveSessionSafe((cur) =>
+        cur?.sessionId === data.sessionId
+          ? { ...cur, status: "active", agentInfo: data.agentInfo }
+          : cur,
+      );
+
+      setActiveSessionSafe;
+    });
+    socket.on("session:removed", ({ sessionId }) => {
+      setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
+      if (activeSessionRef.current?.sessionId === sessionId) {
+        setActiveSessionSafe(null);
+        setMessages([]);
+        setReply("");
+      }
+    });
+
+    // Incoming user message
+    socket.on("user:message", (data) => {
+      const { sessionId, message } = data;
+
+      /**
+       * FIX 3 – Read the current active session from the ref, not from a
+       * closed-over state variable, so we always compare against the correct
+       * session even if state has changed since registration.
+       */
+      const current = activeSessionRef.current;
+
+      updateSession(sessionId, { lastMessage: message.text });
+
+      if (current?.sessionId === sessionId) {
+        setMessages((msgs) => [
+          ...msgs,
+          {
+            id: message.id || uid("user"),
+            sender: "user",
+            text: message.text,
+            createdAt: message.timestamp || new Date(),
+          },
+        ]);
+      } else {
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.sessionId === sessionId
+              ? { ...s, unread: (s.unread || 0) + 1 }
+              : s,
+          ),
+        );
+        setUnreadCount((n) => n + 1);
+      }
+    });
+
+    // User typing indicator
+    socket.on("user:typing", ({ sessionId, isTyping: typing }) => {
+      if (activeSessionRef.current?.sessionId === sessionId) {
+        setIsTyping(typing);
+      }
     });
 
     // Session ended by user
     socket.on("session:ended", ({ sessionId }) => {
-      console.log("🔴 Session ended by user:", sessionId);
       updateSession(sessionId, { status: "closed" });
+      if (activeSessionRef.current?.sessionId === sessionId) {
+        setActiveSessionSafe(null);
+        setMessages([]);
+      }
     });
 
-    // Queue session removed (accepted by another agent)
+    // FIX 12: Handle initial waiting queue from server
+    socket.on("queue:list", (sessions) => {
+      sessions.forEach((s) =>
+        addSessionSafe({
+          sessionId: s.sessionId,
+          guestInfo: s.guestInfo,
+          status: "waiting",
+          userType: s.userType,
+          lastMessage: "Requesting support…",
+          unread: 0,
+        }),
+      );
+    });
+
+    // Session removed from queue
     socket.on("queue:sessionRemoved", ({ sessionId }) => {
       setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
+      if (activeSessionRef.current?.sessionId === sessionId) {
+        setActiveSessionSafe(null);
+        setMessages([]);
+      }
     });
 
     fetchSessions();
 
-    return () => socket.disconnect();
-  }, []);
+    return () => {
+      socket.disconnect();
+      clearTimeout(typingTimeoutRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty – socket is registered once on mount
 
+  // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const fetchSessions = async () => {
-    try {
-      const res = await api.get("/api/chat/admin/sessions");
-      const fetched = res.data.data || [];
-      // Set sessions but don't overwrite — merge with dedup
-      setSessions((prev) => {
-        const merged = [...fetched];
-        prev.forEach((s) => {
-          if (!merged.find((m) => m.sessionId === s.sessionId)) {
-            merged.push(s);
-          }
+  // ── Handlers ─────────────────────────────────────────────────────────────
+
+  const openSession = useCallback(
+    async (session) => {
+      setActiveSessionSafe(session);
+      setCloseError(null);
+      setIsTyping(false);
+
+      /**
+       * FIX 4 – Clear the reply input when switching sessions so stale text
+       * from the previous conversation is not accidentally sent.
+       */
+      setReply("");
+
+      // Clear unread badge for this session
+      if (session.unread > 0) {
+        setUnreadCount((n) => Math.max(0, n - session.unread));
+        updateSession(session.sessionId, { unread: 0 });
+      }
+
+      // Fetch message history
+      setLoadingMessages(true);
+      try {
+        const res = await api.get(
+          `/api/chat/sessions/${session.sessionId}/messages`,
+        );
+        const fetched = (res.data.data || []).map((m) => ({
+          id: m._id || m.id || uid("fetched"),
+          ...m,
+        }));
+        setMessages(fetched);
+      } catch (err) {
+        console.error("Error fetching messages:", err);
+        setMessages([]);
+      } finally {
+        setLoadingMessages(false);
+      }
+
+      // Accept the session if it was still in the waiting queue
+      if (session.status === "waiting") {
+        socketRef.current?.emit("agent:acceptSession", {
+          sessionId: session.sessionId,
         });
-        return merged;
-      });
-    } catch (err) {
-      console.error("Error fetching sessions:", err);
-    }
-  };
+        updateSession(session.sessionId, { status: "active" });
+        setActiveSessionSafe((cur) =>
+          cur?.sessionId === session.sessionId
+            ? { ...cur, status: "active" }
+            : cur,
+        );
+      }
+    },
+    [updateSession, setActiveSessionSafe],
+  );
 
-  const openSession = async (session) => {
-    setActiveSession(session);
-    updateSession(session.sessionId, { unread: 0 });
-    setIsTyping(false);
+  const sendReply = useCallback(() => {
+    const current = activeSessionRef.current;
 
-    try {
-      const res = await api.get(
-        `/api/chat/sessions/${session.sessionId}/messages`,
-      );
-      setMessages(res.data.data || []);
-    } catch (err) {
-      console.error("Error fetching messages:", err);
-    }
+    /**
+     * FIX 5 – Guard uses the ref so the check is never stale, and we
+     * explicitly verify the session is "active" before emitting.
+     */
+    if (!reply.trim() || !current || current.status !== "active") return;
 
-    // Accept session if waiting — server will confirm via session:accepted event
-    if (session.status === "waiting") {
-      console.log("📤 Accepting session:", session.sessionId);
-      socketRef.current?.emit("agent:acceptSession", {
-        sessionId: session.sessionId,
-      });
-      // Optimistically mark as active (server confirms via session:accepted)
-      updateSession(session.sessionId, { status: "active" });
-      setActiveSession((current) =>
-        current?.sessionId === session.sessionId
-          ? { ...current, status: "active" }
-          : current,
-      );
-    }
-  };
-
-  const sendReply = () => {
-    if (!reply.trim() || !activeSession) return;
-
-    if (activeSession.status !== "active") {
-      console.warn(
-        `⚠️ Session ${activeSession.sessionId} is not active (status: ${activeSession.status})`,
-      );
-      return;
-    }
-
+    const msgId = uid("msg");
     socketRef.current?.emit("agent:message", {
-      sessionId: activeSession.sessionId,
-      message: { id: `msg_${Date.now()}`, text: reply },
+      sessionId: current.sessionId,
+      message: { id: msgId, text: reply },
     });
 
     setMessages((prev) => [
       ...prev,
-      { sender: "human", text: reply, createdAt: new Date() },
+      { id: uid("human"), sender: "human", text: reply, createdAt: new Date() },
     ]);
-
-    updateSession(activeSession.sessionId, { lastMessage: reply });
+    updateSession(current.sessionId, { lastMessage: reply });
     setReply("");
-  };
+  }, [reply, updateSession]);
 
-  const closeSession = async (sessionId) => {
-    if (!window.confirm("Close this session?")) return;
-    try {
-      await api.post(`/api/chat/sessions/${sessionId}/close`, {
-        closedBy: "agent",
-      });
-      socketRef.current?.emit("agent:closeSession", { sessionId });
-      setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
-      if (activeSession?.sessionId === sessionId) {
-        setActiveSession(null);
-        setMessages([]);
-      }
-    } catch (err) {
-      console.error("Error closing session:", err);
-    }
-  };
+  /**
+   * FIX 6 – Typing signal is now emitted on onChange (every keystroke) rather
+   * than onKeyUp/onKeyDown, which is the standard pattern for typing indicators.
+   * onKeyUp was missing the very first character; onKeyDown fires before the
+   * value updates.
+   */
+  const handleInputChange = useCallback((e) => {
+    setReply(e.target.value);
 
-  const handleTyping = () => {
+    const current = activeSessionRef.current;
+    if (!current?.sessionId) return;
+
     socketRef.current?.emit("agent:typing", {
-      sessionId: activeSession?.sessionId,
+      sessionId: current.sessionId,
       isTyping: true,
     });
-  };
+
+    clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = setTimeout(() => {
+      socketRef.current?.emit("agent:typing", {
+        sessionId: current.sessionId,
+        isTyping: false,
+      });
+    }, 1500);
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendReply();
+      }
+    },
+    [sendReply],
+  );
+
+  const closeSession = useCallback(
+    async (sessionId) => {
+      if (!window.confirm("Close this session?")) return;
+      setCloseError(null);
+      try {
+        await api.post(`/api/chat/sessions/${sessionId}/close`, {
+          closedBy: "agent",
+        });
+        socketRef.current?.emit("agent:closeSession", { sessionId });
+        setSessions((prev) => prev.filter((s) => s.sessionId !== sessionId));
+        if (activeSessionRef.current?.sessionId === sessionId) {
+          setActiveSessionSafe(null);
+          setMessages([]);
+          setReply("");
+        }
+      } catch {
+        setCloseError("Failed to close session. Please try again.");
+      }
+    },
+    [setActiveSessionSafe],
+  );
+
+  // ── Derived state ─────────────────────────────────────────────────────────
+
+  const canSend = activeSession?.status === "active";
+
+  // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "80vh",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        overflow: "hidden",
-      }}
-    >
-      {/* LEFT — Sessions List */}
-      <div
-        style={{
-          width: "280px",
-          borderRight: "1px solid #ddd",
-          overflowY: "auto",
-          background: "#f9f9f9",
-        }}
-      >
-        <div
-          style={{
-            padding: "16px",
-            borderBottom: "1px solid #ddd",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <h3
-            style={{
-              margin: 0,
-              color: "red",
-              fontSize: "18px",
-              fontWeight: "bold",
-            }}
-          >
-            💬 Support Chats
-          </h3>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "12px" }}>
-              {connected ? "🟢 Connected" : "🔴 Disconnected"}
-            </span>
-            {unreadCount > 0 && (
+    <div className="ac-root">
+      {/* ── Sidebar ── */}
+      <div className="ac-sidebar">
+        <div className="ac-sidebar-header">
+          <div className="ac-sidebar-title">
+            <div className="ac-sidebar-title-icon">💬</div>
+            Support
+          </div>
+          <div className="ac-status-row">
+            <div className="ac-connection">
               <span
-                style={{
-                  background: "red",
-                  color: "white",
-                  borderRadius: "50%",
-                  padding: "2px 8px",
-                  fontSize: "12px",
-                }}
-              >
-                {unreadCount}
-              </span>
+                className={`ac-dot ${connected ? "connected" : "disconnected"}`}
+              />
+              {connected ? "Live" : "Offline"}
+            </div>
+            {unreadCount > 0 && (
+              <span className="ac-unread-badge">{unreadCount}</span>
             )}
           </div>
         </div>
 
-        {sessions.length === 0 && (
-          <p style={{ padding: "16px", color: "#888", fontSize: "13px" }}>
-            No active chats
-          </p>
+        {sessionsError && (
+          <div className="ac-error-banner">⚠ {sessionsError}</div>
         )}
 
-        {sessions.map((session) => (
-          <div
-            key={session.sessionId}
-            onClick={() => openSession(session)}
-            style={{
-              padding: "12px 16px",
-              cursor: "pointer",
-              background:
-                activeSession?.sessionId === session.sessionId
-                  ? "#e8e8ff"
-                  : "white",
-              borderBottom: "1px solid #eee",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <div style={{ fontWeight: "bold", fontSize: "14px" }}>
-                {session.userType === "beautician" ? "💄" : "👤"}{" "}
-                {session.guestInfo?.name || "Guest"}
-              </div>
-              <div
-                style={{ fontSize: "12px", color: "#888", marginTop: "2px" }}
-              >
-                {session.lastMessage || "No messages yet"}
-              </div>
-              <div
-                style={{
-                  fontSize: "11px",
-                  marginTop: "4px",
-                  color: session.status === "waiting" ? "orange" : "green",
-                  fontWeight: "bold",
-                }}
-              >
-                ● {session.status}
-              </div>
+        <div className="ac-sessions-list">
+          {sessions.length === 0 && !sessionsError ? (
+            <div className="ac-empty-list">
+              <span className="ac-empty-icon">📭</span>
+              No active chats right now
             </div>
-            {session.unread > 0 && (
-              <span
-                style={{
-                  background: "#4f46e5",
-                  color: "white",
-                  borderRadius: "50%",
-                  padding: "2px 7px",
-                  fontSize: "12px",
-                }}
+          ) : (
+            sessions.map((session) => (
+              <div
+                key={session.sessionId}
+                onClick={() => openSession(session)}
+                className={`ac-session-item ${
+                  activeSession?.sessionId === session.sessionId ? "active" : ""
+                }`}
               >
-                {session.unread}
-              </span>
-            )}
-          </div>
-        ))}
+                <div style={{ minWidth: 0 }}>
+                  <div className="ac-session-name">
+                    {session.userType === "beautician" ? "💄" : "👤"}
+                    {session.guestInfo?.name || "Guest"}
+                  </div>
+                  <div className="ac-session-preview">
+                    {session.lastMessage || "No messages yet"}
+                  </div>
+                  <SessionStatusLabel status={session.status} />
+                </div>
+                {session.unread > 0 && (
+                  <span className="ac-session-unread">{session.unread}</span>
+                )}
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
-      {/* RIGHT — Chat Window */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      {/* ── Chat Pane ── */}
+      <div className="ac-chat">
         {activeSession ? (
           <>
-            <div
-              style={{
-                padding: "12px 16px",
-                borderBottom: "1px solid #ddd",
-                background: "#f9f9f9",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
+            <div className="ac-chat-header">
               <div>
-                <strong>
-                  {activeSession.userType === "beautician"
-                    ? "💄 Beautician"
-                    : "👤 Client"}
-                  : {activeSession.guestInfo?.name || "Guest"}
-                </strong>
-                {activeSession.guestInfo?.email && (
-                  <div style={{ fontSize: "12px", color: "#888" }}>
-                    {activeSession.guestInfo.email}
-                  </div>
-                )}
-                <div
-                  style={{
-                    fontSize: "11px",
-                    color:
-                      activeSession.status === "active" ? "green" : "orange",
-                  }}
-                >
-                  ● {activeSession.status}
+                <div className="ac-chat-name">
+                  {activeSession.userType === "beautician" ? "💄" : "👤"}
+                  {activeSession.guestInfo?.name || "Guest"}
+                </div>
+                <div className="ac-chat-meta">
+                  {activeSession.guestInfo?.email && (
+                    <span>{activeSession.guestInfo.email}</span>
+                  )}
+                  <StatusPill status={activeSession.status} />
                 </div>
               </div>
               <button
+                className="ac-close-btn"
                 onClick={() => closeSession(activeSession.sessionId)}
-                style={{
-                  background: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "6px 12px",
-                  cursor: "pointer",
-                  fontSize: "12px",
-                }}
               >
-                Close Chat
+                End Chat
               </button>
             </div>
 
-            <div
-              style={{
-                flex: 1,
-                overflowY: "auto",
-                padding: "16px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                background: "#fff",
-              }}
-            >
-              {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  style={{
-                    alignSelf:
-                      msg.sender === "human" ? "flex-end" : "flex-start",
-                    background: msg.sender === "human" ? "#4f46e5" : "#f0f0f0",
-                    color: msg.sender === "human" ? "white" : "black",
-                    padding: "10px 14px",
-                    borderRadius: "16px",
-                    maxWidth: "60%",
-                    fontSize: "14px",
-                  }}
-                >
-                  <div>{msg.text}</div>
-                  <div
-                    style={{ fontSize: "10px", marginTop: "4px", opacity: 0.7 }}
-                  >
-                    {new Date(msg.createdAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </div>
+            {closeError && (
+              <div className="ac-error-banner">⚠ {closeError}</div>
+            )}
+
+            <div className="ac-messages">
+              {loadingMessages ? (
+                <div className="ac-loading">
+                  <div className="ac-spinner" />
+                  Loading conversation…
                 </div>
-              ))}
+              ) : (
+                messages.map((msg) => (
+                  <div key={msg.id} className={`ac-bubble-wrap ${msg.sender}`}>
+                    <div className={`ac-bubble ${msg.sender}`}>{msg.text}</div>
+                    <div className="ac-bubble-time">
+                      {new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </div>
+                ))
+              )}
               {isTyping && (
-                <div
-                  style={{
-                    fontStyle: "italic",
-                    color: "#888",
-                    fontSize: "13px",
-                  }}
-                >
-                  {activeSession.guestInfo?.name || "User"} is typing...
+                <div className="ac-typing">
+                  <div className="ac-typing-dots">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  {activeSession.guestInfo?.name || "User"} is typing
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            <div
-              style={{
-                padding: "12px 16px",
-                borderTop: "1px solid #ddd",
-                display: "flex",
-                gap: "10px",
-                background: "#f9f9f9",
-              }}
-            >
+            <div className="ac-input-row">
               <input
+                className="ac-input"
                 value={reply}
-                onChange={(e) => setReply(e.target.value)}
-                onKeyUp={handleTyping}
-                onKeyDown={(e) => e.key === "Enter" && sendReply()}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
                 placeholder={
-                  activeSession.status === "active"
-                    ? "Type your reply..."
-                    : "Waiting for session to be accepted..."
+                  canSend
+                    ? "Write a reply…"
+                    : "Waiting for session to be accepted…"
                 }
-                disabled={activeSession.status !== "active"}
-                style={{
-                  flex: 1,
-                  padding: "10px",
-                  borderRadius: "8px",
-                  border: "1px solid #ddd",
-                  fontSize: "14px",
-                }}
+                disabled={!canSend}
               />
               <button
+                className={`ac-send-btn ${canSend ? "can-send" : "no-send"}`}
                 onClick={sendReply}
-                disabled={activeSession.status !== "active"}
-                style={{
-                  background:
-                    activeSession.status === "active" ? "#4f46e5" : "#aaa",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "10px 16px",
-                  cursor:
-                    activeSession.status === "active"
-                      ? "pointer"
-                      : "not-allowed",
-                  fontSize: "14px",
-                }}
+                disabled={!canSend}
+                aria-label="Send message"
               >
-                Send ▶
+                ↑
               </button>
             </div>
           </>
         ) : (
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#888",
-              flexDirection: "column",
-              gap: "10px",
-            }}
-          >
-            <div style={{ fontSize: "48px" }}>💬</div>
-            <p>Select a conversation to start replying</p>
+          <div className="ac-empty-pane">
+            <div className="ac-empty-pane-icon">✦</div>
+            <div className="ac-empty-pane-title">No conversation open</div>
+            <p className="ac-empty-pane-sub">
+              Select a chat from the sidebar to start responding.
+            </p>
           </div>
         )}
       </div>
