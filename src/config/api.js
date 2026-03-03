@@ -11,22 +11,15 @@ import { io } from "socket.io-client";
 // with proper CORS headers).
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
-  (import.meta.env.MODE === "production"
-    ? "" // ← relative: requests go to localhost:5173 → Vite proxy → backend
-    : "https://beautyplug.com.ng");
+  (import.meta.env.MODE === "development"
+    ? "" // ← relative in dev → Vite proxy handles it
+    : "https://beautyplug.com.ng"); // ← real URL in production
 
-// The socket always needs an absolute URL to connect.
-// In dev we connect directly to the backend; in prod, through Nginx.
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
-  (import.meta.env.MODE === "production"
-    ? "http://localhost:8000"
-    : "https://beautyplug.com.ng");
-
-console.log("🔧 API Configuration:");
-console.log("   Base URL:", API_BASE_URL || "(relative — using Vite proxy)");
-console.log("   Socket URL:", SOCKET_URL);
-console.log("   Environment:", import.meta.env.MODE);
+  (import.meta.env.MODE === "development"
+    ? "http://localhost:8000" // ← direct to backend in dev
+    : "https://beautyplug.com.ng"); // ← production domain in production
 
 // ============================================
 // AXIOS INSTANCE
