@@ -228,13 +228,7 @@ class ChatServiceClass {
       this.emit("connectionError", { error, attempts: this.reconnectAttempts });
     });
 
-    // this.socket.on("agent:message", (data) => {
-    //   this.emit("messageReceived", {
-    //     ...data,
-    //     sender: "human",
-    //     senderName: this.humanAgent?.name || "Support Agent",
-    //   });
-    // });
+   
     this.socket.on("agent:message", (data) => {
       this.emit("messageReceived", {
         ...data,

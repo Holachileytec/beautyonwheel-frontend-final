@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import api from "../config/api";
 import "../Styles/AdminChat.css";
 
-if (import.meta.env.PROD && !import.meta.env.VITE_SOCKET_URL) {
+if (import.meta.env.production && !import.meta.env.VITE_SOCKET_URL) {
   throw new Error("[AdminChat] VITE_SOCKET_URL is not set.");
 }
 
