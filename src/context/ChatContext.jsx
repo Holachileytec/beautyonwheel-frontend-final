@@ -193,13 +193,15 @@ export const ChatProvider = ({ children, config }) => {
   useEffect(() => {
     if (serviceInitialized.current) return;
     serviceInitialized.current = true;
-
     const cfg = configRef.current;
-    const SERVER_URL = cfg?.serverUrl || import.meta.env.VITE_API_URL;
+    const DEFAULT_SERVER_URL = "https://beautyplug.com.ng";
+    const SERVER_URL =
+      cfg?.serverUrl || import.meta.env.VITE_API_URL || DEFAULT_SERVER_URL;
 
-    if (!SERVER_URL && import.meta.env.PROD) {
-      throw new Error(
-        "[ChatProvider] VITE_API_URL is not set. Cannot initialise chat service in production.",
+    if (!import.meta.env.VITE_API_URL && import.meta.env.PROD) {
+      console.warn(
+        "[ChatProvider] VITE_API_URL not set, using fallback:",
+        DEFAULT_SERVER_URL,
       );
     }
 
@@ -207,7 +209,6 @@ export const ChatProvider = ({ children, config }) => {
       serverUrl: SERVER_URL ?? null,
       enableRealtime: !!SERVER_URL,
     });
-
     const unsubscribers = [
       ChatService.on("connected", () =>
         dispatch({
