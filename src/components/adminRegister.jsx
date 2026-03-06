@@ -3,10 +3,31 @@ import { useState } from "react";
 import api from "../config/api";
 import { useNavigate } from "react-router-dom";
 
+// Decode JWT payload without a library
+const decodeToken = (token) => {
+  try {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+};
+
+const getUserIdFromToken = () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return "";
+    const decoded = decodeToken(token);
+    return decoded?.id || decoded?._id || "";
+  } catch {
+    return "";
+  }
+};
+
 const AdminRegister = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState({
-    userId: "",
+    userId: getUserIdFromToken(), // auto-populated from existing JWT
     username: "",
     password: "",
     passkey: "",
@@ -41,17 +62,24 @@ const AdminRegister = () => {
           </p>
         )}
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="input-group">
-            <label>User ID</label>
-            <input
-              type="text"
-              name="userId"
-              value={info.userId}
-              onChange={handleChange}
-              placeholder="Enter your User ID from database"
-              required
-            />
-          </div>
+          {/* userId is auto-populated from token — only show manual field as fallback */}
+          {!getUserIdFromToken() && (
+            <div className="input-group">
+              <label>User ID</label>
+              <input
+                type="text"
+                name="userId"
+                value={info.userId}
+                onChange={handleChange}
+                placeholder="Log in first, or paste your User ID"
+                required
+              />
+              <small style={{ color: "orange" }}>
+                ⚠️ Could not detect your User ID automatically. Please log in
+                first.
+              </small>
+            </div>
+          )}
           <div className="input-group">
             <label>Username</label>
             <input

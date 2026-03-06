@@ -1,5 +1,3 @@
-// import NavBar from "./NavB";
-
 import "./App.css";
 import "./Styles/mediaquery.css";
 import AllHome from "./components/AllHome";
@@ -24,32 +22,16 @@ import Plan from "./components/Plan";
 import PaymentSuccess from "./components/PaymentSuccess";
 import AdminProtector from "./components/AdminProtector.jsx";
 import AdminLogin from "./components/AdminLogin.jsx";
-import BothLogin from "./components/BothLogin.jsx";
 import AdminRegister from "./components/adminRegister.jsx";
+import AdminLogout from "./components/AdminLogout.jsx"; // ✅ add this
 
 function App() {
-  //  useEffect(() => {
-  //   // Initialize socket when app loads
-  //   const socket = initSocket();
-  //   // Optional: Add global socket listeners here
-  //   socket.on("notification", (data) => {
-  //     console.log("📬 New notification:", data);
-  //   });
-
-  //   // Cleanup on unmount (optional)
-  //   return () => {
-  //     if (socket) {
-  //       socket.disconnect();
-  //     }
-  //   };
-  // }, []); // Empty dependency array = runs once on mount
-
   return (
     <>
       <ChatProvider config={ChatConfig}>
-        {/* <NavBar /> */}
         <NewNav />
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<AllHome />} />
           <Route path="/bookASession" element={<Pay />} />
           <Route path="/login" element={<Login />} />
@@ -57,29 +39,32 @@ function App() {
           <Route path="/plan" element={<Plan />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/blog" element={<Blog />} />
-          {/* <Route path="/log" element={<BothLogin />} /> */}
-          <Route path="/adminBOWReg" element={<AdminRegister />} />
+          <Route path="/user-dashboard" element={<User />} />
+          <Route path="/pay" element={<Payment />} />
+          <Route path="/aboutus" element={<About />} />
+          <Route path="/faq" element={<Fq />} />
+          <Route path="/termsandconditions" element={<Terms />} />
+          <Route path="/gallery" element={<Gallery />} />
 
+          {/* Admin Auth Routes */}
+          <Route path="/adminBOWReg" element={<AdminRegister />} />
+          <Route path="/adminBOWlog" element={<AdminLogin />} />
+
+          {/* Admin Protected Route */}
           <Route
-            path="/adminDashboard"
+            path="/adminDashboard"  
             element={
               <AdminProtector>
                 <Admin />
               </AdminProtector>
             }
           />
-          <Route path="/user-dashboard" element={<User />} />
-          <Route path="/adminBOWlog" element={<AdminLogin />} />
-          <Route path="/pay" element={<Payment />} />
-          <Route path="/aboutus" element={<About />} />
-          <Route path="/faq" element={<Fq />} />
-          <Route path="/termsandconditions" element={<Terms />} />
-          <Route path="/gallery" element={<Gallery />} />
-        </Routes>{" "}
+        </Routes>
         <Footer />
         <ChatWidget />
       </ChatProvider>
     </>
   );
 }
+
 export default App;

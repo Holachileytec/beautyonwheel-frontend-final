@@ -4,6 +4,7 @@ import api from "../config/api";
 import AModal from "./AModal";
 import axios from "axios";
 import AdminChat from "./AdminChat";
+import AdminLogout from "./AdminLogout";
 
 const Admin = () => {
   const [gallery, setGallery] = useState({
@@ -584,6 +585,7 @@ const Admin = () => {
             "settings",
             "beauticians",
             "chat",
+            "Logout",
           ].map((tab) => (
             <button
               key={tab}
@@ -594,8 +596,8 @@ const Admin = () => {
             </button>
           ))}
         </nav>
+        {/* <AdminLogout /> */}
       </div>
-
       {/* Main Content */}
       <div className="main-content">
         <header className="header">
@@ -658,8 +660,7 @@ const Admin = () => {
                 </tbody>
               </table>
             </div>
-
-            {/* ✅ FIXED: User Update Modal */}
+            ;{/* ✅ FIXED: User Update Modal */}
             <AModal
               show={show1}
               handleClose={handleClose1}
@@ -686,7 +687,9 @@ const Admin = () => {
             />
           </div>
         )}
-
+        <div>
+          <AdminLogout />
+        </div>
         {/* Beauticians Tab */}
         {activeTab === "beauticians" && (
           <div className="tab-content">

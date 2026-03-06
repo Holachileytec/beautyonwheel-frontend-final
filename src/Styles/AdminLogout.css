@@ -1,0 +1,28 @@
+/* AdminLogout.css */
+.logout-btn {
+  background-color: #2b2b2b;
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.4);
+  letter-spacing: 0.5px;
+}
+
+.logout-btn:hover {
+  background-color: #2b2b2b;
+  transform: scale(1.03);
+}
+
+.logout-btn:active {
+  transform: scale(0.97);
+}
