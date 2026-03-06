@@ -21,7 +21,7 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/api/admin/loginA", info);
+      const res = await api.post("/api/admin/login", info);
       setMessage(res.data.message || "Login Successful");
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("isAdmin", "true");
