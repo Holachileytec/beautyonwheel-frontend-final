@@ -8,7 +8,7 @@ import AdminLogout from "./AdminLogout";
 
 const Admin = () => {
   const [gallery, setGallery] = useState({
-    imageUrl: "",
+    imageUrl: null,
     description: "",
   });
   const [createServiceFormData, setCreateServiceFormData] = useState({
@@ -116,24 +116,31 @@ const Admin = () => {
     }
   };
   // Gallery
-
-  const dataForG = {
-    description: gallery.description,
-    imageUrl: gallery.imageUrl,
-  };
-
   const uploadImage = async () => {
+    // 1. Log to verify we have the FILE object, not a string
+    console.log("File in state:", gallery.imageUrl);
+
+    if (!gallery.imageUrl) {
+      alert("Please select a file first");
+      return; // Stop the function if no file
+    }
+
     try {
-      const res = await api.post("/api/beauticians/uploadpic", dataForG);
-      // const res = await axios.post(
-      //   "http://localhost:8000/api/beauticians/uploadpic",
-      //   dataForG,
-      // );
-      console.log(res.data);
-      alert(res.data.message || "Image  uploaded successfully!");
-      setGallery({ imageUrl: "", description: "" });
+      // 2. MOVE FormData INSIDE the function so it gets the LATEST state
+      const formdata = new FormData();
+      formdata.append("image", gallery.imageUrl);
+      formdata.append("description", gallery.description);
+
+      // 3. Post the formdata variable
+      const res = await api.post("/api/beauticians/uploadpic", formdata);
+
+      console.log("Success:", res.data);
+      alert(res.data.message || "Image uploaded successfully!");
+
+      // Reset state after success
+      setGallery({ imageUrl: null, description: "" });
     } catch (error) {
-      console.error("This error occured in the gallery api", error);
+      console.error("This error occurred in the gallery api", error);
       alert(error.response?.data?.message || "Failed to upload image");
     }
   };
@@ -219,32 +226,6 @@ const Admin = () => {
     setSelectedSubServiceId(id);
     setShow4(true);
   };
-  // // User Modal
-  // const [show1, setShow1] = useState(false);
-  // const [selectedUserId, setSelectedUserId] = useState(null);
-  // const handleClose1 = () => {
-  //   setShow1(false);
-  //   setSelectedUserId(null);
-  // };
-  // const handleShow1 = (userId) => {
-  //   setSelectedUserId(userId);
-  //   setShow1(true);
-  // };
-
-  // // Plan Modal
-  // const [show2, setShow2] = useState(false);
-  // const handleClose2 = () => setShow2(false);
-  // const handleShow2 = () => setShow2(true);
-
-  // // Service Modal
-  // const [show3, setShow3] = useState(false);
-  // const handleClose3 = () => setShow3(false);
-  // const handleShow3 = () => setShow3(true);
-
-  // // Sub service Modal
-  // const [show4, setShow4] = useState(false);
-  // const handleClose4 = () => setShow4(false);
-  // const handleShow4 = () => setShow4(true);
 
   const [planMessage, setPlanMessage] = useState("");
 
@@ -505,10 +486,12 @@ const Admin = () => {
     }));
   };
   const handleChangeG = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
     setGallery((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+
+      [name]:
+        type === "file" ? files[0] : type === "checkbox" ? checked : value,
     }));
   };
 
@@ -596,7 +579,6 @@ const Admin = () => {
             </button>
           ))}
         </nav>
-        {/* <AdminLogout /> */}
       </div>
       {/* Main Content */}
       <div className="main-content">
@@ -796,7 +778,6 @@ const Admin = () => {
               <h1>Gallery</h1>
               <input
                 type="file"
-                value={gallery.imageUrl}
                 name="imageUrl"
                 placeholder="Paste image URL here"
                 onChange={handleChangeG}
@@ -1001,12 +982,6 @@ const Admin = () => {
                 handleClose={handleClose3}
                 // ✅ Fixed — uses the state variable
                 handleClose1={() => updateService({ id: selectedServiceId })}
-                // handleClose1={() => {
-                //   const selectedServiceId = service.find((s) => show3)?._id;
-                //   if (selectedServiceId) {
-                //     updateService({ id: selectedServiceId });
-                //   }
-                // }}
                 head={<h1>Update Service</h1>}
                 body={
                   <>
