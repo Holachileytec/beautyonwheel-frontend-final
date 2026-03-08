@@ -486,7 +486,6 @@ const User = () => {
             style={{
               display: displayRole === "beautician" ? "none" : "block",
             }}
-            non
           >
             <h3>Our Beauticians</h3>
             <div className="beauticians-list collapsed">
