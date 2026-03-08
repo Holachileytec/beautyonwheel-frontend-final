@@ -18,7 +18,7 @@ function AdminProtector({ children }) {
 
   const SendCode = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/api/admin/code", {
+      const res = await axios.post("/api/admin/code", {
         code: password,
       });
       console.log("Full response:", res.data);
