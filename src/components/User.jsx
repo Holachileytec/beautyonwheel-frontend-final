@@ -42,7 +42,7 @@ const User = () => {
     try {
       const res = await axios.put(
         //`${import.meta.env.VITE_API_URL}/api/beauticians/Bupdate/${id}` this can be use when to deploy to production
-        `http://localhost:8000/api/beauticians/Bupdate/${id}`,
+        `/api/beauticians/Bupdate/${id}`,
         rateInfo,
       );
       alert("Beautician Rated Successfully! Thank you for your feedback.");
