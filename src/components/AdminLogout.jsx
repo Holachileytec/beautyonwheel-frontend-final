@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import api from "../config/api";
+import axios from "../config/api";
 import "../Styles/AdminLogout.css";
 
 const AdminLogout = () => {
@@ -7,15 +7,12 @@ const AdminLogout = () => {
 
   const handleLogout = async () => {
     try {
-      await api.post("/api/admin/logout");
+      await axios.post("/api/admin/logout");
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("admin_unlocked");
+      navigate("/");
     } catch (error) {
       console.error("Logout error:", error);
-    } finally {
-      localStorage.removeItem("token");
-      localStorage.removeItem("isAdmin");
-      localStorage.removeItem("admin");
-      sessionStorage.removeItem("admin_unlocked");
-      navigate("/adminBOWlog");
     }
   };
 

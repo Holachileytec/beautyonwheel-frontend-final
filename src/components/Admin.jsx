@@ -54,7 +54,7 @@ const Admin = () => {
       };
 
       const res = await api.put(`/api/users/userUpdate/${id}`, updateData);
-      setUserUpdate(res.data);
+      setUserUpdate({ name: "", membership: "" });
       alert("User Updated Successfully");
       handleClose1(); // Close modal after success
       return res.data;
@@ -74,7 +74,7 @@ const Admin = () => {
       };
 
       const res = await api.put(`/api/plan/update/${id}`, updateData);
-      setPlanUpdate(res.data);
+      setPlanUpdate({ name: "", price: "" });
       alert("Plan Updated Successfully");
       handleClose2(); // Close modal after success
 
@@ -100,7 +100,7 @@ const Admin = () => {
       };
 
       const res = await api.put(`/api/services/updateServ/${id}`, updateData);
-      setServiceUpdate(res.data);
+      setServiceUpdate({ name: "", price: "", description: "" });
       alert("Service updated successfully!");
       handleClose3(); // Close modal after success
 
@@ -156,7 +156,7 @@ const Admin = () => {
       };
 
       const res = await api.put(`/api/subservices/update/${id}`, updateData);
-      setServiceTUpdate(res.data);
+      setServiceTUpdate({ name: "", price: "", category: "" });
       alert("Service Type updated successfully!");
       handleClose4(); // Close modal after success
 
