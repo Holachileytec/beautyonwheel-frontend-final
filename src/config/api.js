@@ -166,14 +166,14 @@ api.interceptors.response.use(
       switch (status) {
         case 401: {
           console.warn("⚠️  Session expired — please log in again");
-          const isAdminUnlocked = sessionStorage.getItem("admin_unlocked");
-          if (!isAdminUnlocked) {
+          // Only redirect if NOT already on login page
+          if (!window.location.pathname.includes("/login")) {
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
             window.location.href = "/login";
           }
           break;
         }
-
         case 403:
           console.warn("⚠️  Access forbidden");
           break;
