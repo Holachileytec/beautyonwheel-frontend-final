@@ -18,7 +18,7 @@ const API_BASE_URL =
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   (import.meta.env.MODE === "development"
-    ? "http://localhost:8000" // ← direct to backend in dev
+    ? "http://localhost:5000" // ← direct to backend in dev
     : "https://beautyplug.com.ng"); // ← production domain in production
 
 // ============================================

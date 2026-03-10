@@ -11,21 +11,18 @@ function AdminProtector({ children }) {
 
   useEffect(() => {
     const isAuth = sessionStorage.getItem("admin_unlocked");
-    if (isAuth === "true") {
-      setUnlocked(true);
-    }
+    if (isAuth === "true") setUnlocked(true);
   }, []);
 
   const SendCode = async () => {
     try {
-      const res = await api.post("/api/admin/code", {
-        code: password,
-      });
-      console.log("Full response:", res.data);
+      // FIX #1: Use POST so the body is actually sent to the server
+      const res = await api.post("/api/admin/code", { code: password });
+
       if (res.data.success) {
         sessionStorage.setItem("admin_unlocked", "true");
         localStorage.setItem("token", res.data.token);
-        setUnlocked(true); // This tells React: "Re-render now!"
+        setUnlocked(true);
       } else {
         setMessage("Invalid Code");
       }
@@ -35,41 +32,31 @@ function AdminProtector({ children }) {
     }
   };
 
-  // --- THE LOGIC ---
-
-  // 1. If unlocked, show the Admin Dashboard immediately
   if (unlocked) {
-    // Wait until token is actually in localStorage before rendering
     const token = localStorage.getItem("token");
-    if (!token) return <p>Loading...</p>; // ← prevents premature render
+    if (!token) return <p>Loading...</p>;
     return <main>{children}</main>;
   }
 
   return (
-    <>
-      <AModal
-        head="Enter Admin Password"
-        show={!unlocked}
-        body={
-          <div>
-            <p>{message}</p>
-            <input
-              type="password"
-              placeholder="Enter Passcode"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-control mb-3"
-            />
-          </div>
-        }
-        handleClose1={() => {
-          SendCode();
-        }}
-        handleClose={() => {
-          navigate("/");
-        }}
-      />
-    </>
+    <AModal
+      head="Enter Admin Password"
+      show={!unlocked}
+      body={
+        <div>
+          <p>{message}</p>
+          <input
+            type="password"
+            placeholder="Enter Passcode"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="form-control mb-3"
+          />
+        </div>
+      }
+      handleClose1={SendCode}
+      handleClose={() => navigate("/")}
+    />
   );
 }
 
