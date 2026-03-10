@@ -2,29 +2,46 @@ import React, { useEffect, useState } from "react";
 import "../Styles/Login.css";
 import api from "../config/api";
 import { useNavigate } from "react-router-dom";
+
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passkey, setPasskey] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
+    const admin = JSON.parse(localStorage.getItem("user"));
+
+    if (token && admin) {
+      if (admin.role === "admin") {
+        navigate("/admin/dashboard");
+      }
     }
   }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await api.post("/api/users/login", {
-        email,
+      const res = await api.post("/api/admin/login", {
+        username,
         password,
+        passkey,
       });
-      setMessage(res.data.message || "Login Successful");
+
+      const admin = res.data.admin;
+
+      setMessage(res.data.message || "Login Successful!");
+
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-      navigate("/");
+      localStorage.setItem("user", JSON.stringify(admin));
+
+      if (admin.role === "admin") {
+        navigate("/admin/dashboard");
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || "Invalid credentials");
     }
@@ -33,33 +50,40 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Welcome!</h2>
+        <h2>Admin Login</h2>
 
-        <p className="signup-link">
-          Don't have an account yet? <a href="/signup">Sign up</a>
-        </p>
-        {message}
+        {message && <p>{message}</p>}
+
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
-            <label htmlFor="email">Email address</label>
+            <label>Username</label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter username"
               required
             />
           </div>
 
           <div className="input-group">
-            <label htmlFor="password">Password</label>
+            <label>Password</label>
             <input
               type="password"
-              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Admin Passkey</label>
+            <input
+              type="password"
+              value={passkey}
+              onChange={(e) => setPasskey(e.target.value)}
+              placeholder="Enter admin passkey"
               required
             />
           </div>

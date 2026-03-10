@@ -7,44 +7,52 @@ function AdminProtector({ children }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [unlocked, setUnlocked] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isAuth = sessionStorage.getItem("admin_unlocked");
-    if (isAuth === "true") setUnlocked(true);
+    // Check if token already exists and user is admin
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (token && user?.role === "admin") {
+      setUnlocked(true);
+    }
+    setLoading(false);
   }, []);
 
-  const SendCode = async () => {
+  const verifyPasscode = async () => {
+    if (!password) {
+      setMessage("Enter the passcode");
+      return;
+    }
     try {
-      // FIX #1: Use POST so the body is actually sent to the server
       const res = await api.post("/api/admin/code", { code: password });
 
-      if (res.data.success) {
-        sessionStorage.setItem("admin_unlocked", "true");
+      if (res.data.success && res.data.token) {
+        // Save token and unlock
         localStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("admin_unlocked", "true");
         setUnlocked(true);
       } else {
-        setMessage("Invalid Code");
+        setMessage(res.data.message || "Invalid code");
       }
-    } catch (error) {
-      setMessage("Server Error");
-      console.error("Error verifying code:", error);
+    } catch (err) {
+      console.error("Error verifying code:", err);
+      setMessage("Server error. Try again.");
     }
   };
 
-  if (unlocked) {
-    const token = localStorage.getItem("token");
-    if (!token) return <p>Loading...</p>;
-    return <main>{children}</main>;
-  }
+  if (loading) return <p>Loading...</p>;
+
+  if (unlocked) return <>{children}</>;
 
   return (
     <AModal
-      head="Enter Admin Password"
+      head="Enter Admin Passcode"
       show={!unlocked}
       body={
         <div>
-          <p>{message}</p>
+          {message && <p style={{ color: "red" }}>{message}</p>}
           <input
             type="password"
             placeholder="Enter Passcode"
@@ -54,8 +62,8 @@ function AdminProtector({ children }) {
           />
         </div>
       }
-      handleClose1={SendCode}
-      handleClose={() => navigate("/")}
+      handleClose1={verifyPasscode} // On confirm
+      handleClose={() => navigate("/")} // On cancel
     />
   );
 }
