@@ -41,8 +41,8 @@ const User = () => {
   const submitRating = async (id) => {
     try {
       const res = await axios.put(
-        //`${import.meta.env.VITE_API_URL}/api/beauticians/Bupdate/${id}` this can be use when to deploy to production
-        `/api/beauticians/Bupdate/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/beauticians/Bupdate/${id}`,
+        // `/api/beauticians/Bupdate/${id}`,
         rateInfo,
       );
       alert("Beautician Rated Successfully! Thank you for your feedback.");
@@ -219,7 +219,9 @@ const User = () => {
     };
     getAllNotifs();
   }, []);
-  const markAsRead = (id) => {
+  const markAsRead = async(id) => {
+    await api.patch(`api/read/:id`)
+
     setNotifications(
       notifications.map((notif) =>
         notif.id === id ? { ...notif, isRead: true } : notif,
