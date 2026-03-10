@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AModal from "./AModal";
-import axios from "axios";
+import api from "../config/api";
 import { useNavigate } from "react-router-dom";
 
 function AdminProtector({ children }) {
@@ -18,7 +18,7 @@ function AdminProtector({ children }) {
 
   const SendCode = async () => {
     try {
-      const res = await axios.post("/api/admin/code", {
+      const res = await api.post("/api/admin/code", {
         code: password,
       });
       console.log("Full response:", res.data);
