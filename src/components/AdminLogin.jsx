@@ -10,8 +10,8 @@ const AdminLogin = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const isAdmin = localStorage.getItem("isAdmin");
-    if (token && isAdmin) navigate("/adminDashboard");
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    if (token && user?.role === "admin") navigate("/adminDashboard");
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -22,10 +22,20 @@ const AdminLogin = () => {
     e.preventDefault();
     try {
       const res = await api.post("/api/admin/login", info);
-      setMessage(res.data.message || "Login Successful");
+
+      //  Clear any stale client data first
+      localStorage.removeItem("isAdmin");
+      localStorage.removeItem("admin");
+      localStorage.removeItem("admin-pass-unlocked");
+      sessionStorage.removeItem("admin_unlocked");
+
+      //  Store fresh admin data
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("isAdmin", "true");
       localStorage.setItem("admin", JSON.stringify(res.data.admin));
+
+      setMessage(res.data.message || "Login Successful");
       navigate("/adminDashboard");
     } catch (error) {
       setMessage(error.response?.data?.message || "Invalid credentials");
@@ -36,7 +46,11 @@ const AdminLogin = () => {
     <div className="login-container">
       <div className="login-box">
         <h2>Admin Login</h2>
-        {message && <p style={{ color: "red" }}>{message}</p>}
+        {message && (
+          <p style={{ color: message.includes("Successful") ? "green" : "red" }}>
+            {message}
+          </p>
+        )}
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
             <label>Username</label>

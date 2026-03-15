@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "../Styles/Register.css";
 import "../Styles/navbar.css";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../config/api";
-// Make sure to add a beauty-related image to your project
-import beautyImage from "../assets/nil.jpg"; // You'll need to add this image
-import { useNavigate } from "react-router-dom";
-import { p } from "framer-motion/client";
+import beautyImage from "../assets/nil.jpg"; // Make sure this image exists
+
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,9 +17,9 @@ const SignUp = () => {
   });
   const [confirmPass, setConfirmPass] = useState("");
   const [confirmMessage, setConfirmMessage] = useState("");
-  const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -27,28 +27,36 @@ const SignUp = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
-  const handleChange2 = (e) => {
-    const { name, value } = e.target;
+
+  // Handle confirm password input
+  const handleConfirmChange = (e) => {
+    const { value } = e.target;
     setConfirmPass(value);
-    if (formData.password !== value) {
-      setConfirmMessage("Passwords do not match");
-    } else {
-      setConfirmMessage("Passwords Match");
-    }
+    setConfirmMessage(
+      formData.password !== value
+        ? "Passwords do not match"
+        : "Passwords Match",
+    );
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Prevent submission if passwords don't match
+    if (formData.password !== confirmPass) {
+      setMessage("Passwords do not match");
+      return;
+    }
+
     try {
-      // Extract only the fields needed by the backend (exclude agreeTerms)
+      // Exclude agreeTerms before sending to backend
       const { agreeTerms, ...registrationData } = formData;
 
-      const res = await api.post("/api/users/signup", registrationData);
+      const res = await api.post("/api/users/register", registrationData);
       setMessage(res.data.message || "Registration Successful!");
-      navigate("/login");
+      navigate("/login"); // Redirect to login after signup
     } catch (error) {
-      // console.error("Signup error:", error.response?.data || error.message);
       setMessage(
         error.response?.data?.message ||
           "Registration failed. Please try again.",
@@ -58,49 +66,56 @@ const SignUp = () => {
 
   return (
     <div className="register-container">
+      {/* Left image */}
       <div className="register-left">
-        <img
-          src={beautyImage}
-          alt="Beauty and Makeup"
-          className="beauty-image"
-        />
+        <img src={beautyImage} alt="Beauty" className="beauty-image" />
       </div>
 
+      {/* Right form */}
       <div className="register-right">
         <div className="register-box">
           <h1>Create an account</h1>
 
           <p className="login-link">
-            Already have an account? <a href="/login">Login</a>
+            Already have an account? <Link to="/login">Login</Link>
           </p>
-          {message}
-          <form onSubmit={handleSubmit} className="register-form">
-            <div className="name-group">
-              <div className="input-group">
-                <label htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Username"
-                  required
-                />
-              </div>
 
-              <div className="input-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email"
-                  required
-                />
-              </div>
+          {message && (
+            <p
+              style={{
+                color: message.includes("failed") ? "red" : "green",
+                marginBottom: "10px",
+              }}
+            >
+              {message}
+            </p>
+          )}
+
+          <form onSubmit={handleSubmit} className="register-form">
+            <div className="input-group">
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Username"
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                required
+              />
             </div>
 
             <div className="input-group">
@@ -134,29 +149,26 @@ const SignUp = () => {
               <input
                 type="password"
                 id="confirmPassword"
-                name="confirmPassword"
                 value={confirmPass}
-                onChange={handleChange2}
+                onChange={handleConfirmChange}
                 placeholder="Confirm your password"
                 required
               />
-              <label htmlFor="match">
-                {confirmMessage && (
-                  <p
-                    style={{
-                      color:
-                        confirmMessage === "Passwords Match" ? "green" : "red",
-                    }}
-                  >
-                    {confirmMessage}
-                  </p>
-                )}
-              </label>
+              {confirmMessage && (
+                <p
+                  style={{
+                    color:
+                      confirmMessage === "Passwords Match" ? "green" : "red",
+                    marginTop: "5px",
+                  }}
+                >
+                  {confirmMessage}
+                </p>
+              )}
             </div>
+
             <div className="input-group">
-              <label className="checkboxText" htmlFor="role">
-                I am a &nbsp; &nbsp;
-              </label>
+              <label htmlFor="role">I am a:</label>
               <select
                 id="role"
                 name="role"

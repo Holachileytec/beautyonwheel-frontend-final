@@ -12,6 +12,7 @@ function Gallery() {
         const res = await api.get("/api/beauticians/getAllGallery");
         const data = res.data.galleryItems || res.data;
         setImages(Array.isArray(data) ? data : []);
+        console.log("Galerry data", res.data);
       } catch (err) {
         console.error("Fetch error:", err);
       } finally {
@@ -25,16 +26,19 @@ function Gallery() {
 
   return (
     <>
-      <h2>Gallery Page</h2>
+      <h2 className="text-center">Gallery</h2>
 
       <div className="images">
         {images.length > 0 ? (
           images.map((img) => (
-            <img
-              src={img.imageUrl}
-              alt={img.description || "Gallery Item"}
-              key={img._id || img.id}
-            />
+            <div className="d-flex flex-column p-5">
+              <img
+                src={`http://localhost:5000${img.imageUrl}`}
+                alt={img.description || "Gallery Item"}
+                key={img._id || img.id}
+              />
+              <p className="px-3">{img.description}</p>
+            </div>
           ))
         ) : (
           <p>No images found.</p>

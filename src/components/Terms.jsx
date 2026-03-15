@@ -10,11 +10,10 @@ function Terms() {
           <h1 className="tc">Terms and Conditions </h1>
           <div className="ourService">
             <p>
-              Welcome to BeautyOnWheel (“we,” “our,” or “us”). These Terms and
-              Conditions (“Terms”) govern your use of our services, website, and
-              mobile application (collectively, the “Platform”). By accessing or
-              using BeautyOnWheel, you agree to be bound by these Terms. If you
-              do not agree, please do not use our services.
+              Welcome to BeautyOnWheel. These Terms and Conditions govern your
+              use of our services. By accessing or using BeautyOnWheel, you
+              agree to be bound by these Terms. If you are not satisfied with
+              these terms, discontinue the use of our services.
             </p>
           </div>
           <div className="ourService">
@@ -30,10 +29,9 @@ function Terms() {
             <p>
               All bookings must be made through our official platform or
               verified channels. Prices for services are clearly listed before
-              confirming a booking. Payments can be made online (via card,
-              transfer, or wallet) or on delivery (if available). Once payment
-              is made, a booking confirmation will be sent to your email or
-              dashboard.
+              confirming a booking. Payments can be made online or on delivery
+              (if available). Once payment is made, a booking confirmation will
+              be sent to your email or dashboard.
             </p>
           </div>
           <div className="ourService">
@@ -43,7 +41,7 @@ function Terms() {
               time for a full refund. Cancellations made less than 2 hours
               before your appointment may attract a fee or partial refund. If a
               service provider cancels, you will receive a full refund or be
-              offered to reschedule
+              offered to reschedule.
             </p>
           </div>
           <div className="ourService">
@@ -52,7 +50,7 @@ function Terms() {
               Service providers will arrive at the location you specified during
               booking. Ensure that your environment is clean, safe, and suitable
               for service delivery. BeautyOnWheel reserves the right to decline
-              or discontinue service if the environment is unsafe or
+              or discontinue services if the environment is unsafe or
               inappropriate.
             </p>
           </div>
@@ -77,8 +75,8 @@ function Terms() {
             <h2>Governing Law </h2>
             <p>
               These Terms are governed by and construed in accordance with the
-              laws of [Insert Country/State, e.g., Nigeria]. Any disputes will
-              be settled in the appropriate courts within [Insert jurisdiction]
+              laws of Lagos, Nigeria. Any disputes will be settled in the
+              appropriate courts within Lagos.
             </p>
           </div>
           <div className="ourService">

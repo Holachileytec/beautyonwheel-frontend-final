@@ -8,6 +8,10 @@ import axios from "axios";
 
 const User = () => {
   const navigate = useNavigate();
+  const [gallery, setGallery] = useState({
+    description: "",
+    imageUrl: null,
+  });
   const [notifications, setNotifications] = useState([]);
   const [beauticians, setBeauticians] = useState([]);
   const [beauty, setBeauty] = useState();
@@ -42,7 +46,6 @@ const User = () => {
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_API_URL}/api/beauticians/Bupdate/${id}`,
-        // `/api/beauticians/Bupdate/${id}`,
         rateInfo,
       );
       alert("Beautician Rated Successfully! Thank you for your feedback.");
@@ -84,7 +87,7 @@ const User = () => {
     }
 
     try {
-      const res = await api.put(`/api/users/${user._id}`, dataToUpdate);
+      const res = await api.put(`/api/users/update/${user._id}`, dataToUpdate);
       setUpdateMessage(res.data.message || "Update Successful");
       if (res.data.user) {
         setUserInfo(res.data.user);
@@ -96,6 +99,47 @@ const User = () => {
       console.error(e.message);
     }
   };
+  const handleChangeG = (e) => {
+    const { name, value, type, checked, files } = e.target;
+    setGallery((prevData) => ({
+      ...prevData,
+
+      [name]:
+        type === "file" ? files[0] : type === "checkbox" ? checked : value,
+    }));
+  };
+  // Gallery
+  const uploadImage = async () => {
+    // 1. Log to verify we have the FILE object, not a string
+    console.log("File in state:", gallery.imageUrl);
+
+    if (!gallery.imageUrl) {
+      alert("Please select a file first");
+      return; // Stop the function if no file
+    }
+
+    try {
+      const formdata = new FormData();
+      formdata.append("image", gallery.imageUrl);
+      formdata.append("description", gallery.description);
+
+      // 3. Post the formdata variable
+      const res = await api.post("/api/beauticians/uploadpic", formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Success:", res.data);
+      alert(res.data.message || "Image uploaded successfully!");
+
+      setGallery({ imageUrl: null, description: "" });
+    } catch (error) {
+      console.error("This error occurred in the gallery api", error);
+      alert(error.response?.data?.message || "Failed to upload image");
+    }
+  };
+  // End of Gallery
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -104,7 +148,7 @@ const User = () => {
     }));
   };
   //  beautician profile
-  // ✅ Fixed — only runs for beauticians
+  //  only runs for beauticians
   useEffect(() => {
     const getBeautician = async () => {
       const { user } = getAuthData();
@@ -186,7 +230,7 @@ const User = () => {
       return;
     }
     api
-      .get(`/api/users/${user._id}`)
+      .get(`/api/users/single/${user._id}`)
       .then((res) => {
         setUserInfo(res.data.user);
       })
@@ -219,8 +263,8 @@ const User = () => {
     };
     getAllNotifs();
   }, []);
-  const markAsRead = async(id) => {
-    await api.patch(`api/read/:id`)
+  const markAsRead = async (id) => {
+    await api.patch(`api/read/:id`);
 
     setNotifications(
       notifications.map((notif) =>
@@ -462,11 +506,11 @@ const User = () => {
             <div className="notifications-list">
               {notifications.map((notification) => (
                 <div
-                  key={notification.id}
+                  key={notification._id}
                   className={`notification-item ${
                     !notification.read ? "unread" : ""
                   }`}
-                  onClick={() => markAsRead(notification.id)}
+                  onClick={() => markAsRead(notification._id)}
                 >
                   <div className="notification-content">
                     <p className="notification-message">
@@ -557,6 +601,40 @@ const User = () => {
               display: displayRole === "beautician" ? "block" : "none",
             }}
           >
+            <h3>Upload Your Job</h3>
+            <div>
+              <div className="gallery">
+                <input
+                  type="file"
+                  name="imageUrl"
+                  onChange={handleChangeG}
+                  style={{ width: "100%" }}
+                />
+                <textarea
+                  rows="3"
+                  style={{ width: "100%" }}
+                  value={gallery.description}
+                  name="description"
+                  placeholder="Input the image url"
+                  onChange={handleChangeG}
+                />
+                <button
+                  className="book-btn"
+                  onClick={() => {
+                    uploadImage();
+                  }}
+                >
+                  Add Image
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            className="beauticians-card"
+            style={{
+              display: displayRole === "beautician" ? "block" : "none",
+            }}
+          >
             <h3>My Information</h3>
             <div className="beauticians-list">
               {beauty && (
@@ -602,6 +680,11 @@ const User = () => {
               className="action-btn"
               onClick={() => {
                 localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                localStorage.removeItem("isAdmin");
+                localStorage.removeItem("admin");
+                localStorage.removeItem("admin-pass-unlocked");
+                sessionStorage.removeItem("admin_unlocked");
                 navigate("/login");
               }}
             >

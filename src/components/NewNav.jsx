@@ -23,7 +23,7 @@ function NewNav() {
             <div>
               <FaUser />
               <p>
-                <a href="/log">login</a>
+                <a href="/login">login</a>
               </p>
             </div>
 

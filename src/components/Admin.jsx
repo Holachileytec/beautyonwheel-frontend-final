@@ -45,7 +45,7 @@ const Admin = () => {
     price: "",
   });
 
-  // ✅ FIX 1: Update User Function
+  //  Update User Function
   const UpdateUser = async ({ id }) => {
     try {
       const updateData = {
@@ -65,7 +65,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 2: Update Plan Function
+  //  Update Plan Function
   const UpdatePlan = async ({ id }) => {
     try {
       const updateData = {
@@ -90,7 +90,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 3: Update Service Function
+  //  Update Service Function
   const updateService = async ({ id }) => {
     try {
       const updateData = {
@@ -132,7 +132,12 @@ const Admin = () => {
       formdata.append("description", gallery.description);
 
       // 3. Post the formdata variable
-      const res = await api.post("/api/beauticians/uploadpic", formdata);
+      const res = await api.post("/api/beauticians/uploadpic", formdata, {
+        headers: {
+          // This forces Axios to not use the default JSON header
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       console.log("Success:", res.data);
       alert(res.data.message || "Image uploaded successfully!");
@@ -146,7 +151,7 @@ const Admin = () => {
   };
   // End of Gallery
 
-  // ✅ FIX 4: Update Service Type Function
+  //  Update Service Type Function
   const updateServiceType = async ({ id }) => {
     try {
       const updateData = {
@@ -261,7 +266,7 @@ const Admin = () => {
 
     const fetchUsers = async () => {
       try {
-        const res = await api.get("/api/users/getAllUsers");
+        const res = await api.get("/api/users/all");
         setUsers(res.data.users);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -306,7 +311,7 @@ const Admin = () => {
     category: "",
   });
 
-  // ✅ FIX 5: Add Service
+  //  Add Service
   const addService = async () => {
     try {
       const createServiceData = {
@@ -329,7 +334,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 6: Add Plan
+  //  Add Plan
   const addPlan = async () => {
     try {
       const addPData = {
@@ -352,7 +357,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 7: Delete Plan
+  //  Delete Plan
   const deletePlan = async (id) => {
     if (!window.confirm("Are you sure you want to delete this plan?")) return;
 
@@ -366,7 +371,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 8: Delete Service
+  //  Delete Service
   const deleteServ = async (id) => {
     if (!window.confirm("Are you sure you want to delete this service?"))
       return;
@@ -384,7 +389,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 9: Delete SubService
+  //  Delete SubService
   const deleteSubServ = async (id) => {
     if (!window.confirm("Are you sure you want to delete this subservice?"))
       return;
@@ -404,7 +409,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 10: Delete Beautician
+  //  Delete Beautician
   const deleteBeautician = async (id) => {
     if (!window.confirm("Are you sure you want to delete this beautician?"))
       return;
@@ -422,7 +427,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 11: Delete User
+  //  Delete User
   const deleteUser = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
@@ -439,7 +444,7 @@ const Admin = () => {
     }
   };
 
-  // ✅ FIX 12: Add Service Type
+  //  Add Service Type
   const addServiceType = async () => {
     try {
       const serviceTypeData = {

@@ -1,47 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Styles/Login.css";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../config/api";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passkey, setPasskey] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const admin = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user") || "null");
 
-    if (token && admin) {
-      if (admin.role === "admin") {
-        navigate("/admin/dashboard");
-      }
+    if (token && user) {
+      if (user.role === "admin") navigate("/adminDashboard");
+      else navigate("/user-dashboard");
+    } else if (token && !user) {
+      // ✅ Stale token with no user — clear everything
+      localStorage.removeItem("token");
+      localStorage.removeItem("isAdmin");
+      localStorage.removeItem("admin");
+      localStorage.removeItem("admin-pass-unlocked");
+      sessionStorage.removeItem("admin_unlocked");
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await api.post("/api/admin/login", {
-        username,
-        password,
-        passkey,
-      });
+      const res = await api.post("/api/users/login", { email, password });
+      const user = res.data.user;
 
-      const admin = res.data.admin;
+      // Clear all stale admin flags before setting new data
+      localStorage.removeItem("isAdmin");
+      localStorage.removeItem("admin");
+      localStorage.removeItem("admin-pass-unlocked");
+      sessionStorage.removeItem("admin_unlocked");
+
+      //  Set fresh auth data
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(user));
 
       setMessage(res.data.message || "Login Successful!");
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(admin));
-
-      if (admin.role === "admin") {
-        navigate("/admin/dashboard");
-      }
+      if (user.role === "admin") navigate("/adminDashboard");
+      else navigate("/user-dashboard");
     } catch (error) {
       setMessage(error.response?.data?.message || "Invalid credentials");
     }
@@ -50,48 +54,40 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Admin Login</h2>
-
-        {message && <p>{message}</p>}
-
+        <h2>Login</h2>
+        {message && (
+          <p style={{ color: message.includes("Invalid") ? "red" : "green", marginBottom: "10px" }}>
+            {message}
+          </p>
+        )}
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
-            <label>Username</label>
+            <label>Email</label>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
               required
             />
           </div>
-
           <div className="input-group">
             <label>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
+              placeholder="Enter your password"
               required
             />
           </div>
-
-          <div className="input-group">
-            <label>Admin Passkey</label>
-            <input
-              type="password"
-              value={passkey}
-              onChange={(e) => setPasskey(e.target.value)}
-              placeholder="Enter admin passkey"
-              required
-            />
-          </div>
-
           <button type="submit" className="login-button">
             Login
           </button>
         </form>
+        <p className="signup-link">
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </p>
       </div>
     </div>
   );

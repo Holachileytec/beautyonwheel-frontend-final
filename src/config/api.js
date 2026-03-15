@@ -18,7 +18,7 @@ const API_BASE_URL =
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   (import.meta.env.MODE === "development"
-    ? "http://localhost:8000" // ← direct to backend in dev
+    ? "http://localhost:5000" // ← direct to backend in dev
     : "https://beautyplug.com.ng"); // ← production domain in production
 
 // ============================================
@@ -166,14 +166,14 @@ api.interceptors.response.use(
       switch (status) {
         case 401: {
           console.warn("⚠️  Session expired — please log in again");
-          // Only redirect if NOT already on login page
-          if (!window.location.pathname.includes("/login")) {
+          const isAdminUnlocked = sessionStorage.getItem("admin_unlocked");
+          if (!isAdminUnlocked) {
             localStorage.removeItem("token");
-            localStorage.removeItem("user");
             window.location.href = "/login";
           }
           break;
         }
+
         case 403:
           console.warn("⚠️  Access forbidden");
           break;

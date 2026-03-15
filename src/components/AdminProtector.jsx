@@ -1,70 +1,75 @@
 import React, { useState, useEffect } from "react";
 import AModal from "./AModal";
-import api from "../config/api";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function AdminProtector({ children }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [unlocked, setUnlocked] = useState(false);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if token already exists and user is admin
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (token && user?.role === "admin") {
+    const isAuth = sessionStorage.getItem("admin_unlocked");
+    if (isAuth === "true") {
       setUnlocked(true);
     }
-    setLoading(false);
   }, []);
 
-  const verifyPasscode = async () => {
-    if (!password) {
-      setMessage("Enter the passcode");
-      return;
-    }
+  const SendCode = async () => {
     try {
-      const res = await api.post("/api/admin/code", { code: password });
-
-      if (res.data.success && res.data.token) {
-        // Save token and unlock
-        localStorage.setItem("token", res.data.token);
+      const res = await axios.post("/api/admin/code", {
+        code: password,
+      });
+      console.log("Full response:", res.data);
+      if (res.data.success) {
         sessionStorage.setItem("admin_unlocked", "true");
-        setUnlocked(true);
+        localStorage.setItem("token", res.data.token);
+        setUnlocked(true); // This tells React: "Re-render now!"
       } else {
-        setMessage(res.data.message || "Invalid code");
+        setMessage("Invalid Code");
       }
-    } catch (err) {
-      console.error("Error verifying code:", err);
-      setMessage("Server error. Try again.");
+    } catch (error) {
+      setMessage("Server Error");
+      console.error("Error verifying code:", error);
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  // --- THE LOGIC ---
 
-  if (unlocked) return <>{children}</>;
+  // 1. If unlocked, show the Admin Dashboard immediately
+  if (unlocked) {
+    // Wait until token is actually in localStorage before rendering
+    const token = localStorage.getItem("token");
+    if (!token) return <p>Loading...</p>; // ← prevents premature render
+    return <main>{children}</main>;
+  }
 
   return (
-    <AModal
-      head="Enter Admin Passcode"
-      show={!unlocked}
-      body={
-        <div>
-          {message && <p style={{ color: "red" }}>{message}</p>}
-          <input
-            type="password"
-            placeholder="Enter Passcode"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="form-control mb-3"
-          />
-        </div>
-      }
-      handleClose1={verifyPasscode} // On confirm
-      handleClose={() => navigate("/")} // On cancel
-    />
+    <>
+      <AModal
+        head="Enter Admin Password"
+        show={!unlocked}
+        body={
+          <div>
+            <p>{message}</p>
+            <input
+              type="password"
+              placeholder="Enter Passcode"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-control mb-3"
+            />
+          </div>
+        }
+        handleClose1={() => {
+          SendCode();
+        }}
+        handleClose={() => {
+          navigate("/");
+        }}
+      />
+    </>
   );
 }
 

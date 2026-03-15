@@ -6,7 +6,7 @@ import ChatConfig from "./config/ChatConfig.jsx";
 import { ChatWidget } from "./components/ChatWidget.jsx";
 import Pay from "./components/Pay";
 import { Route, Routes } from "react-router-dom";
-import Login from "./components/Login";
+import Login from "./components/Login.jsx";
 import SignUp from "./components/SignUp";
 import Blog from "./components/Blog";
 import Admin from "./components/Admin";
@@ -23,7 +23,8 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import AdminProtector from "./components/AdminProtector.jsx";
 import AdminLogin from "./components/AdminLogin.jsx";
 import AdminRegister from "./components/adminRegister.jsx";
-import AdminLogout from "./components/AdminLogout.jsx"; // ✅ add this
+import AdminLogout from "./components/AdminLogout.jsx";
+import UserProtector from "./components/UserProtector.jsx"; // ✅ New
 
 function App() {
   return (
@@ -39,12 +40,21 @@ function App() {
           <Route path="/plan" element={<Plan />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/user-dashboard" element={<User />} />
           <Route path="/pay" element={<Payment />} />
           <Route path="/aboutus" element={<About />} />
           <Route path="/faq" element={<Fq />} />
           <Route path="/termsandconditions" element={<Terms />} />
           <Route path="/gallery" element={<Gallery />} />
+
+          {/* User Protected Route */}
+          <Route
+            path="/user-dashboard"
+            element={
+              <UserProtector>
+                <User />
+              </UserProtector>
+            }
+          />
 
           {/* Admin Auth Routes */}
           <Route path="/adminBOWReg" element={<AdminRegister />} />
@@ -52,7 +62,7 @@ function App() {
 
           {/* Admin Protected Route */}
           <Route
-            path="/adminDashboard"  
+            path="/adminDashboard"
             element={
               <AdminProtector>
                 <Admin />

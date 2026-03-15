@@ -1,33 +1,13 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import api from "../config/api";
 import { useNavigate } from "react-router-dom";
-
-// Decode JWT payload without a library
-const decodeToken = (token) => {
-  try {
-    const payload = token.split(".")[1];
-    return JSON.parse(atob(payload));
-  } catch {
-    return null;
-  }
-};
-
-const getUserIdFromToken = () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) return "";
-    const decoded = decodeToken(token);
-    return decoded?.id || decoded?._id || "";
-  } catch {
-    return "";
-  }
-};
 
 const AdminRegister = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState({
-    userId: getUserIdFromToken(), // auto-populated from existing JWT
+    name: "",
+    email: "",
+    phone: "",
     username: "",
     password: "",
     passkey: "",
@@ -42,11 +22,8 @@ const AdminRegister = () => {
     e.preventDefault();
     try {
       const res = await api.post("/api/admin/register", info);
-      setMessage(res.data.message);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("isAdmin", "true");
-      localStorage.setItem("admin", JSON.stringify(res.data.admin));
-      navigate("/adminDashboard");
+      setMessage(res.data.message || "Admin registered successfully");
+      setTimeout(() => navigate("/adminBOWlog"), 1500);
     } catch (error) {
       setMessage(error.response?.data?.message || "Registration failed");
     }
@@ -62,24 +39,39 @@ const AdminRegister = () => {
           </p>
         )}
         <form onSubmit={handleSubmit} className="login-form">
-          {/* userId is auto-populated from token — only show manual field as fallback */}
-          {!getUserIdFromToken() && (
-            <div className="input-group">
-              <label>User ID</label>
-              <input
-                type="text"
-                name="userId"
-                value={info.userId}
-                onChange={handleChange}
-                placeholder="Log in first, or paste your User ID"
-                required
-              />
-              <small style={{ color: "orange" }}>
-                ⚠️ Could not detect your User ID automatically. Please log in
-                first.
-              </small>
-            </div>
-          )}
+          <div className="input-group">
+            <label>Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={info.name}
+              onChange={handleChange}
+              placeholder="Enter full name"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={info.email}
+              onChange={handleChange}
+              placeholder="Enter email"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Phone</label>
+            <input
+              type="tel"
+              name="phone"
+              value={info.phone}
+              onChange={handleChange}
+              placeholder="Enter phone number"
+              required
+            />
+          </div>
           <div className="input-group">
             <label>Username</label>
             <input
@@ -87,7 +79,7 @@ const AdminRegister = () => {
               name="username"
               value={info.username}
               onChange={handleChange}
-              placeholder="Choose a username"
+              placeholder="Choose admin username"
               required
             />
           </div>
@@ -98,7 +90,7 @@ const AdminRegister = () => {
               name="password"
               value={info.password}
               onChange={handleChange}
-              placeholder="Choose a password"
+              placeholder="Choose password"
               required
             />
           </div>
