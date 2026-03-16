@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { FaTelegram } from "react-icons/fa";
 import api from "../config/api";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const User = () => {
   const navigate = useNavigate();
@@ -44,8 +43,8 @@ const User = () => {
   };
   const submitRating = async (id) => {
     try {
-      const res = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/beauticians/Bupdate/${id}`,
+      const res = await api.put(
+        `/api/beauticians/Bupdate/${id}`,
         rateInfo,
       );
       alert("Beautician Rated Successfully! Thank you for your feedback.");
