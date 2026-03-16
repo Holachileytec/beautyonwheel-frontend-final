@@ -32,8 +32,13 @@ function Gallery() {
         {images.length > 0 ? (
           images.map((img) => (
             <div className="d-flex flex-column p-5">
-              <img
+              {/* <img
                 src={`http://localhost:5000${img.imageUrl}`}
+                alt={img.description || "Gallery Item"}
+                key={img._id || img.id}
+              /> */}
+              <img
+                src={`${import.meta.env.VITE_API_URL || "https://beautyplug.com.ng"}${img.imageUrl}`}
                 alt={img.description || "Gallery Item"}
                 key={img._id || img.id}
               />
