@@ -84,6 +84,10 @@ const Admin = () => {
           await fetchServices();
           await getAllSubServices();
         } else if (activeTab === "plan") await fetchPlans();
+        else if (activeTab === "gallery") {
+          await getAllImages();
+          await AgetAllImages();
+        }
       } finally {
         setLoading(false);
       }
@@ -102,7 +106,7 @@ const Admin = () => {
       console.error("Fetch error:", err);
     }
   };
-  getAllImages();
+  // getAllImages();
   const AgetAllImages = async () => {
     try {
       const res = await api.get("/api/admin/getAdminImg");
@@ -112,7 +116,7 @@ const Admin = () => {
       console.error("Fetch error:", err);
     }
   };
-  AgetAllImages();
+  // AgetAllImages();
 
   // --- 3. PLAN FUNCTIONS ---
 
@@ -338,7 +342,7 @@ const Admin = () => {
     try {
       await api.delete(`/api/beauticians/deleteImg/${id}`);
       alert("Gallery Item Deleted Successfully!");
-      getAllImages();
+      // getAllImages();
     } catch (error) {
       alert("Gallery Item not deleted!");
       console.log("an error accured when deleting image", error);
