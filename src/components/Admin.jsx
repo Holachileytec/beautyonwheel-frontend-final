@@ -7,90 +7,186 @@ import AdminChat from "./AdminChat";
 import AdminLogout from "./AdminLogout";
 
 const Admin = () => {
-  const [gallery, setGallery] = useState({
-    imageUrl: null,
-    description: "",
-  });
+  const [activeTab, setActiveTab] = useState("users");
+  const [loading, setLoading] = useState(true);
+
+  // User State
+  const [users, setUsers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [show1, setShow1] = useState(false);
+  const [userUpdate, setUserUpdate] = useState({ name: "", membership: "" });
+
+  // Plan State
+  const [plans, setPlans] = useState([]);
+  const [plan, setPlan] = useState({ name: "", price: "" });
+  const [planUpdate, setPlanUpdate] = useState({ name: "", price: "" });
+  const [selectedPlanId, setSelectedPlanId] = useState(null);
+  const [show2, setShow2] = useState(false);
+  const [planMessage, setPlanMessage] = useState("");
+
+  // Service State (Main)
+  const [service, setService] = useState([]);
   const [createServiceFormData, setCreateServiceFormData] = useState({
     name: "",
     price: "",
   });
-  const [createServiceMessage, setCreateServiceMessage] = useState("");
-
-  const [serviceTypeFormData, setServiceTypeFormData] = useState({
-    name: "",
-    price: "",
-    category: "",
-  });
-
-  const [userUpdate, setUserUpdate] = useState({
-    name: "",
-    membership: "",
-  });
-
   const [serviceUpdate, setServiceUpdate] = useState({
     name: "",
     price: "",
     description: "",
   });
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [show3, setShow3] = useState(false);
+  const [createServiceMessage, setCreateServiceMessage] = useState("");
 
+  // Sub-Service State
+  const [subServices, setSubServices] = useState([]);
+  const [serviceTypeFormData, setServiceTypeFormData] = useState({
+    name: "",
+    price: "",
+    category: "",
+  });
   const [serviceTUpdate, setServiceTUpdate] = useState({
     name: "",
     price: "",
     category: "",
   });
+  const [selectedSubServiceId, setSelectedSubServiceId] = useState(null);
+  const [show4, setShow4] = useState(false);
+  const [addServiceTypeMessage, setAddServiceTypeMessage] = useState("");
 
-  const [planUpdate, setPlanUpdate] = useState({
-    name: "",
-    price: "",
+  // Beautician & Gallery State
+  const [beauticians, setBeauticians] = useState([]);
+  const [images, setImages] = useState([]);
+  // Admin Img
+  const [AImages, setAImages] = useState([]);
+  const [gallery, setGallery] = useState({ imageUrl: null, description: "" });
+
+  // Miscellaneous (Blogs, Bookings)
+  const [blogs, setBlogs] = useState([]);
+  const [newBlog, setNewBlog] = useState({
+    title: "",
+    content: "",
+    category: "",
   });
+  const [bookings, setBookings] = useState([]);
 
-  //  Update User Function
-  const UpdateUser = async ({ id }) => {
+  // --- 2. FETCHING LOGIC (useEffect) ---
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (activeTab === "users") await fetchUsers();
+        else if (activeTab === "bookings") await fetchBookings();
+        else if (activeTab === "beauticians") await fetchBeauticians();
+        else if (activeTab === "services") {
+          await fetchServices();
+          await getAllSubServices();
+        } else if (activeTab === "plan") await fetchPlans();
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [activeTab]);
+
+  //  Gallery
+
+  const getAllImages = async () => {
     try {
-      const updateData = {
-        name: userUpdate.name,
-        membership: userUpdate.membership,
-      };
+      const res = await api.get("/api/beauticians/getAllGallery");
+      const data = res.data.galleryItems || res.data;
+      setImages(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  };
+  getAllImages();
+  const AgetAllImages = async () => {
+    try {
+      const res = await api.get("/api/admin/getAdminImg");
+      const data = res.data.galleryItems || res.data;
+      setAImages(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  };
+  AgetAllImages();
 
-      const res = await api.put(`/api/users/userUpdate/${id}`, updateData);
-      setUserUpdate({ name: "", membership: "" });
-      alert("User Updated Successfully");
-      handleClose1(); // Close modal after success
-      return res.data;
-    } catch (error) {
-      console.error("Error updating user:", error);
-      alert("User not updated!");
-      return null;
+  // --- 3. PLAN FUNCTIONS ---
+
+  const fetchPlans = async () => {
+    try {
+      const res = await api.get("/api/plan/allPlans");
+      setPlans(res.data.plans);
+    } catch (err) {
+      console.error("Error fetching plans:", err);
     }
   };
 
-  //  Update Plan Function
+  const addPlan = async () => {
+    try {
+      const addPData = { name: plan.name, price: plan.price };
+      await api.post("/api/plan/addplan", addPData);
+      setPlanMessage("Plan added successfully");
+      fetchPlans(); // Refresh
+      setPlan({ name: "", price: "" });
+    } catch (err) {
+      setPlanMessage("Plan was not successfully added");
+    }
+  };
+
   const UpdatePlan = async ({ id }) => {
     try {
-      const updateData = {
-        name: planUpdate.name,
-        price: planUpdate.price,
-      };
-
-      const res = await api.put(`/api/plan/update/${id}`, updateData);
+      const updateData = { name: planUpdate.name, price: planUpdate.price };
+      await api.put(`/api/plan/update/${id}`, updateData);
       setPlanUpdate({ name: "", price: "" });
       alert("Plan Updated Successfully");
-      handleClose2(); // Close modal after success
-
-      // Refresh plans list
-      const plansRes = await api.get("/api/plan/allPlans");
-      setPlans(plansRes.data.plans);
-
-      return res.data;
+      handleClose2();
+      fetchPlans();
     } catch (error) {
-      console.error("Error updating plan:", error);
       alert("Plan not updated!");
-      return null;
     }
   };
 
-  //  Update Service Function
+  const deletePlan = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this plan?")) return;
+    try {
+      await api.delete(`/api/plan/${id}`);
+      setPlans(plans.filter((p) => p._id !== id));
+      alert("Plan Deleted Successfully");
+    } catch (err) {
+      alert("Plan not Deleted Successfully");
+    }
+  };
+
+  // --- 4. SERVICE & SUB-SERVICE FUNCTIONS ---
+
+  const fetchServices = async () => {
+    try {
+      const res = await api.get(`/api/services/all`);
+      setService(res?.data || []);
+    } catch (err) {
+      setService([]);
+    }
+  };
+
+  const addService = async () => {
+    try {
+      const createServiceData = {
+        name: createServiceFormData.name,
+        price: Number(createServiceFormData.price),
+      };
+      await api.post("/api/services/create", createServiceData);
+      setCreateServiceMessage("Service Added Successfully");
+      fetchServices();
+      setCreateServiceFormData({ name: "", price: "" });
+    } catch (err) {
+      setCreateServiceMessage("Creating Service Failed");
+    }
+  };
+
   const updateService = async ({ id }) => {
     try {
       const updateData = {
@@ -98,101 +194,170 @@ const Admin = () => {
         price: serviceUpdate.price,
         description: serviceUpdate.description,
       };
-
-      const res = await api.put(`/api/services/updateServ/${id}`, updateData);
+      await api.put(`/api/services/updateServ/${id}`, updateData);
       setServiceUpdate({ name: "", price: "", description: "" });
       alert("Service updated successfully!");
-      handleClose3(); // Close modal after success
-
-      // Refresh services list
-      const servRes = await api.get(`/api/services/all`);
-      setService(servRes.data);
-
-      return res.data;
+      handleClose3();
+      fetchServices();
     } catch (error) {
-      console.error("Service update error:", error);
       alert("Service could not be updated");
-      return null;
     }
   };
-  // Gallery
-  const uploadImage = async () => {
-    // 1. Log to verify we have the FILE object, not a string
-    console.log("File in state:", gallery.imageUrl);
 
-    if (!gallery.imageUrl) {
-      alert("Please select a file first");
-      return; // Stop the function if no file
-    }
-
+  const deleteServ = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this service?"))
+      return;
     try {
-      // 2. MOVE FormData INSIDE the function so it gets the LATEST state
-      const formdata = new FormData();
-      formdata.append("image", gallery.imageUrl);
-      formdata.append("description", gallery.description);
-
-      // 3. Post the formdata variable
-      const res = await api.post("/api/beauticians/uploadpic", formdata, {
-        headers: {
-          // This forces Axios to not use the default JSON header
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("Success:", res.data);
-      alert(res.data.message || "Image uploaded successfully!");
-
-      // Reset state after success
-      setGallery({ imageUrl: null, description: "" });
-    } catch (error) {
-      console.error("This error occurred in the gallery api", error);
-      alert(error.response?.data?.message || "Failed to upload image");
+      await api.delete(`/api/services/delete/${id}`);
+      fetchServices();
+      alert("Service Deleted Successfully");
+    } catch (err) {
+      alert("Service not Deleted Successfully");
     }
   };
-  // End of Gallery
 
-  //  Update Service Type Function
+  const getAllSubServices = async () => {
+    try {
+      const res = await api.get("/api/subservices/allService");
+      setSubServices(res?.data?.allService || []);
+    } catch (err) {
+      setSubServices([]);
+    }
+  };
+
+  const addServiceType = async () => {
+    try {
+      await api.post(`/api/subservices/addService`, serviceTypeFormData);
+      setAddServiceTypeMessage("Subservice Added Successfully");
+      getAllSubServices();
+      setServiceTypeFormData({ name: "", price: "", category: "" });
+    } catch (error) {
+      setAddServiceTypeMessage("An Error occurred");
+    }
+  };
+
   const updateServiceType = async ({ id }) => {
     try {
-      const updateData = {
-        name: serviceTUpdate.name,
-        price: serviceTUpdate.price,
-        category: serviceTUpdate.category,
-      };
-
-      const res = await api.put(`/api/subservices/update/${id}`, updateData);
+      await api.put(`/api/subservices/update/${id}`, serviceTUpdate);
       setServiceTUpdate({ name: "", price: "", category: "" });
       alert("Service Type updated successfully!");
-      handleClose4(); // Close modal after success
-
-      // Refresh subservices list
-      const subRes = await api.get("/api/subservices/allService");
-      setSubServices(subRes.data.allService || []);
-
-      return res.data;
+      handleClose4();
+      getAllSubServices();
     } catch (err) {
-      console.error("Service type update error:", err);
       alert("Service type not updated");
-      return null;
     }
   };
 
-  const [addServiceTypeMessage, setAddServiceTypeMessage] = useState("");
-  const [plans, setPlans] = useState([]);
-  const [activeTab, setActiveTab] = useState("users");
-  const [blogs, setBlogs] = useState([]);
-  const [bookings, setBookings] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [service, setService] = useState([]);
-  const [subServices, setSubServices] = useState([]);
-  const [beauticians, setBeauticians] = useState([]);
-  const [plan, setPlan] = useState({
-    name: "",
-    price: "",
-  });
-  // User Modal
-  const [show1, setShow1] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const deleteSubServ = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this subservice?"))
+      return;
+    try {
+      await api.delete(`/api/subservices/delete/${id}`);
+      getAllSubServices();
+      alert("SubService Deleted Successfully");
+    } catch (err) {
+      alert("SubService not Deleted Successfully");
+    }
+  };
+
+  // --- 5. USER FUNCTIONS ---
+
+  const fetchUsers = async () => {
+    try {
+      const res = await api.get("/api/users/all");
+      setUsers(res.data.users);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const UpdateUser = async ({ id }) => {
+    try {
+      await api.put(`/api/users/userUpdate/${id}`, userUpdate);
+      setUserUpdate({ name: "", membership: "" });
+      alert("User Updated Successfully");
+      handleClose1();
+      fetchUsers();
+    } catch (error) {
+      alert("User not updated!");
+    }
+  };
+
+  const deleteUser = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    try {
+      await api.delete(`/api/users/delete/${id}`);
+      alert("User Deleted Successfully");
+      fetchUsers();
+    } catch (err) {
+      alert("User could not be deleted");
+    }
+  };
+
+  // --- 6. BEAUTICIAN & GALLERY FUNCTIONS ---
+
+  const fetchBeauticians = async () => {
+    try {
+      const res = await api.get("/api/beauticians/allbeauticians");
+      setBeauticians(res.data.beauticians);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteBeautician = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this beautician?"))
+      return;
+    try {
+      await api.delete(`/api/beauticians/delete/${id}`);
+      alert("Beautician Deleted Successfully!");
+      fetchBeauticians();
+    } catch (error) {
+      alert("Beautician not deleted!");
+    }
+  };
+
+  const uploadImage = async () => {
+    if (!gallery.imageUrl) return alert("Please select a file first");
+    try {
+      const formdata = new FormData();
+      formdata.append("AImage", gallery.imageUrl);
+      formdata.append("description", gallery.description);
+      await api.post("/api/admin/uploadAJob", formdata, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert(" Admin Image uploaded successfully!");
+      setGallery({ imageUrl: null, description: "" });
+    } catch (error) {
+      alert("Failed to upload image");
+    }
+  };
+
+  const deleteGalleryItem = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this Item?")) return;
+    try {
+      await api.delete(`/api/beauticians/deleteImg/${id}`);
+      alert("Gallery Item Deleted Successfully!");
+      getAllImages();
+    } catch (error) {
+      alert("Gallery Item not deleted!");
+      console.log("an error accured when deleting image", error);
+    }
+  };
+  const AdeleteGalleryItem = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this Item?")) return;
+    try {
+      await api.delete(`/api/admin/deletAJob/${id}`);
+      alert(" Admin Gallery Item Deleted Successfully!");
+      AgetAllImages();
+    } catch (error) {
+      alert(" Admin Gallery Item not deleted!");
+      console.log("an error accured when deleting image", error);
+    }
+  };
+
+  // --- 7. MODAL HANDLERS ---
+
   const handleClose1 = () => {
     setShow1(false);
     setSelectedUserId(null);
@@ -202,299 +367,38 @@ const Admin = () => {
     setShow1(true);
   };
 
-  // Plan Modal
-  const [show2, setShow2] = useState(false);
-  const [selectedPlanId, setSelectedPlanId] = useState(null); // ← NEW
   const handleClose2 = () => setShow2(false);
   const handleShow2 = (id) => {
-    // ← FIXED
     setSelectedPlanId(id);
     setShow2(true);
   };
 
-  // Service Modal
-  const [show3, setShow3] = useState(false);
-  const [selectedServiceId, setSelectedServiceId] = useState(null); // ← NEW
   const handleClose3 = () => setShow3(false);
   const handleShow3 = (id) => {
-    // ← FIXED
     setSelectedServiceId(id);
     setShow3(true);
   };
 
-  // Sub service Modal
-  const [show4, setShow4] = useState(false);
-  const [selectedSubServiceId, setSelectedSubServiceId] = useState(null); // ← NEW
   const handleClose4 = () => setShow4(false);
   const handleShow4 = (id) => {
-    // ← FIXED
     setSelectedSubServiceId(id);
     setShow4(true);
   };
 
-  const [planMessage, setPlanMessage] = useState("");
-
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const res = await api.get("/api/plan/allPlans");
-        setPlans(res.data.plans);
-      } catch (err) {
-        console.error("Error fetching plans:", err);
-      }
-    };
-
-    const fetchServices = async () => {
-      try {
-        const res = await api.get(`/api/services/all`);
-        setService(res?.data || []);
-      } catch (err) {
-        console.error("Error fetching services:", err);
-        setService([]);
-      }
-    };
-
-    const getAllSubServices = async () => {
-      try {
-        const res = await api.get("/api/subservices/allService");
-        setSubServices(res?.data?.allService || []);
-      } catch (err) {
-        setSubServices([]);
-        console.error("Fetch error:", err);
-      }
-    };
-
-    const fetchUsers = async () => {
-      try {
-        const res = await api.get("/api/users/all");
-        setUsers(res.data.users);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    const fetchBookings = async () => {
-      try {
-        const res = await api.get("/api/bookings/all");
-        setBookings(res.data.bookings);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      }
-    };
-
-    const fetchBeauticians = async () => {
-      try {
-        const res = await api.get("/api/beauticians/allbeauticians");
-        setBeauticians(res.data.beauticians);
-      } catch (err) {
-        console.error("Error fetching beauticians:", err);
-      }
-    };
-
-    if (activeTab === "users") {
-      fetchUsers();
-    } else if (activeTab === "bookings") {
-      fetchBookings();
-    } else if (activeTab === "beauticians") {
-      fetchBeauticians();
-    } else if (activeTab === "services") {
-      fetchServices();
-      getAllSubServices();
-    } else if (activeTab === "plan") {
-      fetchPlans();
-    }
-  }, [activeTab]);
-
-  const [newBlog, setNewBlog] = useState({
-    title: "",
-    content: "",
-    category: "",
-  });
-
-  //  Add Service
-  const addService = async () => {
-    try {
-      const createServiceData = {
-        name: createServiceFormData.name,
-        price: Number(createServiceFormData.price),
-      };
-
-      const res = await api.post("/api/services/create", createServiceData);
-      setCreateServiceMessage("Service Added Successfully");
-
-      // Refresh services
-      const servRes = await api.get(`/api/services/all`);
-      setService(servRes.data);
-
-      // Clear form
-      setCreateServiceFormData({ name: "", price: "" });
-    } catch (err) {
-      console.error("Error creating service:", err);
-      setCreateServiceMessage("Creating Service Failed");
-    }
-  };
-
-  //  Add Plan
-  const addPlan = async () => {
-    try {
-      const addPData = {
-        name: plan.name,
-        price: plan.price,
-      };
-
-      const res = await api.post("/api/plan/addplan", addPData);
-      setPlanMessage("Plan added successfully");
-
-      // Refresh plans
-      const plansRes = await api.get("/api/plan/allPlans");
-      setPlans(plansRes.data.plans);
-
-      // Clear form
-      setPlan({ name: "", price: "" });
-    } catch (err) {
-      setPlanMessage("Plan was not successfully added");
-      console.error("Error adding plan:", err);
-    }
-  };
-
-  //  Delete Plan
-  const deletePlan = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this plan?")) return;
-
-    try {
-      const res = await api.delete(`/api/plan/${id}`);
-      setPlans(plans.filter((p) => p._id !== id));
-      alert(res?.data?.message || "Plan Deleted Successfully");
-    } catch (err) {
-      console.error("Error deleting plan:", err);
-      alert("Plan not Deleted Successfully");
-    }
-  };
-
-  //  Delete Service
-  const deleteServ = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this service?"))
-      return;
-
-    try {
-      const res = await api.delete(`/api/services/delete/${id}`);
-      alert(res?.data?.message || "Service Deleted Successfully");
-
-      // Refresh services
-      const servRes = await api.get(`/api/services/all`);
-      setService(servRes.data);
-    } catch (err) {
-      alert(err?.response?.data?.message || "Service not Deleted Successfully");
-      console.error("Error deleting service:", err);
-    }
-  };
-
-  //  Delete SubService
-  const deleteSubServ = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this subservice?"))
-      return;
-
-    try {
-      const res = await api.delete(`/api/subservices/delete/${id}`);
-      alert(res?.data?.message || "SubService Deleted Successfully");
-
-      // Refresh subservices
-      const subRes = await api.get("/api/subservices/allService");
-      setSubServices(subRes.data.allService || []);
-    } catch (err) {
-      alert(
-        err?.response?.data?.message || "SubService not Deleted Successfully",
-      );
-      console.error("Error deleting subservice:", err);
-    }
-  };
-
-  //  Delete Beautician
-  const deleteBeautician = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this beautician?"))
-      return;
-
-    try {
-      const res = await api.delete(`/api/beauticians/delete/${id}`);
-      alert(res?.data?.message || "Beautician Deleted Successfully!");
-
-      // Refresh beauticians
-      const beauRes = await api.get("/api/beauticians/allbeauticians");
-      setBeauticians(beauRes.data.beauticians);
-    } catch (error) {
-      alert("Beautician not deleted! An error occurred.");
-      console.error("Error:", error);
-    }
-  };
-
-  //  Delete User
-  const deleteUser = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-
-    try {
-      const res = await api.delete(`/api/users/delete/${id}`);
-      alert(res?.data?.message || "User Deleted Successfully");
-
-      // Refresh users
-      const userRes = await api.get("/api/users/getAllUsers");
-      setUsers(userRes.data.users);
-    } catch (err) {
-      alert(err?.response?.data?.message || "User could not be deleted");
-      console.error("Error:", err);
-    }
-  };
-
-  //  Add Service Type
-  const addServiceType = async () => {
-    try {
-      const serviceTypeData = {
-        name: serviceTypeFormData.name,
-        price: serviceTypeFormData.price,
-        category: serviceTypeFormData.category,
-      };
-
-      const res = await api.post(
-        `/api/subservices/addService`,
-        serviceTypeData,
-      );
-      setAddServiceTypeMessage("Subservice Added Successfully");
-
-      // Refresh subservices
-      const subRes = await api.get("/api/subservices/allService");
-      setSubServices(subRes.data.allService || []);
-
-      // Clear form
-      setServiceTypeFormData({ name: "", price: "", category: "" });
-    } catch (error) {
-      setAddServiceTypeMessage("An Error occurred while Adding Subservice");
-      console.error("Error:", error);
-    }
-  };
-
-  const handleAddBlog = (e) => {
-    e.preventDefault();
-    const blog = {
-      id: Date.now(),
-      ...newBlog,
-      date: new Date().toLocaleDateString(),
-      status: "Published",
-    };
-    setBlogs([...blogs, blog]);
-    setNewBlog({ title: "", content: "", category: "" });
-  };
+  // --- 8. FORM CHANGE HANDLERS ---
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setCreateServiceFormData((prevData) => ({
-      ...prevData,
+    setCreateServiceFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+
   const handleChangeG = (e) => {
     const { name, value, type, checked, files } = e.target;
-    setGallery((prevData) => ({
-      ...prevData,
-
+    setGallery((prev) => ({
+      ...prev,
       [name]:
         type === "file" ? files[0] : type === "checkbox" ? checked : value,
     }));
@@ -502,50 +406,73 @@ const Admin = () => {
 
   const handleChange4 = (e) => {
     const { name, value, type, checked } = e.target;
-    setUserUpdate((prevData) => ({
-      ...prevData,
+    setUserUpdate((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleChange5 = (e) => {
     const { name, value, type, checked } = e.target;
-    setPlanUpdate((prevData) => ({
-      ...prevData,
+    setPlanUpdate((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleChange6 = (e) => {
     const { name, value, type, checked } = e.target;
-    setServiceUpdate((prevData) => ({
-      ...prevData,
+    setServiceUpdate((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleChange7 = (e) => {
     const { name, value, type, checked } = e.target;
-    setServiceTUpdate((prevData) => ({
-      ...prevData,
+    setServiceTUpdate((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleChange2 = (e) => {
     const { name, value, type, checked } = e.target;
-    setServiceTypeFormData((prevData) => ({
-      ...prevData,
+    setServiceTypeFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleChange3 = (e) => {
     const { name, value, type, checked } = e.target;
-    setPlan((prevData) => ({
-      ...prevData,
+    setPlan((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleAddBlog = (e) => {
+    e.preventDefault();
+    setBlogs([
+      ...blogs,
+      {
+        id: Date.now(),
+        ...newBlog,
+        date: new Date().toLocaleDateString(),
+        status: "Published",
+      },
+    ]);
+    setNewBlog({ title: "", content: "", category: "" });
+  };
+
+  const fetchBookings = async () => {
+    try {
+      const res = await api.get("/api/bookings/all");
+      setBookings(res.data.bookings);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const serviceCategories = [
@@ -573,7 +500,7 @@ const Admin = () => {
             "settings",
             "beauticians",
             "chat",
-            "Logout",
+            "gallery",
           ].map((tab) => (
             <button
               key={tab}
@@ -674,9 +601,7 @@ const Admin = () => {
             />
           </div>
         )}
-        <div>
-          <AdminLogout />
-        </div>
+
         {/* Beauticians Tab */}
         {activeTab === "beauticians" && (
           <div className="tab-content">
@@ -706,6 +631,115 @@ const Admin = () => {
                         <button
                           className="action-btn delete"
                           onClick={() => deleteBeautician(b._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+        {activeTab === "gallery" && (
+          <div className="tab-content">
+            <h1>Gallery</h1>
+            <div className="gallery">
+              <input
+                type="file"
+                name="imageUrl"
+                placeholder="Paste image URL here"
+                onChange={handleChangeG}
+              />
+              <textarea
+                rows="3"
+                value={gallery.description}
+                name="description"
+                placeholder="Input the image url"
+                onChange={handleChangeG}
+              />
+              <button
+                onClick={() => {
+                  uploadImage();
+                }}
+              >
+                Add Image
+              </button>
+            </div>
+            <div className="table-container">
+              <h1>Admin Gallery</h1>
+              <table className="users-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {AImages.map((i) => (
+                    <tr key={i._id}>
+                      <td className="images">
+                        <img
+                          src={`${import.meta.env.VITE_API_URL || "https://beautyplug.com.ng"}${i.imageUrl}`}
+                          alt={i.description || "Gallery Item"}
+                          key={i._id || i.id}
+                        />
+                      </td>
+                      <td> {i.description}</td>
+                      <td>
+                        <a
+                          href={`${import.meta.env.VITE_API_URL || "https://beautyplug.com.ng"}${i.imageUrl}`}
+                        >
+                          <button className="action-btn edit">
+                            View Image
+                          </button>
+                        </a>
+                        <button
+                          className="action-btn delete"
+                          onClick={() => AdeleteGalleryItem(i._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="table-container mt-4">
+              <h1>Beauticians Job Upload</h1>
+              <table className="users-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {images.map((i) => (
+                    <tr key={i._id}>
+                      <td className="images">
+                        <img
+                          src={`${import.meta.env.VITE_API_URL || "https://beautyplug.com.ng"}${i.imageUrl}`}
+                          alt={i.description || "Gallery Item"}
+                          key={i._id || i.id}
+                        />
+                      </td>
+                      <td>{i.description}</td>
+                      <td>
+                        <a
+                          href={`${import.meta.env.VITE_API_URL || "https://beautyplug.com.ng"}${i.imageUrl}`}
+                        >
+                          <button className="action-btn edit">
+                            View Image
+                          </button>
+                        </a>
+                        <button
+                          className="action-btn delete"
+                          onClick={() => deleteGalleryItem(i._id)}
                         >
                           Delete
                         </button>
@@ -776,31 +810,6 @@ const Admin = () => {
                   </div>
                 </div>
               ))}
-            </div>
-            {/* 
-            gallary */}
-            <div className="gallery">
-              <h1>Gallery</h1>
-              <input
-                type="file"
-                name="imageUrl"
-                placeholder="Paste image URL here"
-                onChange={handleChangeG}
-              />
-              <textarea
-                rows="3"
-                value={gallery.description}
-                name="description"
-                placeholder="Input the image url"
-                onChange={handleChangeG}
-              />
-              <button
-                onClick={() => {
-                  uploadImage();
-                }}
-              >
-                Add Image
-              </button>
             </div>
           </div>
         )}
@@ -1171,10 +1180,14 @@ const Admin = () => {
           <div className="tab-content">
             <h2>Settings</h2>
             <div className="settings-form">
+              <div>
+                <AdminLogout />
+              </div>
               <div className="setting-group">
                 <label>Website Name</label>
                 <input type="text" defaultValue="Beauty Palace" />
               </div>
+
               <div className="setting-group">
                 <label>Admin Email</label>
                 <input type="email" defaultValue="admin@beautypalace.com" />

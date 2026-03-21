@@ -106,6 +106,7 @@ const Plan = () => {
             "hair-styling",
             "Pedicure & Manicure",
             "massage",
+            "Nails",
             "create-plan",
           ].map((tab) => (
             <button
@@ -120,7 +121,7 @@ const Plan = () => {
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
+      <div className="main-content tab-content">
         {/* For Beauticians */}
         {activeTab === "makeup" && (
           <div className="tabcontent">
@@ -345,7 +346,7 @@ const Plan = () => {
 
         {/* Massage Tab */}
         {activeTab === "massage" && (
-          <div className="tabcontent">
+          <div className="tab-content">
             <h1>Massage</h1>
             <hr />
 

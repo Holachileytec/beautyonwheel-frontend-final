@@ -3,7 +3,23 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+.gallery {
+  display: flex;
+  flex-direction: column;
+}
+.gallery input,
+.gallery textarea {
+  width: 100%;
+  margin: 10px;
+}
+.gallery button {
+  width: 100%;
+  margin: 10px;
+  padding: 20px;
+  background-color: pink;
+  border-radius: 10px;
+  border: none;
+}
 .admin-dashboard {
   display: flex;
   min-height: 100vh;
@@ -52,7 +68,7 @@
 }
 
 .nav-item.active {
-  background:#d1307b;
+  background: #d1307b;
   color: white;
 }
 
@@ -87,7 +103,7 @@
 .avatar {
   width: 40px;
   height: 40px;
-  background:#d1307b;
+  background: #d1307b;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -98,6 +114,9 @@
 /* Tab Content */
 .tab-content {
   animation: fadeIn 0.5s ease;
+  max-height: 100vh;
+  overflow-y: scroll !important;
+
 }
 
 @keyframes fadeIn {
@@ -168,7 +187,7 @@
 }
 
 .users-table th {
-  background:#d1307b;
+  background: #d1307b;
   color: white;
 }
 
@@ -226,7 +245,7 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color:#d1307b;
+  border-color: #d1307b;
   transform: scale(1.02);
 }
 
@@ -238,7 +257,7 @@ textarea {
 /* Buttons */
 .submit-btn,
 .save-btn {
-  background:#d1307b;
+  background: #d1307b;
   color: white;
   padding: 15px;
   border: none;
@@ -295,7 +314,7 @@ textarea {
 }
 
 .filter-btn:hover {
-  background:#d1307b;
+  background: #d1307b;
   color: white;
 }
 
@@ -338,7 +357,7 @@ textarea {
 }
 
 .update-btn {
-  background:#d1307b;
+  background: #d1307b;
   color: white;
   border: none;
   padding: 8px 15px;
