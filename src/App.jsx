@@ -25,10 +25,23 @@ import AdminLogin from "./components/AdminLogin.jsx";
 import AdminRegister from "./components/adminRegister.jsx";
 import AdminLogout from "./components/AdminLogout.jsx";
 import UserProtector from "./components/UserProtector.jsx"; // ✅ New
+import StudentLogin from "./components/StudenLogin.jsx";
+import StudentDashboard from "./components/StudentDashboard.jsx";
+import WhatsaapBtn from "./components/WhatsaapButton/WhatsaapBtn.jsx";
 
 function App() {
   return (
     <>
+      <WhatsaapBtn
+        phoneNumber="2347089986222"
+        message="Hello! I have a question about your services."
+        position="right"
+        tooltipText="Need help? Chat with us!"
+        showOnlyAfterScroll={200}
+        badgeCount={1}
+        pulse={true}
+        onClick={() => console.log("WhatsApp button clicked")}
+      />
       <ChatProvider config={ChatConfig}>
         <NewNav />
         <Routes>
@@ -45,6 +58,8 @@ function App() {
           <Route path="/faq" element={<Fq />} />
           <Route path="/termsandconditions" element={<Terms />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/student-login" element={<StudentLogin />} />
+          <Route path="/studentDashboard" element={<StudentDashboard />} />
 
           {/* User Protected Route */}
           <Route

@@ -55,7 +55,7 @@ function NewNav() {
               <a href="/#mkup">Makeup</a>
               <a href="/blog">Blog</a>
               <a href="/aboutus">About Us </a>
-              <a href="/pay">Payment</a>
+              <a href="/student-login">Student Login</a>
             </div>
           </Col>
           <Col>

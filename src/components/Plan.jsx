@@ -143,8 +143,7 @@ const Plan = () => {
                     </p>
                     <p>
                       {" "}
-                      <strong>Bonus:</strong> Basic skin prep, Simple lashes or
-                      brow touch, Light setting spray.
+                      <strong>Bonus:</strong> Lip Gloss
                     </p>
                   </div>
                 }
@@ -154,26 +153,6 @@ const Plan = () => {
                     <ListGroup.Item>
                       <strong>Everyday/Natural Makeup:</strong> (Light and
                       Simple look to daily wear.)
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>No Makeup Makeup:</strong> (Soft, skin-like, very
-                      minimal. )
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Casual Makeup:</strong> (For errands, outings, or
-                      meetups.)
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Office / Professional Makeup:</strong> (Neutral
-                      tones, polished but simple)
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Matte Makeup:</strong> (For oil control and clean
-                      finish)
                     </ListGroup.Item>
                   </>
                 }
@@ -190,10 +169,7 @@ const Plan = () => {
                     </p>
                     <p>
                       {" "}
-                      <strong>Bonus:</strong> Mini skincare treatment (facial
-                      massage,serum prep),Custom lashes,Priority booking,
-                      Retouch or short on-site service, Complementary mini
-                      skincare kit.
+                      <strong>Bonus:</strong> Complementary Lip Gloss & Mascara
                     </p>
                   </div>
                 }
@@ -204,33 +180,6 @@ const Plan = () => {
                       <strong>Glam Makeup:</strong> (Bold eyes, contour,
                       shimmer, and highlight.)
                     </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Bridal Makeup (Regular):</strong> (For wedding
-                      guests or simple brides. )
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Dewy / Glowy Makeup:</strong> (Fresh and radiant
-                      finish.)
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>HD/ Camera Makeup:</strong> (For photography or
-                      video)
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Matte / Satin Makeup(enhanced):</strong> (Smooth,
-                      photo-friendly)
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>
-                        Traditional / Cultural Makeup(simple):
-                      </strong>{" "}
-                      (For cultural events)
-                    </ListGroup.Item>
                   </>
                 }
               />
@@ -249,10 +198,8 @@ const Plan = () => {
                     </p>
                     <p>
                       {" "}
-                      <strong>Bonus:</strong> Mini skincare treatment (facial
-                      massage,serum prep),Custom lashes,Priority booking,
-                      Retouch or short on-site service, Complementary mini
-                      skincare kit.
+                      <strong>Bonus:</strong> Complimentary Mascara + mini
+                      makeup bag
                     </p>
                   </div>
                 }
@@ -262,36 +209,6 @@ const Plan = () => {
                     <ListGroup.Item>
                       <strong>Airbrush Makeup:</strong> (Smooth, Weightless,
                       camera-perfect.)
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Bridal Makeup (Luxury):</strong> (Flawless,
-                      waterproof, long-lasting for brides )
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>HD/ Ultra-Glam Makeup:</strong> (Perfect for
-                      high-defination photography or red carpets)
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Editorial / Creative Makeup:</strong> (Artistic or
-                      magazine-quality looks)
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Traditional Bridal Makeup:</strong> ( Complete
-                      cultural glamwith luxury touch)
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Fantasy / SFX Makeup:</strong> ( For shoots,
-                      movies or luxury themed events)
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {" "}
-                      <strong>Runaway / Performance Makeup:</strong> ( Stage and
-                      spotlight ready)
                     </ListGroup.Item>
                   </>
                 }
@@ -326,6 +243,11 @@ const Plan = () => {
                       {" "}
                       <strong>Products:</strong> Top Notch brands.
                     </p>
+                    <p>
+                      {" "}
+                      <strong>Bonus:</strong>Complimentary Makeup-Bag + Setting
+                      Spray
+                    </p>
                   </div>
                 }
                 Title="Exclusive Plan"
@@ -355,25 +277,25 @@ const Plan = () => {
                 myImage={make4}
                 b4Bdy={
                   <div>
-                    <p>For everyday client, students, casual grooming</p>
+                    <p>For quick, everyday massage needs</p>
                     <p>
                       {" "}
-                      <strong>Products:</strong> Quality but non-luxury brands.
+                      <strong>Products:</strong> Basic massage Oils
                     </p>
                     <p>
                       {" "}
-                      <strong>Bonus:</strong> Free quick-dry top coat, 3-day
-                      polish fix
+                      <strong>Bonus:</strong> Complimentary hand cream
                     </p>
                   </div>
                 }
                 Title="Basic Plan"
                 item={
                   <>
-                    <ListGroup.Item>Nail trimming and shaping</ListGroup.Item>{" "}
-                    <ListGroup.Item>Cuticle care</ListGroup.Item>{" "}
-                    <ListGroup.Item>Hand soak & scrub</ListGroup.Item>{" "}
-                    <ListGroup.Item>Polish (1 color)</ListGroup.Item>
+                    <ListGroup.Item>Basic Oil Application</ListGroup.Item>{" "}
+                    <ListGroup.Item>Prefered body part massage</ListGroup.Item>
+                    <ListGroup.Item>
+                      15-minute neck massage session
+                    </ListGroup.Item>{" "}
                   </>
                 }
               />
@@ -388,12 +310,11 @@ const Plan = () => {
                     </p>
                     <p>
                       {" "}
-                      <strong>Products:</strong> Premium brands
+                      <strong>Products:</strong> Essential oil blends
                     </p>
                     <p>
                       {" "}
-                      <strong>Bonus:</strong> Mini hand cream gift. Priority
-                      booking. Free repair within 5days
+                      <strong>Bonus:</strong>
                     </p>
                   </div>
                 }
@@ -401,12 +322,10 @@ const Plan = () => {
                 item={
                   <>
                     <ListGroup.Item>
-                      <strong>Full spa manicure:</strong> (exfoliation, mask,
-                      massage)
+                      20-minutes full body massage
                     </ListGroup.Item>{" "}
-                    <ListGroup.Item>Gel or French polish</ListGroup.Item>{" "}
-                    <ListGroup.Item>Cuticle softening and care</ListGroup.Item>{" "}
-                    <ListGroup.Item>Moisturizing hand cream</ListGroup.Item>
+                    <ListGroup.Item>Preferred body part massage</ListGroup.Item>{" "}
+                    <ListGroup.Item>Aromatherapy session</ListGroup.Item>
                   </>
                 }
               />
@@ -414,18 +333,13 @@ const Plan = () => {
                 myImage={make6}
                 b4Bdy={
                   <div>
-                    <p>
-                      <strong>Ideal For: </strong> Celebrites, Bride or Elite
-                      clients.
-                    </p>
+                 
                     <p>
                       {" "}
-                      <strong>Products:</strong> Luxury / Designer brands
+                      <strong>Products:</strong> Luxury brands
                     </p>
                     <p>
-                      <strong>Bonus:</strong> Complimentary drink &
-                      aromatherapy. Take-home hand kit(cream + oil + file). Free
-                      repair within 7days
+                      <strong>Bonus:</strong> Complimentary full-sized luxury scented candle
                     </p>
                   </div>
                 }
@@ -433,17 +347,13 @@ const Plan = () => {
                 item={
                   <>
                     <ListGroup.Item>
-                      <strong>Luxury Manicure:</strong> (hot oil treatment +
-                      paraffin wax.)
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      Custom nail design or chrome finish
-                    </ListGroup.Item>{" "}
-                    <ListGroup.Item>
-                      Premium hand exfoliation & serum
+                     Prefered body part massage
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      Heated towel wrap and full massage
+                     60-minute Deep Tissue
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                     Prefered body part massag
                     </ListGroup.Item>
                   </>
                 }

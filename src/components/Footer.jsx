@@ -108,7 +108,7 @@ function Footer() {
               <div className="icons">
                 <a href="">
                   <p className="icon whatsap">
-                    <FaWhatsapp />
+                    {/* <FaWhatsapp /> */}
                   </p>
                 </a>
                 <a href="https://www.facebook.com/share/1AfAswee3B/">
