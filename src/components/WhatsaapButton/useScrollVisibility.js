@@ -13,7 +13,7 @@ const useScrollVisibility = (threshold = 0) => {
       setVisible(window.scrollY >= threshold);
     };
 
-    handleScroll();
+    handleScroll(); 
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
