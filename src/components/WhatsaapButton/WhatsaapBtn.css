@@ -2,7 +2,7 @@
 
 .whatsapp-button {
   position: fixed;
-  top: 1000px;
+  bottom: 120px; /* ✅ sticks to bottom of screen */
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -37,8 +37,9 @@
   transition:
     opacity 0.3s ease,
     transform 0.3s ease;
+  /* ✅ ADD THIS */
+  display: none;
 }
-
 /* Pulse ring */
 .pulse {
   position: absolute;

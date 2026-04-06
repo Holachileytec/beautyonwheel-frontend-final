@@ -37,7 +37,7 @@ function App() {
         message="Hello! I have a question about your services."
         position="right"
         tooltipText="Need help? Chat with us!"
-        showOnlyAfterScroll={200}
+        showOnlyAfterScroll={0}
         badgeCount={1}
         pulse={true}
         onClick={() => console.log("WhatsApp button clicked")}

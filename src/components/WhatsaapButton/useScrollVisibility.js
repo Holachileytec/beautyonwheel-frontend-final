@@ -1,8 +1,7 @@
-// useScrollVisibility.js
 import { useState, useEffect } from "react";
 
 const useScrollVisibility = (threshold = 0) => {
-  const [visible, setVisible] = useState(threshold === 0);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (threshold === 0) {
@@ -13,6 +12,8 @@ const useScrollVisibility = (threshold = 0) => {
     const handleScroll = () => {
       setVisible(window.scrollY >= threshold);
     };
+
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
