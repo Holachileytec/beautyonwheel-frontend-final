@@ -7,20 +7,25 @@ const StudentLogin = () => {
   const navigate = useNavigate();
   const [userName, SetUserName] = useState("");
   const [entryCode, setEntryCode] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/api/users/login", { userName, entryCode });
-      const student = res.data.student;
+      const res = await api.post("/api/academics/studentLog", {
+        userName,
+        entryCode,
+        email,
+      });
+      const student = res.data.newStudent;
 
       // Clear all stale admin flags before setting new data
       localStorage.removeItem("isAdmin");
       localStorage.removeItem("admin");
       localStorage.removeItem("admin-pass-unlocked");
       sessionStorage.removeItem("admin_unlocked");
-
+ 
       //  Set fresh auth data
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("student", JSON.stringify(student));
@@ -58,9 +63,19 @@ const StudentLogin = () => {
             />
           </div>
           <div className="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div className="input-group">
             <label>Entry Code</label>
             <input
-              type="text"
+              type="password"
               value={entryCode}
               onChange={(e) => setEntryCode(e.target.value)}
               placeholder="Enter your entry code"

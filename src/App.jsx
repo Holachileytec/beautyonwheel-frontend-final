@@ -33,7 +33,7 @@ function App() {
   return (
     <>
       <WhatsaapBtn
-        phoneNumber="2347089986222"
+        phoneNumber="+2348125120885"
         message="Hello! I have a question about your services."
         position="right"
         tooltipText="Need help? Chat with us!"
