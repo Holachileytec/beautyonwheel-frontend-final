@@ -33,13 +33,11 @@ function App() {
   return (
     <>
       <WhatsaapBtn
-        phoneNumber="+2348125120885"
+        phoneNumber="+2348151944779"
         message="Hello! I have a question about your services."
         position="right"
         tooltipText="Need help? Chat with us!"
         showOnlyAfterScroll={0}
-        badgeCount={1}
-        pulse={true}
         onClick={() => console.log("WhatsApp button clicked")}
       />
       <ChatProvider config={ChatConfig}>

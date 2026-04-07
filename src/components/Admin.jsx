@@ -478,6 +478,37 @@ const Admin = () => {
       console.error(error);
     }
   };
+  //  the student code generator
+  const [numberOfCodes, setNumberOfCodes] = useState(0);
+  const generateCode = async () => {
+    try {
+      if (numberOfCodes <= 0) {
+        return alert("Please enter a number greater than 0");
+      }
+
+      const res = await api.post("/api/admin/generateCodes", {
+        count: numberOfCodes,
+      });
+      console.log(numberOfCodes);
+      alert(`${numberOfCodes} codes generated successfully!`);
+    } catch (err) {
+      alert("Failed to generate codes. Please try again.");
+      console.log("Code generation error:", err);
+    }
+  };
+  const [allCodes, setAllCodes] = useState([]);
+
+  useEffect(() => {
+    const getAllCodes = async () => {
+      try {
+        const res = await api.get("/api/admin/allCodes");
+        setAllCodes(res.data.codes);
+      } catch (err) {
+        console.log("Error fetching all codes:", err);
+      }
+    };
+    getAllCodes();
+  }, []);
 
   const serviceCategories = [
     "Makeup",
@@ -505,6 +536,7 @@ const Admin = () => {
             "beauticians",
             "chat",
             "gallery",
+            "Codes",
           ].map((tab) => (
             <button
               key={tab}
@@ -1215,6 +1247,31 @@ const Admin = () => {
               </div>
               <button className="save-btn">Save Settings</button>
             </div>
+          </div>
+        )}
+
+        {/* Settings Tab */}
+        {activeTab === "Codes" && (
+          <div className="tab-content">
+            <form onSubmit={generateCode}>
+              <input
+                type="text"
+                onChange={(e) => {
+                  setNumberOfCodes(e.target.value);
+                }}
+                value={numberOfCodes}
+              />
+              <button type="submit">Generate Codes</button>
+            </form>
+
+            <h1>Available codes</h1>
+            <ul>
+              {allCodes.map((code) => (
+                <li key={code._id}>
+                  {code.code} - {code.isUsed ? "Used" : "Available"}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>

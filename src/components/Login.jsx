@@ -8,6 +8,11 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [successful, setSuccessful] = useState(false);
+  const [view, setView] = useState("login"); // "login" | "forgot"
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotMessage, setForgotMessage] = useState("");
+  const [forgotSent, setForgotSent] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,7 +22,6 @@ const Login = () => {
       if (user.role === "admin") navigate("/adminDashboard");
       else navigate("/user-dashboard");
     } else if (token && !user) {
-      // ✅ Stale token with no user — clear everything
       localStorage.removeItem("token");
       localStorage.removeItem("isAdmin");
       localStorage.removeItem("admin");
@@ -32,31 +36,121 @@ const Login = () => {
       const res = await api.post("/api/users/login", { email, password });
       const user = res.data.user;
 
-      // Clear all stale admin flags before setting new data
       localStorage.removeItem("isAdmin");
       localStorage.removeItem("admin");
       localStorage.removeItem("admin-pass-unlocked");
       sessionStorage.removeItem("admin_unlocked");
 
-      //  Set fresh auth data
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(user));
 
       setMessage(res.data.message || "Login Successful!");
-
-      if (user.role === "admin") navigate("/adminDashboard");
-      else navigate("/user-dashboard");
+      setSuccessful(true);
+      setTimeout(() => {
+        if (user.role === "admin") navigate("/adminDashboard");
+        else navigate("/user-dashboard");
+      }, 2000);
     } catch (error) {
       setMessage(error.response?.data?.message || "Invalid credentials");
     }
   };
 
+  // ✅ Forgot Password Handler — connect to your backend
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post("/api/users/forgot-password", { email: forgotEmail });
+      setForgotSent(true);
+      setForgotMessage(`A reset link has been sent to ${forgotEmail}`);
+    } catch (error) {
+      setForgotMessage(
+        error.response?.data?.message || "Something went wrong. Try again.",
+      );
+    }
+  };
+
+  // ✅ FORGOT PASSWORD VIEW
+  if (view === "forgot") {
+    return (
+      <div className="login-container">
+        <div className="login-box">
+          <h2>Forgot Password</h2>
+
+          {forgotMessage && (
+            <p
+              style={{
+                color: forgotSent ? "green" : "red",
+                marginBottom: "10px",
+              }}
+            >
+              {forgotMessage}
+            </p>
+          )}
+
+          {!forgotSent ? (
+            <form onSubmit={handleForgotPassword} className="login-form">
+              <p
+                style={{
+                  color: "#666",
+                  fontSize: "14px",
+                  marginBottom: "16px",
+                }}
+              >
+                Enter your email and we'll send you a password reset link.
+              </p>
+              <div className="input-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+              <button type="submit" className="login-button">
+                Send Reset Link
+              </button>
+            </form>
+          ) : (
+            <p style={{ color: "#666", fontSize: "14px" }}>
+              Check your inbox and follow the link to reset your password.
+            </p>
+          )}
+
+          <p
+            style={{
+              marginTop: "16px",
+              color: "#4F46E5",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+            onClick={() => {
+              setView("login");
+              setForgotMessage("");
+              setForgotSent(false);
+              setForgotEmail("");
+            }}
+          >
+            ← Back to Login
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ LOGIN VIEW
   return (
     <div className="login-container">
       <div className="login-box">
         <h2>Login</h2>
         {message && (
-          <p style={{ color: message.includes("Invalid") ? "red" : "green", marginBottom: "10px" }}>
+          <p
+            style={{
+              color: message.includes("Invalid") ? "red" : "green",
+              marginBottom: "10px",
+            }}
+          >
             {message}
           </p>
         )}
@@ -81,6 +175,21 @@ const Login = () => {
               required
             />
           </div>
+
+          {/* ✅ Forgot Password Link */}
+          <p
+            style={{
+              textAlign: "right",
+              color: "#4F46E5",
+              fontSize: "13px",
+              cursor: "pointer",
+              marginBottom: "12px",
+            }}
+            onClick={() => setView("forgot")}
+          >
+            Forgot password?
+          </p>
+
           <button type="submit" className="login-button">
             Login
           </button>
