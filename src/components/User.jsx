@@ -43,10 +43,7 @@ const User = () => {
   };
   const submitRating = async (id) => {
     try {
-      const res = await api.put(
-        `/api/beauticians/Bupdate/${id}`,
-        rateInfo,
-      );
+      const res = await api.put(`/api/beauticians/Bupdate/${id}`, rateInfo);
       alert("Beautician Rated Successfully! Thank you for your feedback.");
       console.log(res.data);
     } catch (err) {
@@ -601,6 +598,9 @@ const User = () => {
             }}
           >
             <h3>Upload Your Job</h3>
+            <i style={{ fontSize: "15px", color: "gray" }}>
+              Upload all Certifications, Utility bills,and before and after job
+            </i>
             <div>
               <div className="gallery">
                 <input
@@ -614,7 +614,7 @@ const User = () => {
                   style={{ width: "100%" }}
                   value={gallery.description}
                   name="description"
-                  placeholder="Input the image url"
+                  placeholder="Input the image description here..."
                   onChange={handleChangeG}
                 />
                 <button

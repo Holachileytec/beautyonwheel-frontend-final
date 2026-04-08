@@ -55,7 +55,9 @@ const SignUp = () => {
 
       const res = await api.post("/api/users/register", registrationData);
       setMessage(res.data.message || "Registration Successful!");
-      navigate("/login"); // Redirect to login after signup
+      setTimeout(() => {
+        navigate("/login"); // Redirect to login after signup
+      }, 5000);
     } catch (error) {
       setMessage(
         error.response?.data?.message ||

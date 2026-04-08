@@ -55,7 +55,7 @@ const Login = () => {
     }
   };
 
-  // ✅ Forgot Password Handler — connect to your backend
+  // Forgot Password Handler — connect to your backend
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     try {
@@ -69,7 +69,6 @@ const Login = () => {
     }
   };
 
-  // ✅ FORGOT PASSWORD VIEW
   if (view === "forgot") {
     return (
       <div className="login-container">
@@ -139,7 +138,7 @@ const Login = () => {
     );
   }
 
-  // ✅ LOGIN VIEW
+  //  LOGIN VIEW
   return (
     <div className="login-container">
       <div className="login-box">
@@ -176,27 +175,28 @@ const Login = () => {
             />
           </div>
 
-          {/* ✅ Forgot Password Link */}
-          <p
-            style={{
-              textAlign: "right",
-              color: "#4F46E5",
-              fontSize: "13px",
-              cursor: "pointer",
-              marginBottom: "12px",
-            }}
-            onClick={() => setView("forgot")}
-          >
-            Forgot password?
-          </p>
+          {/*  Forgot Password Link */}
 
           <button type="submit" className="login-button">
             Login
           </button>
         </form>
-        <p className="signup-link">
+        <div className="signup-link">
+          <p
+            style={{
+              textAlign: "center",
+              color: "#4F46E5",
+              fontSize: "13px",
+              cursor: "pointer",
+              marginTop: "10px",
+              marginBottom: "6px",
+            }}
+            onClick={() => setView("forgot")}
+          >
+            Forgot password?
+          </p>
           Don't have an account? <Link to="/signup">Sign Up</Link>
-        </p>
+        </div>
       </div>
     </div>
   );

@@ -28,6 +28,8 @@ import UserProtector from "./components/UserProtector.jsx"; // ✅ New
 import StudentLogin from "./components/StudenLogin.jsx";
 import StudentDashboard from "./components/StudentDashboard.jsx";
 import WhatsaapBtn from "./components/WhatsaapButton/WhatsaapBtn.jsx";
+import ResetPassword from "./components/ResetPasword.jsx";
+import ForgotPassword from "./page/ForgetPassword.jsx";
 
 function App() {
   return (
@@ -58,6 +60,8 @@ function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/student-login" element={<StudentLogin />} />
           <Route path="/studentDashboard" element={<StudentDashboard />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           {/* User Protected Route */}
           <Route
