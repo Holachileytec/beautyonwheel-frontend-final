@@ -59,7 +59,7 @@ const Login = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/api/users/forgot-password", { email: forgotEmail });
+      await api.post("/forgot-password", { email: forgotEmail });
       setForgotSent(true);
       setForgotMessage(`A reset link has been sent to ${forgotEmail}`);
     } catch (error) {

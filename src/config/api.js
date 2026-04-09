@@ -15,6 +15,12 @@ const API_BASE_URL =
     ? "" // ← relative in dev → Vite proxy handles it
     : "https://beautyplug.com.ng"); // ← real URL in production
 
+// const API_BASE_URL =
+//   import.meta.env.VITE_API_URL ||
+//   (import.meta.env.MODE === "development"
+//     ? "/api/users"
+//     : "https://beautyplug.com.ng/api/users");
+
 const SOCKET_URL =
   import.meta.env.VITE_SOCKET_URL ||
   (import.meta.env.MODE === "development"
