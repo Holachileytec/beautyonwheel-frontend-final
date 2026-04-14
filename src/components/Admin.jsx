@@ -576,7 +576,7 @@ const Admin = () => {
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Address</th>
+                    <th>Role</th>
                     <th>Subscription</th>
                     <th>Actions</th>
                   </tr>
@@ -587,7 +587,7 @@ const Admin = () => {
                       <td>{user.name}</td>
                       <td>{user.email}</td>
                       <td>{user.phone}</td>
-                      <td>{user.address}</td>
+                      <td>{user.role}</td>
                       <td>
                         <span
                           className={`subscription-badge ${user.membership.type}`}
@@ -607,6 +607,12 @@ const Admin = () => {
                           onClick={() => deleteUser(user._id)}
                         >
                           Delete
+                        </button>
+                        <button
+                          className="action-btn view"
+                          onClick={() => handleShow1(user._id)}
+                        >
+                          View
                         </button>
                       </td>
                     </tr>
