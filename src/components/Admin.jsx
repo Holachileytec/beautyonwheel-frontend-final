@@ -563,7 +563,7 @@ const Admin = () => {
           <div className="tab-content">
             <h2>User Management</h2>
             <div className="subscription-filters">
-              {["All", "Normal", "VIP", "VVIP"].map((sub) => (
+              {["All", "Basic", "Premium", "Luxury","Exclusive","Combo"].map((sub) => (
                 <button key={sub} className="filter-btn">
                   {sub}
                 </button>
@@ -575,6 +575,8 @@ const Admin = () => {
                   <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
                     <th>Subscription</th>
                     <th>Actions</th>
                   </tr>
@@ -584,6 +586,8 @@ const Admin = () => {
                     <tr key={user._id}>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
+                      <td>{user.phone}</td>
+                      <td>{user.address}</td>
                       <td>
                         <span
                           className={`subscription-badge ${user.membership.type}`}
@@ -648,6 +652,8 @@ const Admin = () => {
                   <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
                     <th>Speciality</th>
                     <th>Experience</th>
                     <th>Customer Ratings</th>
@@ -659,6 +665,8 @@ const Admin = () => {
                     <tr key={b._id}>
                       <td>{b?.user?.name}</td>
                       <td>{b?.user?.email}</td>
+                      <td>{b?.user?.phone}</td>
+                      <td>{b?.user?.address}</td>
                       <td>{b?.specialties}</td>
                       <td>{b?.experienceYears}</td>
                       <td>{b?.rating}</td>

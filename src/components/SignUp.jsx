@@ -57,7 +57,7 @@ const SignUp = () => {
       setMessage(res.data.message || "Registration Successful!");
       setTimeout(() => {
         navigate("/login"); // Redirect to login after signup
-      }, 5000);
+      }, 3000);
     } catch (error) {
       setMessage(
         error.response?.data?.message ||
@@ -116,6 +116,19 @@ const SignUp = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Email"
+                required
+              />
+            </div>
+
+            <div className="input-group">
+              <label htmlFor="address">Address</label>
+              <input
+                type="address"
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                placeholder="Address"
                 required
               />
             </div>
