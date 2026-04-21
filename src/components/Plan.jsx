@@ -256,7 +256,7 @@ const Plan = () => {
               />
               <Content
                 myImage={nail5}
-                Title="Combo Plan(Basic, Premium, Luxury)"
+                Title="Combo Plan(Basic, Premium)"
                 b4Bdy={
                   <div>
                     <p>
@@ -272,7 +272,7 @@ const Plan = () => {
                       <strong>Bonus:</strong> 10% off first trial.
                     </p>
                     <p>
-                      <strong>Price:</strong> 180,000. Slot.
+                      <strong>Price:</strong> 180,000.
                     </p>
                   </div>
                 }
@@ -313,7 +313,7 @@ const Plan = () => {
                       to Premium plan.
                     </p>
                     <p>
-                      <strong>Duration:</strong> 3x/month.
+                      <strong>Duration:</strong> 2x/month.
                     </p>
                     <p>
                       <strong>Price:</strong> 150,000.
@@ -349,7 +349,7 @@ const Plan = () => {
                       to luxury plan
                     </p>
                     <p>
-                      <strong>Duration:</strong> 3x/month.
+                      <strong>Duration:</strong> 2x/month.
                     </p>
                     <p>
                       <strong>Price:</strong> 350,000.
@@ -766,7 +766,7 @@ const Plan = () => {
                       to Luxury.
                     </p>
                     <p>
-                      <strong>Duration:</strong> 3x/month.
+                      <strong>Duration:</strong> 2x/month.
                     </p>
                     <p>
                       <strong>Price:</strong> 150,000. Slot.
@@ -799,7 +799,7 @@ const Plan = () => {
                       to Luxury.
                     </p>
                     <p>
-                      <strong>Duration:</strong> 3x/month.
+                      <strong>Duration:</strong> 2x/month.
                     </p>
                     <p>
                       <strong>Price:</strong> 300,000.
@@ -889,7 +889,7 @@ const Plan = () => {
                     </p>
 
                     <p>
-                      <strong>Duration:</strong> 3x/month.
+                      <strong>Duration:</strong> 2x/month.
                     </p>
                     <p>
                       <strong>Price:</strong> 350,000.
